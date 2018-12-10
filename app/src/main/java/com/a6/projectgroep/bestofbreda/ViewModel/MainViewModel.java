@@ -11,6 +11,6 @@ public class MainViewModel extends AndroidViewModel {
 
     public MainViewModel(@NonNull Application application) {
         super(application);
-        mapsApiManager = new GoogleMapsAPIManager(application.getApplicationContext());
+        mapsApiManager = GoogleMapsAPIManager.getInstance(application.getApplicationContext());
     }
 }
