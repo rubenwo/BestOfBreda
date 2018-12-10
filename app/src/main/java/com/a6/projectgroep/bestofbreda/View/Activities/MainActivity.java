@@ -25,15 +25,6 @@ public class MainActivity extends AppCompatActivity {
 
         askPermission();
         mainViewModel = new MainViewModel(getApplication());
-        TextView test = findViewById(R.id.Test);
-
-        if(mainViewModel.getCurrentPosition() != null)
-        {
-            test.setText(mainViewModel.getCurrentPosition().toString());
-            String teststring = mainViewModel.getCurrentPosition().toString();
-            System.out.println(teststring);
-    }
-
     }
 
     private void askPermission() {
