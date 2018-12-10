@@ -6,17 +6,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="6dp"
     app:cardElevation="6dp"
-    android:layout_margin="6dp"
-    android:id="@+id/routeactivity_cardview">
+    android:layout_margin="8dp"
+    android:id="@+id/sightlistfragment_cardview">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/routeactivity_recyclerview_item_background">
 
-
         <ImageView
-            android:id="@+id/routeactivity_recyclerview_item_imageview"
+            android:id="@+id/sightlistfragment_recyclerview_item_imageview"
             android:layout_width="50dp"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
@@ -27,37 +26,25 @@
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/ic_nav_routes" />
+            tools:srcCompat="@drawable/ic_nav_sights" />
 
         <TextView
-            android:id="@+id/routeactivity_recyclerview_item_name"
+            android:id="@+id/sightlistfragment_recyclerview_item_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:text="Route Name"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/routeactivity_recyclerview_item_distance"
-            app:layout_constraintStart_toEndOf="@+id/routeactivity_recyclerview_item_imageview"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/routeactivity_recyclerview_item_distance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="5 km"
+            android:text="Sight Name"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/sightlistfragment_recyclerview_item_imageview"
             app:layout_constraintTop_toTopOf="parent" />
+
+
     </android.support.constraint.ConstraintLayout>
 
 
