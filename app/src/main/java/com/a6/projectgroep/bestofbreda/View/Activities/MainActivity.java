@@ -2,6 +2,8 @@ package com.a6.projectgroep.bestofbreda.View.Activities;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -32,6 +34,33 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setDisplayShowTitleEnabled(false);
 
         drawerLayout = findViewById(R.id.mainactivity_drawer_layout);
+
+        NavigationView navigationView = findViewById(R.id.mainactivity_nav_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener()
+        {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem)
+            {
+                menuItem.setChecked(true);
+                //TODO navigate to the activities
+                switch (menuItem.getItemId()){
+                    case R.id.menu_nav_sights:
+
+                        break;
+                    case R.id.menu_nav_routes:
+
+                        break;
+                    case R.id.menu_nav_help:
+
+                        break;
+                    case R.id.menu_nav_termsofservice:
+
+                        break;
+                }
+                drawerLayout.closeDrawers();
+                return true;
+            }
+        });
     }
 
     @Override
