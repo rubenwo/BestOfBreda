@@ -12,10 +12,12 @@ public class RouteModel {
     @NonNull
     @PrimaryKey
     private String name;
+    private boolean done;
 
-    public RouteModel(ArrayList<Integer> route, String name) {
+    public RouteModel(ArrayList<Integer> route, String name, boolean done) {
         this.route = route;
         this.name = name;
+        this.done = done;
     }
 
     public ArrayList<Integer> getRoute() {
@@ -32,5 +34,13 @@ public class RouteModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
+    }
+
+    public boolean isDone() {
+        return done;
     }
 }
