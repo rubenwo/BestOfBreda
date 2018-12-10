@@ -1,15 +1,31 @@
 package com.a6.projectgroep.bestofbreda.Services.database;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
+import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
+import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 
-import java.util.ArrayList;
+import java.util.List;
 
+@Dao
 public interface RouteDAO {
-    ArrayList<RouteModel> getAllRoutes();
+    @Query("SELECT * FROM route_model")
+    LiveData<List<RouteModel>> getAllRoutes();
 
+    @Query("SELECT * FROM route_model WHERE name = :routeName")
     LiveData<RouteModel> getLiveRoute(String routeName);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertRoute(RouteModel route);
+
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    void updateRoute(RouteModel route);
+
+    @Delete
+    void deleteRoute(RouteModel route);
 }
