@@ -1,9 +1,16 @@
 package com.a6.projectgroep.bestofbreda.Model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
 import com.google.android.gms.maps.model.LatLng;
 
+@Entity(tableName = "WAYPOINT_MODEL")
 public class WayPointModel {
-
+    @NonNull
+    @PrimaryKey(autoGenerate = true)
+    private int waypointID;
     private String name;
     private LatLng location;
     private String description;
@@ -76,5 +83,10 @@ public class WayPointModel {
 
     public void setMultimedia(MultimediaModel multimedia) {
         this.multimedia = multimedia;
+    }
+
+    @NonNull
+    public int getWaypointID() {
+        return waypointID;
     }
 }

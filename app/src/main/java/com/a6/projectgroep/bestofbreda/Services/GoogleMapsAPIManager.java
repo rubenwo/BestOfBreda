@@ -1,5 +1,6 @@
 package com.a6.projectgroep.bestofbreda.Services;
 
+import android.app.Application;
 import android.content.Context;
 import android.location.LocationManager;
 
@@ -18,13 +19,15 @@ public class GoogleMapsAPIManager {
     private RouteModel currentRoute;
     private WayPointModel currentWaypoint;
     private ArrayList<WayPointModel> waypoints;
+    private LocationHandler locationHandler;
 
-    public GoogleMapsAPIManager(Context context) {
+    public GoogleMapsAPIManager(Application application) {
+        locationHandler = new LocationHandler(application);
     }
 
-    public static GoogleMapsAPIManager getInstance(Context context) {
+    public static GoogleMapsAPIManager getInstance(Application application) {
         if (instance == null)
-            instance = new GoogleMapsAPIManager(context);
+            instance = new GoogleMapsAPIManager(application);
         return instance;
     }
 
@@ -44,6 +47,7 @@ public class GoogleMapsAPIManager {
     }
 
     public LatLng getCurrentPosition() {
+        currentPosition = locationHandler.getCurrentLocation();
         return this.currentPosition;
     }
 
