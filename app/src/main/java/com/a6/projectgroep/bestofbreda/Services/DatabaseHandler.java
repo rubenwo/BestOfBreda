@@ -7,6 +7,7 @@ import com.a6.projectgroep.bestofbreda.Services.database.WaypointDAO;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
+//TODO: Delete, seems a bit useless when using Room...
 public class DatabaseHandler {
     private static DatabaseHandler instance;
     private ThreadPoolExecutor backgorundQueryPool;

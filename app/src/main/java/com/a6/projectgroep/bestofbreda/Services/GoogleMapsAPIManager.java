@@ -1,7 +1,6 @@
 package com.a6.projectgroep.bestofbreda.Services;
 
 import android.app.Application;
-import android.content.Context;
 import android.location.LocationManager;
 
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;

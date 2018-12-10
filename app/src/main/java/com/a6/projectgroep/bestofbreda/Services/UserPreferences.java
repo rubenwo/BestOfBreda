@@ -26,6 +26,12 @@ public class UserPreferences {
         createAllKeys();
     }
 
+    public static UserPreferences getInstance(Application application) {
+        if (instance == null)
+            instance = new UserPreferences(application);
+        return instance;
+    }
+
     private void createAllKeys() {
         Set<String> keys = preferences.getAll().keySet();
         for (String key : keys) {
@@ -36,12 +42,6 @@ public class UserPreferences {
             else if (key.contains("CURRENT"))
                 currentRouteKey = key;
         }
-    }
-
-    public static UserPreferences getInstance(Application application) {
-        if (instance == null)
-            instance = new UserPreferences(application);
-        return instance;
     }
 
     public void setSeenWaypoints(WayPointModel waypoint) {
@@ -61,14 +61,6 @@ public class UserPreferences {
         Gson gson = new Gson();
         String serialized = gson.toJson(route);
         editor.putString("ROUTE:" + route.getName(), serialized);
-        editor.apply();
-    }
-
-    public void setCurrentRoute(RouteModel route) {
-        SharedPreferences.Editor editor = this.preferences.edit();
-        Gson gson = new Gson();
-        String serialized = gson.toJson(route);
-        editor.putString("CURRENT:" + route.getName(), serialized);
         editor.apply();
     }
 
@@ -104,6 +96,14 @@ public class UserPreferences {
         if (!serialized.equals("ERROR"))
             currentRoute = gson.fromJson(serialized, RouteModel.class);
         return currentRoute;
+    }
+
+    public void setCurrentRoute(RouteModel route) {
+        SharedPreferences.Editor editor = this.preferences.edit();
+        Gson gson = new Gson();
+        String serialized = gson.toJson(route);
+        editor.putString("CURRENT:" + route.getName(), serialized);
+        editor.apply();
     }
 
 

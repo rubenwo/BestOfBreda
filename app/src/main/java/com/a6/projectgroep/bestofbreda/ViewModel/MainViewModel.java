@@ -3,7 +3,6 @@ package com.a6.projectgroep.bestofbreda.ViewModel;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
-import android.location.Location;
 import android.support.annotation.NonNull;
 
 import com.a6.projectgroep.bestofbreda.Model.WayPointModel;
@@ -25,8 +24,7 @@ public class MainViewModel extends AndroidViewModel {
         liveData = repository.getAllTestData();
     }
 
-    public LatLng getCurrentPosition()
-    {
+    public LatLng getCurrentPosition() {
         return mapsApiManager.getCurrentPosition();
     }
 

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/routeactivity_cardview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="6dp"
-    app:cardElevation="6dp"
     android:layout_margin="6dp"
-    android:id="@+id/routeactivity_cardview">
+    app:cardCornerRadius="6dp"
+    app:cardElevation="6dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

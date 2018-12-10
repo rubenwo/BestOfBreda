@@ -53,8 +53,8 @@
         android:layout_marginBottom="8dp"
         android:backgroundTint="@color/colorPrimary"
         android:clickable="true"
-        app:fabCustomSize="50dp"
         android:scaleType="centerCrop"
+        app:fabCustomSize="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_detailed_music_white" />

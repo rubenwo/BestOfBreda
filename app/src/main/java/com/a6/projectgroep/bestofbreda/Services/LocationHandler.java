@@ -49,10 +49,12 @@ public class LocationHandler {
             }
         };
         if (ActivityCompat.checkSelfPermission(application.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(provider, 5, 2, locationListener);
-            currentLocation = new LatLng(locationManager.getLastKnownLocation(provider).getLatitude(),locationManager.getLastKnownLocation(provider).getLongitude());
-            System.out.println(currentLocation);
-            System.out.println(locationManager.getLastKnownLocation(provider));
+            if (locationManager.getLastKnownLocation(provider) != null) {
+                locationManager.requestLocationUpdates(provider, 5, 2, locationListener);
+                currentLocation = new LatLng(locationManager.getLastKnownLocation(provider).getLatitude(), locationManager.getLastKnownLocation(provider).getLongitude());
+                System.out.println(currentLocation);
+                System.out.println(locationManager.getLastKnownLocation(provider));
+            }
         }
     }
 

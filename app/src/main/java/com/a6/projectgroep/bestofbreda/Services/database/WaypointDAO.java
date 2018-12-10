@@ -10,7 +10,6 @@ import android.arch.persistence.room.Update;
 
 import com.a6.projectgroep.bestofbreda.Model.WayPointModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Dao

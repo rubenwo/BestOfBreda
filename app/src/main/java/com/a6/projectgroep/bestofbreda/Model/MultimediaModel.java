@@ -5,7 +5,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Entity(tableName = "MULTIMEDIA_MODEL")
 public class MultimediaModel {
@@ -13,33 +13,37 @@ public class MultimediaModel {
     @PrimaryKey(autoGenerate = true)
     private int id;
     @ColumnInfo(name = "picture_urls")
-    private ArrayList<String> pictureUrls;
+    private List<String> pictureUrls;
     @ColumnInfo(name = "video_urls")
-    private ArrayList<String> videoUrls;
+    private List<String> videoUrls;
 
-    public MultimediaModel(ArrayList<String> pictureUrls, ArrayList<String> videoUrls) {
+    public MultimediaModel(List<String> pictureUrls, List<String> videoUrls) {
         this.pictureUrls = pictureUrls;
         this.videoUrls = videoUrls;
     }
 
-    public ArrayList<String> getPictureUrls() {
+    public List<String> getPictureUrls() {
         return pictureUrls;
     }
 
-    public void setPictureUrls(ArrayList<String> pictureUrls) {
+    public void setPictureUrls(List<String> pictureUrls) {
         this.pictureUrls = pictureUrls;
     }
 
-    public ArrayList<String> getVideoUrls() {
+    public List<String> getVideoUrls() {
         return videoUrls;
     }
 
-    public void setVideoUrls(ArrayList<String> videoUrls) {
+    public void setVideoUrls(List<String> videoUrls) {
         this.videoUrls = videoUrls;
     }
 
     @NonNull
     public int getId() {
         return id;
+    }
+
+    public void setId(@NonNull int id) {
+        this.id = id;
     }
 }

@@ -20,8 +20,8 @@ public class SightsListViewModel extends AndroidViewModel {
         liveData = repository.getAllTestData();
     }
 
-    public WayPointModel getWayPoint(int pointPos){
-        if(liveData.getValue().size() >= pointPos)
+    public WayPointModel getWayPoint(int pointPos) {
+        if (liveData.getValue().size() >= pointPos)
             return liveData.getValue().get(pointPos);
         else
             return null;

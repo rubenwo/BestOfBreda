@@ -89,4 +89,8 @@ public class WayPointModel {
     public int getWaypointID() {
         return waypointID;
     }
+
+    public void setWaypointID(@NonNull int waypointID) {
+        this.waypointID = waypointID;
+    }
 }
