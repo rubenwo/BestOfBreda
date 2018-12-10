@@ -2,32 +2,47 @@ package com.a6.projectgroep.bestofbreda.ViewModel;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
+import com.a6.projectgroep.bestofbreda.Model.WayPointModel;
 import com.a6.projectgroep.bestofbreda.Services.DatabaseHandler;
 import com.a6.projectgroep.bestofbreda.Services.GoogleMapsAPIManager;
+import com.a6.projectgroep.bestofbreda.Services.database.RouteRepository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RouteListViewModel extends AndroidViewModel {
-    private ArrayList<RouteModel> routes;
-    private RouteModel routeModel;
+    private RouteRepository repository;
+    private LiveData<List<RouteModel>> liveData;
 
     public RouteListViewModel(@NonNull Application application) {
         super(application);
-        routes = (ArrayList<RouteModel>) DatabaseHandler.getInstance(application.getApplicationContext()).routeDAO().getAllRoutes().getValue();
-        routeModel = new RouteModel(routes.get(0).getRoute(), routes.get(0).getName());
+        repository = new RouteRepository(application);
+        liveData = repository.getAllTestData();
     }
 
     public void selectRoute(int routeNumber){
         //TODO no way dat dit goed werkt zo
-        if(routes.size() > routeNumber) {
-            routeModel.setRoute(routes.get(routeNumber).getRoute());
-            GoogleMapsAPIManager.getInstance(getApplication()).setCurrentRoute(routes.get(routeNumber));
-        }
-        else
-            Log.i("[ERROR]", "Route not found, index " + routeNumber + " too high!");
+            GoogleMapsAPIManager.getInstance(getApplication()).setCurrentRoute(repository.getAllTestData().getValue().get(routeNumber));
+    }
+
+    public void insertRouteModel(RouteModel model) {
+        repository.insertMultiMedia(model);
+    }
+
+    public void updateRouteModel(RouteModel model) {
+        repository.updateTestData(model);
+    }
+
+    public void deleteRouteModel(RouteModel model) {
+        repository.deleteTestData(model);
+    }
+
+    public LiveData<List<RouteModel>> getAllRouteModels() {
+        return liveData;
     }
 }
