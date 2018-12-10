@@ -85,5 +85,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         for (WayPointModel model: markers) {
             GeoCoderService.getInstance(getApplication()).placeMarker(mMap, model.getLocation(), 222, model.getName(), model.getDescription());
         }
+        mainViewModel.getRoute(markers.get(0).getLocation(), markers.get(1).getLocation());
     }
 }

@@ -98,7 +98,7 @@ public class VolleyConnection {
                     }
                 }
         );
-
+        queue.add(request);
         return routePoints;
     }
 }
