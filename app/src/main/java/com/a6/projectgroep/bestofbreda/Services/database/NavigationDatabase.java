@@ -54,7 +54,7 @@ public abstract class NavigationDatabase extends RoomDatabase{
         @Override
         protected Void doInBackground(Void... voids) {
             multiMediaDAO.insertMultiMedia(new MultimediaModel(new ArrayList<String>(), new ArrayList<String>()));
-            routeDAO.insertRoute(new RouteModel(new ArrayList<Integer>(), "nameOfRoute"));
+            routeDAO.insertRoute(new RouteModel(new ArrayList<Integer>(), "nameOfRoute", false));
             waypointDAO.insertWaypoint(new WayPointModel("nameOfWaypoint", new LatLng(1.2d,3.4d), "waypointDescription", 100,
                     false, false, new MultimediaModel(new ArrayList<String>(), new ArrayList<String>())));
             return null;
