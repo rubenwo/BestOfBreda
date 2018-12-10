@@ -9,7 +9,7 @@ import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
 import java.util.List;
 
 public class MultimediaRepository {
-    private RouteDAO multimediaDAO;
+    private MultimediaDAO multimediaDAO;
     private LiveData<List<MultimediaModel>> mMultiMedia;
 
     public MultimediaRepository(Application application){

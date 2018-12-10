@@ -17,7 +17,7 @@ public class RouteListViewModel extends AndroidViewModel {
 
     public RouteListViewModel(@NonNull Application application) {
         super(application);
-        routes = DatabaseHandler.getInstance(application.getApplicationContext()).routeDAO().getAllRoutes();
+        routes = (ArrayList<RouteModel>) DatabaseHandler.getInstance(application.getApplicationContext()).routeDAO().getAllRoutes().getValue();
         routeModel = new RouteModel(routes.get(0).getRoute(), routes.get(0).getName());
     }
 
@@ -25,7 +25,7 @@ public class RouteListViewModel extends AndroidViewModel {
         //TODO no way dat dit goed werkt zo
         if(routes.size() > routeNumber) {
             routeModel.setRoute(routes.get(routeNumber).getRoute());
-            GoogleMapsAPIManager.getInstance(getApplication().getApplicationContext()).setCurrentRoute(routes.get(routeNumber));
+            GoogleMapsAPIManager.getInstance(getApplication()).setCurrentRoute(routes.get(routeNumber));
         }
         else
             Log.i("[ERROR]", "Route not found, index " + routeNumber + " too high!");
