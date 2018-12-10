@@ -23,6 +23,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     private MainViewModel mainViewModel;
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         googleMap.setMyLocationEnabled(true);
-        ArrayList<WayPointModel> markers = mainViewModel.getAllWaypoints();
+        List<WayPointModel> markers = mainViewModel.getAllWaypointModels().getValue();
 
         for (WayPointModel model: markers) {
             GeoCoderService.getInstance(getApplication()).placeMarker(mMap, model.getLocation(), 222, model.getName(), model.getDescription());

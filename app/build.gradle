@@ -30,5 +30,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     def room_version = "1.1.1"
     implementation "android.arch.persistence.room:runtime:$room_version"
-    implementation "com.google.code.gson:gson:2.8.4"
+    annotationProcessor "android.arch.persistence.room:compiler:$room_version"
+    implementation "com.google.code.gson:gson:2.8.5"
+    implementation 'com.android.volley:volley:1.1.1'
 }
