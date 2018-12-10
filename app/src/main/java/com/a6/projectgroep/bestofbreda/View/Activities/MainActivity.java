@@ -2,6 +2,7 @@ package com.a6.projectgroep.bestofbreda.View.Activities;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -10,12 +11,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.a6.projectgroep.bestofbreda.Model.WayPointModel;
 import com.a6.projectgroep.bestofbreda.R;
+import com.a6.projectgroep.bestofbreda.Services.GeoCoderService;
+import com.a6.projectgroep.bestofbreda.Services.GoogleMapsAPIManager;
 import com.a6.projectgroep.bestofbreda.ViewModel.MainViewModel;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     private MainViewModel mainViewModel;
@@ -73,5 +80,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         googleMap.setMyLocationEnabled(true);
+        ArrayList<WayPointModel> markers = mainViewModel.getAllWaypoints();
+
+        for (WayPointModel model: markers) {
+            GeoCoderService.getInstance(getApplication()).placeMarker(mMap, model.getLocation(), 222, model.getName(), model.getDescription());
+        }
     }
 }
