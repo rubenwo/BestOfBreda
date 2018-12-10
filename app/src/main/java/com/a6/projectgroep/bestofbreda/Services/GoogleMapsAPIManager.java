@@ -19,7 +19,7 @@ public class GoogleMapsAPIManager {
     private WayPointModel currentWaypoint;
     private ArrayList<WayPointModel> waypoints;
 
-    private GoogleMapsAPIManager(Context context) {
+    public GoogleMapsAPIManager(Context context) {
     }
 
     public static GoogleMapsAPIManager getInstance(Context context) {

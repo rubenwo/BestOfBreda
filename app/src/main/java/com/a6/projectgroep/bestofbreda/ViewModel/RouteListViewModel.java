@@ -8,4 +8,6 @@ public class RouteListViewModel extends AndroidViewModel {
     public RouteListViewModel(@NonNull Application application) {
         super(application);
     }
+
+
 }
