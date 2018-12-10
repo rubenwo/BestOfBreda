@@ -28,6 +28,7 @@ public class DatabaseHandler {
         return null;
     }
 
+
     public void PerformQueryOnBackground(Runnable task) {
 
     }
