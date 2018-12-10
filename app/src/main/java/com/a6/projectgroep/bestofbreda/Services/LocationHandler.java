@@ -10,11 +10,13 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class LocationHandler {
     private Application application;
     private LocationManager locationManager;
     private LocationListener locationListener;
-    private Location currentLocation;
+    private LatLng currentLocation;
     private String provider;
     private boolean providerOn;
 
@@ -26,7 +28,7 @@ public class LocationHandler {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                currentLocation = location;
+                currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
                 System.out.println(location.getLatitude());
             }
 
@@ -46,13 +48,17 @@ public class LocationHandler {
                 //Toast.makeText(MapsActivity.this, "Je GPS functie staat niet aan", Toast.LENGTH_LONG).show();
             }
         };
-        if (ActivityCompat.checkSelfPermission(application.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && providerOn) {
+        if (ActivityCompat.checkSelfPermission(application.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(provider, 5, 2, locationListener);
-            currentLocation = locationManager.getLastKnownLocation(provider);
+            currentLocation = new LatLng(locationManager.getLastKnownLocation(provider).getLatitude(),locationManager.getLastKnownLocation(provider).getLongitude());
+            System.out.println(currentLocation);
+            System.out.println(locationManager.getLastKnownLocation(provider));
         }
     }
 
-    public Location getCurrentLocation() {
+    public LatLng getCurrentLocation() {
         return currentLocation;
     }
+
+
 }
