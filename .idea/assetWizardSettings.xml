@@ -19,8 +19,9 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="D:\Maarten\Downloads\ic_nav_termsofservice.png" />
-                                      <entry key="outputName" value="ic_nav_termsofservice" />
+                                      <entry key="imageAsset" value="D:\Maarten\Downloads\ic_detailed_music_white.png" />
+                                      <entry key="outputName" value="ic_detailed_music" />
+                                      <entry key="theme" value="HOLO_DARK" />
                                     </map>
                                   </option>
                                 </PersistentState>

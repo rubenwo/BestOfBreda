@@ -28,7 +28,7 @@
         android:id="@+id/detailedroutefragment_address"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:text="Sight address"
         app:layout_constraintEnd_toEndOf="@+id/detailedroutefragment_sight_name"
         app:layout_constraintStart_toStartOf="@+id/detailedroutefragment_sight_name"
@@ -38,7 +38,7 @@
         android:id="@+id/detailedroutefragment_current_address"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="24dp"
         android:text="Current address"
         app:layout_constraintEnd_toEndOf="@+id/detailedroutefragment_address"
         app:layout_constraintStart_toStartOf="@+id/detailedroutefragment_address"
@@ -48,7 +48,7 @@
         android:id="@+id/detailedroutefragment_total_distance"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginBottom="16dp"
         android:text="total distance"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -66,6 +66,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_directions" />
 
 </android.support.constraint.ConstraintLayout>

@@ -26,6 +26,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/mainactivity_toolbar" />
+
+        <FrameLayout
+            android:id="@+id/mainactivity_detailed_route_placeholder"
+            android:name="com.mpapps.hueapplication.Activities.BridgeFragment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:layout="@layout/fragment_detailed_route" />
     </android.support.constraint.ConstraintLayout>
 
     <android.support.design.widget.NavigationView

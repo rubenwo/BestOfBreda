@@ -7,4 +7,5 @@
     <string name="menu_nav_help">Help</string>
     <string name="menu_nav_termsofservice">Terms of Service</string>
     <string name="menu_toolbar_search">Search</string>
+    <string name="helpactivity_header_instructions">Instructions</string>
 </resources>
