@@ -4,7 +4,6 @@ import android.Manifest;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.pm.PackageManager;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -73,7 +72,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 //TODO navigate to the activities
                 switch (menuItem.getItemId()) {
                     case R.id.menu_nav_sights:
-
+//                        FragmentManager fragmentManager = getSupportFragmentManager();
+//                        Fragment fragment = fragmentManager.findFragmentById(R.id.detailedactivity_videofragment_placeholder);
+//                        if(fragment == null){
+//                            DetailedVideoFragment detailedVideoFragment = new DetailedVideoFragment();
+//                            detailedVideoFragment.show(fragmentManager, "FRAGMENT_ADD_BRIDGE");
+//                        }
                         break;
                     case R.id.menu_nav_routes:
 
