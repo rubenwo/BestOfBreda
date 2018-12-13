@@ -42,15 +42,17 @@ public class VolleyConnection {
     {
         String str_origin = "origin=" + origin.latitude + "," + origin.longitude;       // Detination of route
         String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-        String trafficMode = "mode=walking";
+        //String trafficMode = "mode=walking";
         // trafficMode = "mode=driving";
         // Building the parameters to the web service
-        String parameters = str_origin + "&" + str_dest + "&" + trafficMode;
+        String parameters = str_origin + "&" + str_dest;
         // Output format
         String output = "json";
         // Building the url to the web service
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
-        return url + "&key=AIzaSyAVFvWsRZacQWdZgiRfd8A3T04zfwvmYBE";
+        String url2 = "https://maps.moviecast.io/directions?origin=Disneyland&destination=Universal+Studios+Hollywood&key=YOUR_API_KEY";
+        String url3 = "https://maps.moviecast.io/directions?" + parameters;
+        return url3 + "&key=6f11e342-bdef-434d-98c6-205098f327e9";
     }
 
     public ArrayList<LatLng> getRoute(LatLng origin, LatLng dest)
@@ -66,7 +68,7 @@ public class VolleyConnection {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.i("blindwall", "OK");
+                        Log.i("route", "OK");
                         try {
                             System.out.println(response);
                             JSONArray jsonArray = response.getJSONArray("routes").getJSONArray(2).getJSONArray(2);
@@ -96,7 +98,7 @@ public class VolleyConnection {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.i("blindwall", "NOK");
+                        Log.i("route", "NOK");
                     }
                 }
         );
