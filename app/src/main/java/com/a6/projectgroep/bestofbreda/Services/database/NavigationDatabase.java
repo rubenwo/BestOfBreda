@@ -17,7 +17,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.List;
 
-@Database(entities = {MultimediaModel.class, RouteModel.class, WayPointModel.class}, version = 1)
+@Database(entities = {MultimediaModel.class, RouteModel.class, WayPointModel.class}, version = 2)
 @TypeConverters({Converters.class})
 public abstract class NavigationDatabase extends RoomDatabase {
 
@@ -63,10 +63,10 @@ public abstract class NavigationDatabase extends RoomDatabase {
         @Override
         protected Void doInBackground(Void... voids) {
             List<String> testList = new ArrayList<>();
-            multiMediaDAO.insertMultiMedia(new MultimediaModel(new ArrayList<String>(), new ArrayList<String>()));
+            multiMediaDAO.insertMultiMedia(new MultimediaModel(new ArrayList<String>(), "url"));
             routeDAO.insertRoute(new RouteModel(new ArrayList<Integer>(), "nameOfRoute", false));
-            waypointDAO.insertWaypoint(new WayPointModel("nameOfWaypoint", new LatLng(1.2d, 3.4d), "waypointDescription", 100,
-                    false, false, new MultimediaModel(testList, testList)));
+            waypointDAO.insertWaypoint(new WayPointModel("nameOfWaypoint", new LatLng(1.2d, 3.4d), "waypointDescription",
+                    false, false, new MultimediaModel(testList, "url")));
             return null;
         }
     }
