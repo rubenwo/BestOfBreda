@@ -14,16 +14,14 @@ public class WayPointModel {
     private String name;
     private LatLng location;
     private String description;
-    private int height;
     private boolean alreadySeen;
     private boolean isFavourite;
     private MultimediaModel multimedia;
 
-    public WayPointModel(String name, LatLng location, String description, int height, boolean alreadySeen, boolean isFavourite, MultimediaModel multimedia) {
+    public WayPointModel(String name, LatLng location, String description, boolean alreadySeen, boolean isFavourite, MultimediaModel multimedia) {
         this.name = name;
         this.location = location;
         this.description = description;
-        this.height = height;
         this.alreadySeen = alreadySeen;
         this.isFavourite = isFavourite;
         this.multimedia = multimedia;
@@ -51,14 +49,6 @@ public class WayPointModel {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
     }
 
     public boolean isAlreadySeen() {
