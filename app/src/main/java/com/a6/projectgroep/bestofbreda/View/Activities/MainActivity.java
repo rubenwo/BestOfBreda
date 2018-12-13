@@ -3,6 +3,7 @@ package com.a6.projectgroep.bestofbreda.View.Activities;
 import android.Manifest;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -24,15 +25,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+
 import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.R;
+import com.a6.projectgroep.bestofbreda.Services.BackgroundService;
 import com.a6.projectgroep.bestofbreda.Services.GeoCoderService;
 import com.a6.projectgroep.bestofbreda.Services.LiveLocationListener;
 import com.a6.projectgroep.bestofbreda.Services.RouteReceivedListener;
 import com.a6.projectgroep.bestofbreda.View.Fragments.DetailedRouteFragment;
 import com.a6.projectgroep.bestofbreda.ViewModel.MainViewModel;
+import com.a6.projectgroep.bestofbreda.ViewModel.ViewModelFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
@@ -40,6 +44,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,12 +65,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
         this.savedInstanceState = savedInstanceState;
         askPermission();
+        setupDetailedRouteFragment();
         setupToolbar();
         setupDrawerLayout();
-        //setupDetailedRouteFragment();
         setupViewModel();
-        //Intent intent = new Intent(getApplicationContext(), BackgroundService.class); TODO: aanzetten.
-        //startService(intent);
+        Intent intent = new Intent(getApplicationContext(), BackgroundService.class);
+        startService(intent);
     }
 
     private void setupToolbar() {
@@ -78,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void setupViewModel() {
-        mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mainViewModel = ViewModelProviders.of(this, new ViewModelFactory(getApplication(), this::onLocationChanged)).get(MainViewModel.class);
         mainViewModel.getAllWaypointModels().observe(this, new Observer<List<WaypointModel>>() {
             @Override
             public void onChanged(@Nullable List<WaypointModel> wayPointModels) {
@@ -221,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         googleMap.setMyLocationEnabled(true);
         markers = mainViewModel.getAllRouteWaypoints();
         waypoints = new ArrayList<>();
-        //waypoints.add(mainViewModel.getCurrentPosition());    TODO: later weer aanzetten
+        waypoints.add(mainViewModel.getCurrentPosition());
         if (markers != null) {
             for (WaypointModel model : markers) {
                 if (!model.isAlreadySeen()) {
@@ -234,11 +239,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             polylineOptions.width(10);
             polylineOptions.color(Color.BLUE);
-//            polylineOptions.add(mainViewModel.getCurrentPosition());
+            polylineOptions.add(mainViewModel.getCurrentPosition());
 
-            //TODO: weer aanzetten
-            //mainViewModel.getRoutePoints(waypoints, this);
-            //onLocationChanged(mainViewModel.getCurrentPosition());        TODO: later weer aanzetten
+            mainViewModel.getRoutePoints(waypoints, this);
+            onLocationChanged(mainViewModel.getCurrentPosition());
         }
 
     }
@@ -271,8 +275,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             polylineOptions.width(10);
             polylineOptions.color(Color.BLUE);
-            //TODO: weer aanzetten
-            //mainViewModel.getRoutePoints(waypoints, this);
+            mainViewModel.getRoutePoints(waypoints, this);
         }
     }
 }

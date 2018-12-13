@@ -58,7 +58,6 @@ public abstract class NavigationDatabase extends RoomDatabase {
             waypointDAO = database.waypointDAO();
         }
 
-        //TODO: This is only called when running for the first time after installing for some weird reason..... It needs to run every time the app launches.
         @Override
         protected Void doInBackground(Void... voids) {
             multiMediaDAO.insertMultiMedia(new MultimediaModel(1, Arrays.asList("test", "test2"), "url"));

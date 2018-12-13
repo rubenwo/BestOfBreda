@@ -9,6 +9,7 @@ import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.Services.GoogleMapsAPIManager;
+import com.a6.projectgroep.bestofbreda.Services.LiveLocationListener;
 import com.a6.projectgroep.bestofbreda.Services.RouteReceivedListener;
 import com.a6.projectgroep.bestofbreda.Services.VolleyConnection;
 import com.a6.projectgroep.bestofbreda.Services.database.MultimediaRepository;
@@ -29,9 +30,9 @@ public class MainViewModel extends AndroidViewModel {
     private LiveData<List<RouteModel>> mRouteModels;
     private LiveData<List<MultimediaModel>> mMultiMediaModels;
 
-    public MainViewModel(@NonNull Application application) {
+    public MainViewModel(@NonNull Application application, LiveLocationListener listener) {
         super(application);
-        //mapsApiManager = GoogleMapsAPIManager.getInstance(application, listener); TODO: later weer aanzetten met viewmodel factory
+        mapsApiManager = GoogleMapsAPIManager.getInstance(application, listener);
         waypointRepository = new WaypointRepository(application);
         routeRepository = new RouteRepository(application);
         multimediaRepository = new MultimediaRepository(application);
@@ -94,6 +95,8 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     //endregion
+
+
     public void getRoutePoints(ArrayList<LatLng> waypoints, RouteReceivedListener listener) {
         volleyConnection = VolleyConnection.getInstance(getApplication().getApplicationContext());
         volleyConnection.getRoute(waypoints, listener);
@@ -102,8 +105,9 @@ public class MainViewModel extends AndroidViewModel {
     public List<WaypointModel> getAllRouteWaypoints() {
         return mapsApiManager.getRouteWaypoints(getApplication());
     }
-    //    public LatLng getCurrentPosition() {
-//        return mapsApiManager.getCurrentPosition();
-//    } TODO: aanzetten
+
+    public LatLng getCurrentPosition() {
+        return mapsApiManager.getCurrentPosition();
+    }
 
 }
