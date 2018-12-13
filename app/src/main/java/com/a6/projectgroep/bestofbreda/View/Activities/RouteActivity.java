@@ -11,10 +11,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.a6.projectgroep.bestofbreda.R;
+import com.a6.projectgroep.bestofbreda.ViewModel.Adapters.RoutesRecyclerviewAdapter;
+import com.a6.projectgroep.bestofbreda.ViewModel.RouteListViewModel;
 
 public class RouteActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
+    private RoutesRecyclerviewAdapter adapter;
+    private RouteListViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,7 @@ public class RouteActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
+        adapter = new RoutesRecyclerviewAdapter(getApplicationContext(), viewModel);
     }
 
     @Override

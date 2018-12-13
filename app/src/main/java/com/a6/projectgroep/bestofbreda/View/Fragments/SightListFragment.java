@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.a6.projectgroep.bestofbreda.R;
+import com.a6.projectgroep.bestofbreda.ViewModel.Adapters.SightsRecyclerviewAdapter;
+import com.a6.projectgroep.bestofbreda.ViewModel.SightsListViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,6 +22,8 @@ import com.a6.projectgroep.bestofbreda.R;
 public class SightListFragment extends Fragment {
 
     private RecyclerView recyclerView;
+    private SightsRecyclerviewAdapter adapter;
+    private SightsListViewModel viewModel;
 
     @Nullable
     @Override
@@ -36,7 +40,8 @@ public class SightListFragment extends Fragment {
         recyclerView = view.findViewById(R.id.sightlistfragment_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-//        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
-
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
+        adapter = new SightsRecyclerviewAdapter(getContext(), viewModel);
+        recyclerView.setAdapter(adapter);
     }
 }
