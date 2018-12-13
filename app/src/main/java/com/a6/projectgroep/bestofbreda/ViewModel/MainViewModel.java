@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 
 import com.a6.projectgroep.bestofbreda.Model.WayPointModel;
 import com.a6.projectgroep.bestofbreda.Services.GoogleMapsAPIManager;
+import com.a6.projectgroep.bestofbreda.Services.RouteReceivedListener;
 import com.a6.projectgroep.bestofbreda.Services.VolleyConnection;
 import com.a6.projectgroep.bestofbreda.Services.database.WaypointRepository;
 import com.google.android.gms.maps.model.LatLng;
@@ -24,7 +25,6 @@ public class MainViewModel extends AndroidViewModel {
     public MainViewModel(@NonNull Application application) {
         super(application);
         mapsApiManager = GoogleMapsAPIManager.getInstance(application);
-        volleyConnection = VolleyConnection.getInstance(application.getApplicationContext());
         repository = new WaypointRepository(application);
         liveData = repository.getAllTestData();
     }
@@ -53,9 +53,10 @@ public class MainViewModel extends AndroidViewModel {
         return mapsApiManager.getRouteWaypoints(getApplication());
     }
 
-    public ArrayList<LatLng> getRoute(LatLng origin, LatLng dest)
+    public void getRoutePoints(ArrayList<LatLng> waypoints, RouteReceivedListener listener)
     {
-        return volleyConnection.getRoute(origin, dest);
+        volleyConnection = VolleyConnection.getInstance(getApplication().getApplicationContext(), listener);
+        volleyConnection.getRoute(waypoints);
     }
 
 }

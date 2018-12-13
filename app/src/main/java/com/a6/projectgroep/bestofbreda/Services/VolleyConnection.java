@@ -23,29 +23,38 @@ public class VolleyConnection {
 
     RequestQueue queue;
     public static VolleyConnection volleyConnection;
+    private RouteReceivedListener routeReceivedListener;
 
-    private VolleyConnection(Context context)
+    private VolleyConnection(Context context, RouteReceivedListener routeReceivedListener)
     {
         queue = Volley.newRequestQueue(context);
+        this.routeReceivedListener = routeReceivedListener;
     }
 
-    public static VolleyConnection getInstance(Context context)
+    public static VolleyConnection getInstance(Context context, RouteReceivedListener routeReceivedListener)
     {
         if(volleyConnection == null)
         {
-            volleyConnection = new VolleyConnection(context);
+            volleyConnection = new VolleyConnection(context, routeReceivedListener);
         }
         return volleyConnection;
     }
 
-    public String getRouteURL(LatLng origin, LatLng dest)
+    public String getRouteURL(ArrayList<LatLng> waypoints)
     {
-        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;       // Detination of route
-        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-        //String trafficMode = "mode=walking";
+        String str_origin = "origin=" + waypoints.get(0).latitude + "," + waypoints.get(0).longitude;       // Detination of route
+        String str_dest = "destination=" + waypoints.get(waypoints.size()-1).latitude + "," + waypoints.get(waypoints.size()-1).longitude;
+        String str_waypoint = "waypoints=";
+        for(int i = 1; i < waypoints.size()-2; i++)
+        {
+            str_waypoint += "via:" + waypoints.get(i).latitude + "," + waypoints.get(i).longitude + "|";
+        }
+        str_waypoint += "via:" + waypoints.get(waypoints.size()-2).latitude + "," + waypoints.get(waypoints.size()-2).longitude;
+
+        String trafficMode = "mode=walking";
         // trafficMode = "mode=driving";
         // Building the parameters to the web service
-        String parameters = str_origin + "&" + str_dest;
+        String parameters = str_origin + "&" + str_dest + "&" + trafficMode + "&" + str_waypoint;
         // Output format
         String output = "json";
         // Building the url to the web service
@@ -55,54 +64,35 @@ public class VolleyConnection {
         return url3 + "&key=6f11e342-bdef-434d-98c6-205098f327e9";
     }
 
-    public ArrayList<LatLng> getRoute(LatLng origin, LatLng dest)
+    public void getRoute(ArrayList<LatLng> waypoints)
     {
-        String url = getRouteURL(origin, dest);
-        ArrayList<LatLng> routePoints = new ArrayList<>();
-        final JsonObjectRequest request = new JsonObjectRequest(
+        String url = getRouteURL(waypoints);
+        JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
                 url,
                 null,
-
-                new Response.Listener<JSONObject>(){
-
+                new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.i("route", "OK");
                         try {
                             System.out.println(response);
-                            JSONArray jsonArray = response.getJSONArray("routes").getJSONArray(2).getJSONArray(2);
-                            for( int idx = 0; idx < jsonArray.length(); idx++) {
-                                LatLng latLng = new LatLng(1,1);
-//                                String author = response.getJSONObject(idx).getString("author");
-//                                String desc = response.getJSONObject(idx).getJSONObject("description").getString("nl");
-//                                String desc2 = response.getJSONObject(idx).getJSONObject("description").getString("en");
-//                                JSONArray images = response.getJSONObject(idx).getJSONArray("images");
-//                                String material = response.getJSONObject(idx).getJSONObject("material").getString("nl");
-//                                String adress = response.getJSONObject(idx).getString("address");
-//                                String fotograaf = response.getJSONObject(idx).getString("photographer");
-//                                int index = new Random().nextInt(images.length());
-//
-//                                String imageUrl = "https://api.blindwalls.gallery/" +
-//                                        images.getJSONObject(index).getString("url");
-
-
+                            JSONArray jsonArray = response.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONArray("steps");
+                            for (int idx = 0; idx < jsonArray.length(); idx++) {
+                                LatLng latLng = new LatLng(jsonArray.getJSONObject(idx).getJSONObject("end_location").getDouble("lat"), jsonArray.getJSONObject(idx).getJSONObject("end_location").getDouble("lng"));
+                                routeReceivedListener.onRoutePointReceived(latLng);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
-                },
-
-                new Response.ErrorListener(){
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.i("route", "NOK");
-                    }
-                }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("route", "NOK");
+            }
+        }
         );
         queue.add(request);
-        return routePoints;
     }
 }

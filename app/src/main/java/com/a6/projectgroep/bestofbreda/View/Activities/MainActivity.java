@@ -1,9 +1,11 @@
 package com.a6.projectgroep.bestofbreda.View.Activities;
 
 import android.Manifest;
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,21 +29,26 @@ import android.widget.Toast;
 import com.a6.projectgroep.bestofbreda.Model.WayPointModel;
 import com.a6.projectgroep.bestofbreda.R;
 import com.a6.projectgroep.bestofbreda.Services.GeoCoderService;
+import com.a6.projectgroep.bestofbreda.Services.RouteReceivedListener;
 import com.a6.projectgroep.bestofbreda.View.Fragments.DetailedRouteFragment;
 import com.a6.projectgroep.bestofbreda.ViewModel.MainViewModel;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, RouteReceivedListener {
     private static final int GPS_REQUEST = 50;
     private MainViewModel mainViewModel;
     private DrawerLayout drawerLayout;
     private MapView mMapView;
     private GoogleMap googleMap;
+    private PolylineOptions polylineOptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             e.printStackTrace();
         }
         mMapView.getMapAsync(this);
+        polylineOptions = new PolylineOptions();
     }
 
     private void askPermission() {
@@ -167,12 +175,26 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         googleMap.setMyLocationEnabled(true);
-        List<WayPointModel> markers = mainViewModel.getAllWaypointModels().getValue();
+        List<WayPointModel> markers = mainViewModel.getAllWaypoints();
+        ArrayList<LatLng> waypoints = new ArrayList<>();
+        waypoints.add(mainViewModel.getCurrentPosition());
+        polylineOptions.add(waypoints.get(0));
         if(markers != null){
             for (WayPointModel model: markers) {
                 GeoCoderService.getInstance(getApplication()).placeMarker(mMap, model.getLocation(), 222, model.getName(), model.getDescription());
+                waypoints.add(model.getLocation());
             }
-            mainViewModel.getRoute(markers.get(0).getLocation(), markers.get(1).getLocation());
+            polylineOptions.width(10);
+            polylineOptions.color(Color.BLUE);
+//            polylineOptions.add(mainViewModel.getCurrentPosition());
+
+            mainViewModel.getRoutePoints(waypoints, this);
         }
+    }
+
+    @Override
+    public void onRoutePointReceived(LatLng latLng) {
+        polylineOptions.add(latLng);
+        googleMap.addPolyline(polylineOptions);
     }
 }
