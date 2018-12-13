@@ -4,16 +4,20 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.location.Location;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
+import com.a6.projectgroep.bestofbreda.Model.WayPointModel;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BackgroundService extends IntentService implements LiveLocationListener {
 
-    private LocationHandler locationHandler;
-    private ArrayList<LatLng> positions;
+    private GoogleMapsAPIManager googleMapsAPIManager;
+    private List<WayPointModel> wayPoints;
+    private PushNotification pushNotification;
 
     public BackgroundService(String name) {
         super(name);
@@ -25,17 +29,31 @@ public class BackgroundService extends IntentService implements LiveLocationList
 
     @Override
     protected void onHandleIntent(Intent workIntent) {
-        locationHandler = LocationHandler.getInstance(getApplication(), this);
-        positions = new ArrayList<>();
+        googleMapsAPIManager = GoogleMapsAPIManager.getInstance(getApplication(), this);
+        wayPoints = googleMapsAPIManager.getRouteWaypoints(getApplication());
+        pushNotification = PushNotification.getInstance(getApplicationContext());
+
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
-                    if(locationHandler != null) {
-                        positions.add(locationHandler.getCurrentLocation());
-                        Log.d("background", String.valueOf(positions.size()));
+                    LatLng currentPosition = googleMapsAPIManager.getCurrentPosition();
+                    Location currentLocation = new Location("currentLocation");
+                    currentLocation.setLatitude(currentPosition.latitude);
+                    currentLocation.setLongitude(currentPosition.longitude);
+                    for(WayPointModel wayPointModel : wayPoints)
+                    {
+                        Location wayPointLocation = new Location("WayPointLocation");
+                        wayPointLocation.setLongitude(wayPointModel.getLocation().longitude);
+                        wayPointLocation.setLatitude(wayPointModel.getLocation().latitude);
+                        if(currentLocation.distanceTo(wayPointLocation) < 200)
+                        {
+                            if(!wayPointModel.isAlreadySeen()) {
+                                pushNotification.SendSightNotification(wayPointModel.getName(), wayPointModel.getDescription(), getApplicationContext());
+                                wayPointModel.setAlreadySeen(true);
+                            }
+                        }
                     }
-
                     try {
                         Thread.sleep(2000);
                     } catch (InterruptedException e) {

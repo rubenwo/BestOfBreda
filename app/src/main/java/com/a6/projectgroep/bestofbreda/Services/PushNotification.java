@@ -38,4 +38,15 @@ public class PushNotification {
 
         managerCompat.notify(1, notification);
     }
+
+    public void SendSightNotification(String sightName, String sightDescription, Context context) {
+        Notification notification = new NotificationCompat.Builder(context, CHANNEL_SIGHT_PASSED_ID)
+                .setSmallIcon(R.drawable.ic_nav_sights)
+                .setContentTitle(sightName)
+                .setContentText(sightDescription)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .build();
+
+        managerCompat.notify(1, notification);
+    }
 }
