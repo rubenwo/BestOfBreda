@@ -21,7 +21,7 @@ public class RouteModel {
         this.done = done;
     }
 
-    public List<Integer> getRoute() {
+    public List<Integer> getWaypointList() {
         return route;
     }
 

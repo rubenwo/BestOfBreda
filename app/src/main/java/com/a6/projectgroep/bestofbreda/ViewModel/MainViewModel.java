@@ -49,8 +49,8 @@ public class MainViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public ArrayList<WayPointModel> getAllWaypoints(){
-        return mapsApiManager.getRouteWaypoints(getApplication());
+    public List<WayPointModel> getAllRouteWaypoints(){
+        return mapsApiManager.getRouteWaypoints();
     }
 
     public void getRoutePoints(ArrayList<LatLng> waypoints, RouteReceivedListener listener)

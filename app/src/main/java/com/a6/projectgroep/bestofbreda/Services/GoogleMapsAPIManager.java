@@ -9,6 +9,7 @@ import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GoogleMapsAPIManager {
     private static GoogleMapsAPIManager instance;
@@ -20,7 +21,7 @@ public class GoogleMapsAPIManager {
     private ArrayList<WayPointModel> waypoints;
     private LocationHandler locationHandler;
 
-    public GoogleMapsAPIManager(Application application) {
+    private GoogleMapsAPIManager(Application application) {
         locationHandler = new LocationHandler(application);
     }
 
@@ -38,16 +39,20 @@ public class GoogleMapsAPIManager {
         this.currentRoute = route;
     }
 
-    public ArrayList<WayPointModel> getRouteWaypoints(Application application) {
-        ArrayList<WayPointModel> testWayPoints = new ArrayList<>();
-        testWayPoints.add(new WayPointModel("avans breda", GeoCoderService.getInstance(application).getLocationFromName("Avans breda"), "", 0, false, false, null));
-        testWayPoints.add(new WayPointModel("casino", GeoCoderService.getInstance(application).getLocationFromName("holland casino breda"), "", 0, false, false, null));
-        testWayPoints.add(new WayPointModel("station breda", GeoCoderService.getInstance(application).getLocationFromName("station breda"), "", 0, false, false, null));
-        return testWayPoints;
+    public List<WayPointModel> getRouteWaypoints() {
+//        List<WayPointModel> testWayPoints = new ArrayList<>();
+//        testWayPoints.add(new WayPointModel("avans breda", GeoCoderService.getInstance(application).getLocationFromName("Avans breda"), "", 0, false, false, null));
+//        testWayPoints.add(new WayPointModel("casino", GeoCoderService.getInstance(application).getLocationFromName("holland casino breda"), "", 0, false, false, null));
+//        testWayPoints.add(new WayPointModel("station breda", GeoCoderService.getInstance(application).getLocationFromName("station breda"), "", 0, false, false, null));
+        return currentRoute.getWaypointList();
     }
 
     public WayPointModel getCurrentWaypoint() {
         return this.currentWaypoint;
+    }
+
+    public void SetCurrentWaypoint(WayPointModel currentWaypoint){
+        this.currentWaypoint = currentWaypoint;
     }
 
     public LatLng getCurrentPosition() {
