@@ -3,6 +3,7 @@ package com.a6.projectgroep.bestofbreda.View.Activities;
 import android.Manifest;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 
 import com.a6.projectgroep.bestofbreda.Model.WayPointModel;
 import com.a6.projectgroep.bestofbreda.R;
+import com.a6.projectgroep.bestofbreda.Services.BackgroundService;
 import com.a6.projectgroep.bestofbreda.Services.GeoCoderService;
 import com.a6.projectgroep.bestofbreda.Services.LiveLocationListener;
 import com.a6.projectgroep.bestofbreda.Services.RouteReceivedListener;
@@ -120,6 +122,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         mMapView.getMapAsync(this);
         polylineOptions = new PolylineOptions();
+
+        Intent intent = new Intent(getApplicationContext(),BackgroundService.class);
+        startService(intent);
     }
 
     private void askPermission() {
@@ -201,6 +206,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             mainViewModel.getRoutePoints(waypoints, this);
             onLocationChanged(mainViewModel.getCurrentPosition());
         }
+
     }
 
     @Override

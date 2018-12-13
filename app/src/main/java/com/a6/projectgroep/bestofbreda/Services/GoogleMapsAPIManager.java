@@ -24,7 +24,7 @@ public class GoogleMapsAPIManager {
     private LocationHandler locationHandler;
 
     private GoogleMapsAPIManager(Application application, LiveLocationListener listener) {
-        locationHandler = new LocationHandler(application, listener);
+        locationHandler = LocationHandler.getInstance(application, listener);
     }
 
     public static GoogleMapsAPIManager getInstance(Application application, LiveLocationListener listener) {

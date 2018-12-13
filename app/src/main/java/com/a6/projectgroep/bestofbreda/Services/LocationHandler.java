@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 
 public class LocationHandler {
+    private static LocationHandler instance;
     private Application application;
     private LocationManager locationManager;
     private LocationListener locationListener;
@@ -21,7 +22,16 @@ public class LocationHandler {
     private String provider;
     private boolean providerOn;
 
-    public LocationHandler(Application application, LiveLocationListener liveLocationListener) {
+    public static LocationHandler getInstance(Application application, LiveLocationListener liveLocationListener)
+    {
+        if(instance == null)
+        {
+            instance = new LocationHandler(application, liveLocationListener);
+        }
+        return instance;
+    }
+
+    private LocationHandler(Application application, LiveLocationListener liveLocationListener) {
         this.application = application;
         provider = LocationManager.NETWORK_PROVIDER;
         locationManager = (LocationManager) application.getSystemService(Context.LOCATION_SERVICE);
