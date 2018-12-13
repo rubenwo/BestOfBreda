@@ -2,6 +2,7 @@ package com.a6.projectgroep.bestofbreda.Model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;

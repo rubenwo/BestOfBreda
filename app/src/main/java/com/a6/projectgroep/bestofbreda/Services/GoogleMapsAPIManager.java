@@ -23,13 +23,13 @@ public class GoogleMapsAPIManager {
     private ArrayList<WayPointModel> waypoints;
     private LocationHandler locationHandler;
 
-    private GoogleMapsAPIManager(Application application, LiveLocationListener listener) {
-        locationHandler = LocationHandler.getInstance(application, listener);
+    private GoogleMapsAPIManager(Application application) {
+        locationHandler = LocationHandler.getInstance(application);
     }
 
-    public static GoogleMapsAPIManager getInstance(Application application, LiveLocationListener listener) {
+    public static GoogleMapsAPIManager getInstance(Application application) {
         if (instance == null)
-            instance = new GoogleMapsAPIManager(application, listener);
+            instance = new GoogleMapsAPIManager(application);
         return instance;
     }
 

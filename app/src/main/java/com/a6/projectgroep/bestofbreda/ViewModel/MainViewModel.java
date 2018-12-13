@@ -23,27 +23,11 @@ public class MainViewModel extends AndroidViewModel {
     private WaypointRepository repository;
     private LiveData<List<WayPointModel>> liveData;
 
-    public MainViewModel(@NonNull Application application, LiveLocationListener listener) {
+    public MainViewModel(@NonNull Application application) {
         super(application);
-        mapsApiManager = GoogleMapsAPIManager.getInstance(application, listener);
+        mapsApiManager = GoogleMapsAPIManager.getInstance(application);
         repository = new WaypointRepository(application);
         liveData = repository.getAllTestData();
-    }
-
-    public LatLng getCurrentPosition() {
-        return mapsApiManager.getCurrentPosition();
-    }
-
-    public void insertWayPointModel(WayPointModel model) {
-        repository.insertMultiMedia(model);
-    }
-
-    public void updateWayPointModel(WayPointModel model) {
-        repository.updateTestData(model);
-    }
-
-    public void deleteWayPointModel(WayPointModel model) {
-        repository.deleteTestData(model);
     }
 
     public LiveData<List<WayPointModel>> getAllWaypointModels() {

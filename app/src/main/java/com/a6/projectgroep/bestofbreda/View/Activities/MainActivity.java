@@ -31,21 +31,24 @@ import com.a6.projectgroep.bestofbreda.R;
 import com.a6.projectgroep.bestofbreda.Services.BackgroundService;
 import com.a6.projectgroep.bestofbreda.Services.GeoCoderService;
 import com.a6.projectgroep.bestofbreda.Services.LiveLocationListener;
+import com.a6.projectgroep.bestofbreda.Services.LocationHandler;
 import com.a6.projectgroep.bestofbreda.Services.RouteReceivedListener;
 import com.a6.projectgroep.bestofbreda.View.Fragments.DetailedRouteFragment;
 import com.a6.projectgroep.bestofbreda.ViewModel.MainViewModel;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, RouteReceivedListener, LiveLocationListener {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, RouteReceivedListener, LiveLocationListener, GoogleMap.OnInfoWindowClickListener {
     private static final int GPS_REQUEST = 50;
     private MainViewModel mainViewModel;
     private DrawerLayout drawerLayout;
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private PolylineOptions polylineOptions;
     private List<WayPointModel> markers;
     private ArrayList<LatLng> waypoints;
+    private LocationHandler locationHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +65,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
 
         askPermission();
-//        mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        mainViewModel = new MainViewModel(getApplication(), this);
+        mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        locationHandler = LocationHandler.getInstance(getApplication(), this);
         mainViewModel.getAllWaypointModels().observe(this, new Observer<List<WayPointModel>>() {
             @Override
             public void onChanged(@Nullable List<WayPointModel> wayPointModels) {
@@ -109,7 +113,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         DetailedRouteFragment detailedRouteFragment = new DetailedRouteFragment();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.mainactivity_detailed_route_placeholder, detailedRouteFragment).addToBackStack(null).commit();
-        mainViewModel = new MainViewModel(getApplication(), this);
 
         mMapView = findViewById(R.id.mainactivity_map_view);
         mMapView.onCreate(savedInstanceState);
@@ -185,9 +188,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         googleMap.setMyLocationEnabled(true);
+        googleMap.setOnInfoWindowClickListener(this);
+
         markers = mainViewModel.getAllRouteWaypoints();
         waypoints = new ArrayList<>();
-        waypoints.add(mainViewModel.getCurrentPosition());
+        waypoints.add(locationHandler.getCurrentLocation());
         if (markers != null) {
             for (WayPointModel model : markers) {
                 if(!model.isAlreadySeen()) {
@@ -201,10 +206,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             polylineOptions.width(10);
             polylineOptions.color(Color.BLUE);
-//            polylineOptions.add(mainViewModel.getCurrentPosition());
 
             mainViewModel.getRoutePoints(waypoints, this);
-            onLocationChanged(mainViewModel.getCurrentPosition());
         }
 
     }
@@ -229,16 +232,36 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             for (WayPointModel model : markers) {
                 if(!model.isAlreadySeen()) {
                     GeoCoderService.getInstance(getApplication())
-                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_RED, model.getName(), model.getDescription());
+                            .placeMarker(googleMap,
+                                    model.getLocation(),
+                                    BitmapDescriptorFactory.HUE_RED,
+                                    model.getName(),
+                                    model.getDescription());
                     waypoints.add(model.getLocation());
                 }
                 else
                     GeoCoderService.getInstance(getApplication())
-                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_GREEN, model.getName(), model.getDescription());
+                            .placeMarker(googleMap,
+                                    model.getLocation(),
+                                    BitmapDescriptorFactory.HUE_GREEN,
+                                    model.getName(),
+                                    model.getDescription());
             }
             polylineOptions.width(10);
             polylineOptions.color(Color.BLUE);
             mainViewModel.getRoutePoints(waypoints, this);
         }
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Intent detailedIntent = new Intent(this, DetailedActivity.class);
+        for (WayPointModel model : markers) {
+            if(model.getLocation().equals(marker.getPosition())) {
+                detailedIntent.putExtra("MARKERNUMBER", markers.indexOf(model));
+                break;
+            }
+        }
+        startActivity(detailedIntent);
     }
 }

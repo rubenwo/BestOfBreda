@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
+import com.a6.projectgroep.bestofbreda.View.Activities.MainActivity;
 import com.google.android.gms.maps.model.LatLng;
 
 public class LocationHandler {
@@ -24,9 +25,21 @@ public class LocationHandler {
 
     public static LocationHandler getInstance(Application application, LiveLocationListener liveLocationListener)
     {
-        if(instance == null)
-        {
+        if(instance == null) {
             instance = new LocationHandler(application, liveLocationListener);
+        }
+        return instance;
+    }
+
+    public static LocationHandler getInstance(Application application)
+    {
+        if(instance == null) {
+            instance = new LocationHandler(application, new LiveLocationListener() {
+                @Override
+                public void onLocationChanged(LatLng latLng) {
+
+                }
+            });
         }
         return instance;
     }
