@@ -6,16 +6,37 @@
     android:layout_height="match_parent"
     tools:context=".View.Activities.DetailedActivity">
 
-    <ImageView
-        android:id="@+id/imageView"
+    <!--<ImageView-->
+        <!--android:id="@+id/imageView"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:scaleType="centerCrop"-->
+        <!--app:layout_constraintBottom_toTopOf="@+id/detailedactivity_guideline"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent"-->
+        <!--app:srcCompat="@color/colorAccent" />-->
+    <android.support.v4.view.ViewPager
+        android:id="@+id/detailedactivity_viewpager"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/detailedactivity_guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@color/colorAccent" />
+        />
+    <com.viewpagerindicator.CirclePageIndicator
+        android:id="@+id/detailedactivity_circlepageindicator"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/detailedactivity_guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:padding="10dip"
+        app:centered="true"
+        app:fillColor="@color/colorPrimaryLight"
+        app:pageColor="@color/colorAccent"
+        app:snap="false"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/detailedactivity_guideline"
