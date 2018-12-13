@@ -50,13 +50,13 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public List<WayPointModel> getAllRouteWaypoints(){
-        return mapsApiManager.getRouteWaypoints();
+        return mapsApiManager.getRouteWaypoints(getApplication());
     }
 
     public void getRoutePoints(ArrayList<LatLng> waypoints, RouteReceivedListener listener)
     {
-        volleyConnection = VolleyConnection.getInstance(getApplication().getApplicationContext(), listener);
-        volleyConnection.getRoute(waypoints);
+        volleyConnection = VolleyConnection.getInstance(getApplication().getApplicationContext());
+        volleyConnection.getRoute(waypoints, listener);
     }
 
 }

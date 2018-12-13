@@ -8,19 +8,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
-import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.gson.JsonArray;
 
 public class VolleyConnection {
 
@@ -28,17 +23,16 @@ public class VolleyConnection {
     public static VolleyConnection volleyConnection;
     private RouteReceivedListener routeReceivedListener;
 
-    private VolleyConnection(Context context, RouteReceivedListener routeReceivedListener)
+    private VolleyConnection(Context context)
     {
         queue = Volley.newRequestQueue(context);
-        this.routeReceivedListener = routeReceivedListener;
     }
 
-    public static VolleyConnection getInstance(Context context, RouteReceivedListener routeReceivedListener)
+    public static VolleyConnection getInstance(Context context)
     {
         if(volleyConnection == null)
         {
-            volleyConnection = new VolleyConnection(context, routeReceivedListener);
+            volleyConnection = new VolleyConnection(context);
         }
         return volleyConnection;
     }
@@ -67,9 +61,10 @@ public class VolleyConnection {
         return url3 + "&key=6f11e342-bdef-434d-98c6-205098f327e9";
     }
 
-    public void getRoute(ArrayList<LatLng> waypoints)
+    public void getRoute(ArrayList<LatLng> waypoints, RouteReceivedListener listener)
     {
         String url = getRouteURL(waypoints);
+        routeReceivedListener = listener;
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
                 url,
@@ -94,8 +89,7 @@ public class VolleyConnection {
             public void onErrorResponse(VolleyError error) {
                 Log.i("route", "NOK");
             }
-        }
-        );
+        });
         queue.add(request);
     }
 }

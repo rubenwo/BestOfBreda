@@ -29,7 +29,7 @@ public class LocationHandler {
             @Override
             public void onLocationChanged(Location location) {
                 currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                System.out.println(location.getLatitude());
+
             }
 
             @Override

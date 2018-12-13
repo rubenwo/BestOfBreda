@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         googleMap.setMyLocationEnabled(true);
-        List<WayPointModel> markers = mainViewModel.getAllWaypoints();
+        List<WayPointModel> markers = mainViewModel.getAllRouteWaypoints();
         ArrayList<LatLng> waypoints = new ArrayList<>();
         waypoints.add(mainViewModel.getCurrentPosition());
         polylineOptions.add(waypoints.get(0));
