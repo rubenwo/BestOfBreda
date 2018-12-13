@@ -7,7 +7,10 @@ import android.support.annotation.NonNull;
 
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Services.GoogleMapsAPIManager;
+import com.a6.projectgroep.bestofbreda.Services.LiveLocationListener;
 import com.a6.projectgroep.bestofbreda.Services.database.RouteRepository;
+import com.a6.projectgroep.bestofbreda.View.Activities.MainActivity;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
@@ -22,9 +25,12 @@ public class RouteListViewModel extends AndroidViewModel {
     }
 
     public void selectRoute(int routeNumber) {
-        //TODO no way dat dit goed werkt zo
-        //Dat klopt :P
-        GoogleMapsAPIManager.getInstance(getApplication()).setCurrentRoute(repository.getAllTestData().getValue().get(routeNumber));
+        GoogleMapsAPIManager.getInstance(getApplication(), new LiveLocationListener() {
+            @Override
+            public void onLocationChanged(LatLng latLng) {
+
+            }
+        }).setCurrentRoute(repository.getAllTestData().getValue().get(routeNumber));
     }
 
     public void insertRouteModel(RouteModel model) {

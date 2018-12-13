@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 
 import com.a6.projectgroep.bestofbreda.Model.WayPointModel;
 import com.a6.projectgroep.bestofbreda.Services.GoogleMapsAPIManager;
+import com.a6.projectgroep.bestofbreda.Services.LiveLocationListener;
 import com.a6.projectgroep.bestofbreda.Services.RouteReceivedListener;
 import com.a6.projectgroep.bestofbreda.Services.VolleyConnection;
 import com.a6.projectgroep.bestofbreda.Services.database.WaypointRepository;
@@ -22,9 +23,9 @@ public class MainViewModel extends AndroidViewModel {
     private WaypointRepository repository;
     private LiveData<List<WayPointModel>> liveData;
 
-    public MainViewModel(@NonNull Application application) {
+    public MainViewModel(@NonNull Application application, LiveLocationListener listener) {
         super(application);
-        mapsApiManager = GoogleMapsAPIManager.getInstance(application);
+        mapsApiManager = GoogleMapsAPIManager.getInstance(application, listener);
         repository = new WaypointRepository(application);
         liveData = repository.getAllTestData();
     }
@@ -49,14 +50,14 @@ public class MainViewModel extends AndroidViewModel {
         return liveData;
     }
 
-    public ArrayList<WayPointModel> getAllWaypoints(){
+    public List<WayPointModel> getAllRouteWaypoints(){
         return mapsApiManager.getRouteWaypoints(getApplication());
     }
 
     public void getRoutePoints(ArrayList<LatLng> waypoints, RouteReceivedListener listener)
     {
-        volleyConnection = VolleyConnection.getInstance(getApplication().getApplicationContext(), listener);
-        volleyConnection.getRoute(waypoints);
+        volleyConnection = VolleyConnection.getInstance(getApplication().getApplicationContext());
+        volleyConnection.getRoute(waypoints, listener);
     }
 
 }

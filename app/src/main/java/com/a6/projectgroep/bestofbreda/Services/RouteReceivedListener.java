@@ -4,5 +4,5 @@ import com.google.android.gms.maps.model.LatLng;
 
 public interface RouteReceivedListener {
 
-    public void onRoutePointReceived(LatLng latLng);
+    void onRoutePointReceived(LatLng latLng);
 }

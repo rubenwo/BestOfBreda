@@ -13,6 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <service
+            android:name=".Services.BackgroundService"
+            android:exported="false"/>
+
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyAVFvWsRZacQWdZgiRfd8A3T04zfwvmYBE"/>
         <activity android:name=".View.Activities.MainActivity">
             <intent-filter>
@@ -26,6 +31,9 @@
 
         </activity>
         <activity android:name=".View.Activities.HelpActivity"></activity>
+
+
+
     </application>
 
 </manifest>
