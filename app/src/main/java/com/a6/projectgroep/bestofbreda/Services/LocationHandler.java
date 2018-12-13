@@ -9,6 +9,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -20,7 +21,7 @@ public class LocationHandler {
     private String provider;
     private boolean providerOn;
 
-    public LocationHandler(Application application) {
+    public LocationHandler(Application application, LiveLocationListener liveLocationListener) {
         this.application = application;
         provider = LocationManager.NETWORK_PROVIDER;
         locationManager = (LocationManager) application.getSystemService(Context.LOCATION_SERVICE);
@@ -29,7 +30,7 @@ public class LocationHandler {
             @Override
             public void onLocationChanged(Location location) {
                 currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-
+                liveLocationListener.onLocationChanged(new LatLng(location.getLatitude(), location.getLongitude()));
             }
 
             @Override
@@ -45,15 +46,13 @@ public class LocationHandler {
             @Override
             public void onProviderDisabled(String provider) {
                 providerOn = false;
-                //Toast.makeText(MapsActivity.this, "Je GPS functie staat niet aan", Toast.LENGTH_LONG).show();
+                Toast.makeText(application.getApplicationContext(), "Je GPS functie staat niet aan", Toast.LENGTH_LONG).show();
             }
         };
         if (ActivityCompat.checkSelfPermission(application.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (locationManager.getLastKnownLocation(provider) != null) {
                 locationManager.requestLocationUpdates(provider, 5, 2, locationListener);
                 currentLocation = new LatLng(locationManager.getLastKnownLocation(provider).getLatitude(), locationManager.getLastKnownLocation(provider).getLongitude());
-                System.out.println(currentLocation);
-                System.out.println(locationManager.getLastKnownLocation(provider));
             }
         }
     }

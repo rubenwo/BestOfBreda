@@ -39,7 +39,8 @@ public class VolleyConnection {
 
     public String getRouteURL(ArrayList<LatLng> waypoints)
     {
-        String str_origin = "origin=" + waypoints.get(0).latitude + "," + waypoints.get(0).longitude;       // Detination of route
+        // Origin, destination and waypoints of route
+        String str_origin = "origin=" + waypoints.get(0).latitude + "," + waypoints.get(0).longitude;
         String str_dest = "destination=" + waypoints.get(waypoints.size()-1).latitude + "," + waypoints.get(waypoints.size()-1).longitude;
         String str_waypoint = "waypoints=";
         for(int i = 1; i < waypoints.size()-2; i++)
@@ -49,16 +50,13 @@ public class VolleyConnection {
         str_waypoint += "via:" + waypoints.get(waypoints.size()-2).latitude + "," + waypoints.get(waypoints.size()-2).longitude;
 
         String trafficMode = "mode=walking";
-        // trafficMode = "mode=driving";
-        // Building the parameters to the web service
+
+        // Building the parameters to the web service
         String parameters = str_origin + "&" + str_dest + "&" + trafficMode + "&" + str_waypoint;
-        // Output format
-        String output = "json";
+
         // Building the url to the web service
-        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
-        String url2 = "https://maps.moviecast.io/directions?origin=Disneyland&destination=Universal+Studios+Hollywood&key=YOUR_API_KEY";
-        String url3 = "https://maps.moviecast.io/directions?" + parameters;
-        return url3 + "&key=6f11e342-bdef-434d-98c6-205098f327e9";
+        String url3 = "https://maps.moviecast.io/directions?" + parameters + "&key=6f11e342-bdef-434d-98c6-205098f327e9";
+        return url3;
     }
 
     public void getRoute(ArrayList<LatLng> waypoints, RouteReceivedListener listener)

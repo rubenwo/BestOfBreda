@@ -1,7 +1,9 @@
 package com.a6.projectgroep.bestofbreda.Services;
 
 import android.app.Application;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.support.annotation.Nullable;
 
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WayPointModel;
@@ -21,13 +23,13 @@ public class GoogleMapsAPIManager {
     private ArrayList<WayPointModel> waypoints;
     private LocationHandler locationHandler;
 
-    private GoogleMapsAPIManager(Application application) {
-        locationHandler = new LocationHandler(application);
+    private GoogleMapsAPIManager(Application application, LiveLocationListener listener) {
+        locationHandler = new LocationHandler(application, listener);
     }
 
-    public static GoogleMapsAPIManager getInstance(Application application) {
+    public static GoogleMapsAPIManager getInstance(Application application, LiveLocationListener listener) {
         if (instance == null)
-            instance = new GoogleMapsAPIManager(application);
+            instance = new GoogleMapsAPIManager(application, listener);
         return instance;
     }
 
@@ -60,6 +62,4 @@ public class GoogleMapsAPIManager {
         currentPosition = locationHandler.getCurrentLocation();
         return this.currentPosition;
     }
-
-
 }
