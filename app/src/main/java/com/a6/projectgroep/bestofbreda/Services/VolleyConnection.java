@@ -17,6 +17,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.JsonArray;
 
 public class VolleyConnection {
 
@@ -68,8 +69,9 @@ public class VolleyConnection {
                         Log.i("blindwall", "OK");
                         try {
                             System.out.println(response);
-                            for( int idx = 0; idx < response.getJSONArray("routes").getJSONArray(0).length(); idx++) {
-
+                            JSONArray jsonArray = response.getJSONArray("routes").getJSONArray(2).getJSONArray(2);
+                            for( int idx = 0; idx < jsonArray.length(); idx++) {
+                                LatLng latLng = new LatLng(1,1);
 //                                String author = response.getJSONObject(idx).getString("author");
 //                                String desc = response.getJSONObject(idx).getJSONObject("description").getString("nl");
 //                                String desc2 = response.getJSONObject(idx).getJSONObject("description").getString("en");
