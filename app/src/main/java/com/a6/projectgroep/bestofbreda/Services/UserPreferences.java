@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
-import com.a6.projectgroep.bestofbreda.Model.WayPointModel;
+import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class UserPreferences {
         }
     }
 
-    public void setSeenWaypoints(WayPointModel waypoint) {
+    public void setSeenWaypoints(WaypointModel waypoint) {
         waypointKeys.add(waypoint.getName());
         SharedPreferences.Editor editor = this.preferences.edit();
         waypoint.setAlreadySeen(true);
@@ -64,13 +64,13 @@ public class UserPreferences {
         editor.apply();
     }
 
-    public ArrayList<WayPointModel> getSeenWayPoints() {
-        ArrayList<WayPointModel> models = new ArrayList<>();
+    public ArrayList<WaypointModel> getSeenWayPoints() {
+        ArrayList<WaypointModel> models = new ArrayList<>();
         Gson gson = new Gson();
         for (String key : waypointKeys) {
             String serialized = preferences.getString(key, "ERROR");
             if (!serialized.equals("ERROR")) {
-                models.add(gson.fromJson(serialized, WayPointModel.class));
+                models.add(gson.fromJson(serialized, WaypointModel.class));
 
             }
         }

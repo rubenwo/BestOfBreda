@@ -20,10 +20,10 @@ public interface MultimediaDAO {
     @Query("SELECT * FROM MULTIMEDIA_MODEL WHERE id = :multimediaID")
     LiveData<MultimediaModel> getLiveMultimedia(int multimediaID);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     void insertMultiMedia(MultimediaModel multimediaModel);
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
+    @Update
     void updateMultiMedia(MultimediaModel multimediaMode);
 
     @Delete

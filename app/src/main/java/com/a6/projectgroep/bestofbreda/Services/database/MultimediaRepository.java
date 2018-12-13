@@ -22,15 +22,15 @@ public class MultimediaRepository {
         new InsertMultiMediaAsyncTask(multimediaDAO).execute(model);
     }
 
-    public void updateTestData(MultimediaModel model) {
-        new UpdateTestDataAsyncTask(multimediaDAO).execute(model);
+    public void updateMultiMedia(MultimediaModel model) {
+        new UpdateMultiMediaAsyncTask(multimediaDAO).execute(model);
     }
 
-    public void deleteTestData(MultimediaModel model) {
-        new DeleteTestDataAsyncTask(multimediaDAO).execute(model);
+    public void deleteMultiMedia(MultimediaModel model) {
+        new DeleteMultiMediaAsyncTask(multimediaDAO).execute(model);
     }
 
-    public LiveData<List<MultimediaModel>> getAllTestData() {
+    public LiveData<List<MultimediaModel>> getAllMultiMedia() {
         return mMultiMedia;
     }
 
@@ -48,10 +48,10 @@ public class MultimediaRepository {
         }
     }
 
-    private static class UpdateTestDataAsyncTask extends AsyncTask<MultimediaModel, Void, Void> {
+    private static class UpdateMultiMediaAsyncTask extends AsyncTask<MultimediaModel, Void, Void> {
         private MultimediaDAO multimediaDAO;
 
-        private UpdateTestDataAsyncTask(MultimediaDAO multimediaDAO) {
+        private UpdateMultiMediaAsyncTask(MultimediaDAO multimediaDAO) {
             this.multimediaDAO = multimediaDAO;
         }
 
@@ -62,10 +62,10 @@ public class MultimediaRepository {
         }
     }
 
-    private static class DeleteTestDataAsyncTask extends AsyncTask<MultimediaModel, Void, Void> {
+    private static class DeleteMultiMediaAsyncTask extends AsyncTask<MultimediaModel, Void, Void> {
         private MultimediaDAO multimediaDAO;
 
-        private DeleteTestDataAsyncTask(MultimediaDAO multimediaDAO) {
+        private DeleteMultiMediaAsyncTask(MultimediaDAO multimediaDAO) {
             this.multimediaDAO = multimediaDAO;
         }
 

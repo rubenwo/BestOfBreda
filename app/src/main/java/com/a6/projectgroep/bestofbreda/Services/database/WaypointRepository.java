@@ -3,76 +3,77 @@ package com.a6.projectgroep.bestofbreda.Services.database;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
-
-import com.a6.projectgroep.bestofbreda.Model.WayPointModel;
+import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 
 import java.util.List;
 
 public class WaypointRepository {
-    private WaypointDAO wayPointDAO;
-    private LiveData<List<WayPointModel>> mWaypoint;
+    private WaypointDAO waypointDAO;
+    private LiveData<List<WaypointModel>> mData;
 
     public WaypointRepository(Application application) {
-        NavigationDatabase navigationDatabase = NavigationDatabase.getInstance(application);
-        wayPointDAO = navigationDatabase.waypointDAO();
-        mWaypoint = wayPointDAO.getAllWaypoints();
+        NavigationDatabase database = NavigationDatabase.getInstance(application);
+        waypointDAO = database.waypointDAO();
+        mData = waypointDAO.getAllWayPoints();
     }
 
-    public void insertMultiMedia(WayPointModel model) {
-        new WaypointRepository.InsertMultiMediaAsyncTask(wayPointDAO).execute(model);
+    public LiveData<List<WaypointModel>> getAllWaypoints() {
+        return mData;
     }
 
-    public void updateTestData(WayPointModel model) {
-        new WaypointRepository.UpdateTestDataAsyncTask(wayPointDAO).execute(model);
+    public void insertWaypoint(WaypointModel model) {
+        new InsertWaypointAsyncTask(waypointDAO).doInBackground(model);
     }
 
-    public void deleteTestData(WayPointModel model) {
-        new WaypointRepository.DeleteTestDataAsyncTask(wayPointDAO).execute(model);
+    public void updateWaypoint(WaypointModel model) {
+        new UpdateWaypointAsyncTask(waypointDAO).doInBackground(model);
     }
 
-    public LiveData<List<WayPointModel>> getAllTestData() {
-        return mWaypoint;
+    public void deleteWaypoint(WaypointModel model) {
+        new DeleteWaypointAsyncTask(waypointDAO).doInBackground(model);
     }
 
-    private static class InsertMultiMediaAsyncTask extends AsyncTask<WayPointModel, Void, Void> {
+    private static class InsertWaypointAsyncTask extends AsyncTask<WaypointModel, Void, Void> {
         private WaypointDAO waypointDAO;
 
-        private InsertMultiMediaAsyncTask(WaypointDAO waypointDAO) {
-            this.waypointDAO = waypointDAO;
+        private InsertWaypointAsyncTask(WaypointDAO dao) {
+            this.waypointDAO = dao;
         }
 
         @Override
-        protected Void doInBackground(WayPointModel... model) {
-            waypointDAO.insertWaypoint(model[0]);
+        protected Void doInBackground(WaypointModel... waypointModels) {
+            waypointDAO.insertWaypoint(waypointModels[0]);
             return null;
         }
     }
 
-    private static class UpdateTestDataAsyncTask extends AsyncTask<WayPointModel, Void, Void> {
+    private static class UpdateWaypointAsyncTask extends AsyncTask<WaypointModel, Void, Void> {
         private WaypointDAO waypointDAO;
 
-        private UpdateTestDataAsyncTask(WaypointDAO waypointDAO) {
-            this.waypointDAO = waypointDAO;
+        private UpdateWaypointAsyncTask(WaypointDAO dao) {
+            this.waypointDAO = dao;
         }
 
         @Override
-        protected Void doInBackground(WayPointModel... models) {
-            waypointDAO.updateWaypoint(models[0]);
+        protected Void doInBackground(WaypointModel... waypointModels) {
+            waypointDAO.updateWaypoint(waypointModels[0]);
             return null;
         }
     }
 
-    private static class DeleteTestDataAsyncTask extends AsyncTask<WayPointModel, Void, Void> {
+    private static class DeleteWaypointAsyncTask extends AsyncTask<WaypointModel, Void, Void> {
         private WaypointDAO waypointDAO;
 
-        private DeleteTestDataAsyncTask(WaypointDAO waypointDAO) {
-            this.waypointDAO = waypointDAO;
+        private DeleteWaypointAsyncTask(WaypointDAO dao) {
+            this.waypointDAO = dao;
         }
 
         @Override
-        protected Void doInBackground(WayPointModel... models) {
-            waypointDAO.deleteWayPoint(models[0]);
+        protected Void doInBackground(WaypointModel... waypointModels) {
+            waypointDAO.deleteWaypoint(waypointModels[0]);
             return null;
         }
     }
+
 }
+

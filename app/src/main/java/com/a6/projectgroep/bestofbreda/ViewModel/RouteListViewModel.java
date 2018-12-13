@@ -21,7 +21,7 @@ public class RouteListViewModel extends AndroidViewModel {
     public RouteListViewModel(@NonNull Application application) {
         super(application);
         repository = new RouteRepository(application);
-        liveData = repository.getAllTestData();
+        liveData = repository.getAllRouteModels();
     }
 
     public void selectRoute(int routeNumber) {
@@ -30,19 +30,19 @@ public class RouteListViewModel extends AndroidViewModel {
             public void onLocationChanged(LatLng latLng) {
 
             }
-        }).setCurrentRoute(repository.getAllTestData().getValue().get(routeNumber));
+        }).setCurrentRoute(repository.getAllRouteModels().getValue().get(routeNumber));
     }
 
     public void insertRouteModel(RouteModel model) {
-        repository.insertMultiMedia(model);
+        repository.insertRouteModel(model);
     }
 
     public void updateRouteModel(RouteModel model) {
-        repository.updateTestData(model);
+        repository.updateRouteModel(model);
     }
 
     public void deleteRouteModel(RouteModel model) {
-        repository.deleteTestData(model);
+        repository.deleteRouteModel(model);
     }
 
     public LiveData<List<RouteModel>> getAllRouteModels() {

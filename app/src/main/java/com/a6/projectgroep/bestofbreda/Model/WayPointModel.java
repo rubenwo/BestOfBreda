@@ -1,30 +1,46 @@
 package com.a6.projectgroep.bestofbreda.Model;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
 
-@Entity(tableName = "WAYPOINT_MODEL")
-public class WayPointModel {
+@Entity(tableName = "WAYPOINT_MODEL", primaryKeys = {"waypoint_id"})
+public class WaypointModel {
+    @ColumnInfo(name = "waypoint_id")
     @NonNull
-    @PrimaryKey(autoGenerate = true)
-    private int waypointID;
+    private int id;
+    @ColumnInfo(name = "waypoint_name")
     private String name;
-    private LatLng location;
+    @ColumnInfo(name = "waypoint_description")
     private String description;
+    @ColumnInfo(name = "waypoint_location")
+    private LatLng location;
+    @ColumnInfo(name = "waypoint_already_seen")
     private boolean alreadySeen;
-    private boolean isFavourite;
-    private MultimediaModel multimedia;
+    @ColumnInfo(name = "waypoint_is_favorite")
+    private boolean isFavorite;
+    @ColumnInfo(name = "waypoint_multimedia_id")
+    private int multimediaID;
 
-    public WayPointModel(String name, LatLng location, String description, boolean alreadySeen, boolean isFavourite, MultimediaModel multimedia) {
+    public WaypointModel(@NonNull int id, String name, String description, LatLng location, boolean alreadySeen, boolean isFavorite, int multimediaID) {
+        this.id = id;
         this.name = name;
-        this.location = location;
         this.description = description;
+        this.location = location;
         this.alreadySeen = alreadySeen;
-        this.isFavourite = isFavourite;
-        this.multimedia = multimedia;
+        this.isFavorite = isFavorite;
+        this.multimediaID = multimediaID;
+    }
+
+    @NonNull
+    public int getId() {
+        return id;
+    }
+
+    public void setId(@NonNull int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -35,13 +51,6 @@ public class WayPointModel {
         this.name = name;
     }
 
-    public LatLng getLocation() {
-        return location;
-    }
-
-    public void setLocation(LatLng location) {
-        this.location = location;
-    }
 
     public String getDescription() {
         return description;
@@ -49,6 +58,14 @@ public class WayPointModel {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public LatLng getLocation() {
+        return location;
+    }
+
+    public void setLocation(LatLng location) {
+        this.location = location;
     }
 
     public boolean isAlreadySeen() {
@@ -59,28 +76,32 @@ public class WayPointModel {
         this.alreadySeen = alreadySeen;
     }
 
-    public boolean isFavourite() {
-        return isFavourite;
+    public boolean isFavorite() {
+        return isFavorite;
     }
 
-    public void setFavourite(boolean favourite) {
-        isFavourite = favourite;
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 
-    public MultimediaModel getMultimedia() {
-        return multimedia;
+    public int getMultimediaID() {
+        return multimediaID;
     }
 
-    public void setMultimedia(MultimediaModel multimedia) {
-        this.multimedia = multimedia;
+    public void setMultimediaID(int multimediaID) {
+        this.multimediaID = multimediaID;
     }
 
-    @NonNull
-    public int getWaypointID() {
-        return waypointID;
-    }
-
-    public void setWaypointID(@NonNull int waypointID) {
-        this.waypointID = waypointID;
+    @Override
+    public String toString() {
+        return "WaypointModel{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", location=" + location +
+                ", alreadySeen=" + alreadySeen +
+                ", isFavorite=" + isFavorite +
+                ", multimediaID=" + multimediaID +
+                '}';
     }
 }

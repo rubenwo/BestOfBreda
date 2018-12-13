@@ -20,10 +20,10 @@ public interface RouteDAO {
     @Query("SELECT * FROM route_model WHERE name = :routeName")
     LiveData<RouteModel> getLiveRoute(String routeName);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     void insertRoute(RouteModel route);
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
+    @Update
     void updateRoute(RouteModel route);
 
     @Delete

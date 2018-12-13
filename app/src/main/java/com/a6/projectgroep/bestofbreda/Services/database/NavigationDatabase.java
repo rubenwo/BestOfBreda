@@ -11,13 +11,12 @@ import android.support.annotation.NonNull;
 
 import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
-import com.a6.projectgroep.bestofbreda.Model.WayPointModel;
+import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
-@Database(entities = {MultimediaModel.class, RouteModel.class, WayPointModel.class}, version = 2)
+@Database(entities = {MultimediaModel.class, RouteModel.class, WaypointModel.class}, version = 1)
 @TypeConverters({Converters.class})
 public abstract class NavigationDatabase extends RoomDatabase {
 
@@ -62,11 +61,9 @@ public abstract class NavigationDatabase extends RoomDatabase {
         //TODO: This is only called when running for the first time after installing for some weird reason..... It needs to run every time the app launches.
         @Override
         protected Void doInBackground(Void... voids) {
-            List<String> testList = new ArrayList<>();
-            multiMediaDAO.insertMultiMedia(new MultimediaModel(new ArrayList<String>(), "url"));
-            routeDAO.insertRoute(new RouteModel(new ArrayList<Integer>(), "nameOfRoute", false));
-            waypointDAO.insertWaypoint(new WayPointModel("nameOfWaypoint", new LatLng(1.2d, 3.4d), "waypointDescription",
-                    false, false, new MultimediaModel(testList, "url")));
+            multiMediaDAO.insertMultiMedia(new MultimediaModel(1, Arrays.asList("test", "test2"), "url"));
+            routeDAO.insertRoute(new RouteModel(Arrays.asList(1, 2, 3, 4), "nameOfRoute", false));
+            waypointDAO.insertWaypoint(new WaypointModel(1, "name", "desc", new LatLng(1.23, 4.56), false, false, 1));
             return null;
         }
     }

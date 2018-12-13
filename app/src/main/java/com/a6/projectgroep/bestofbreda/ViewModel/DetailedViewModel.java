@@ -6,7 +6,7 @@ import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
 import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
-import com.a6.projectgroep.bestofbreda.Model.WayPointModel;
+import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.Services.database.MultimediaRepository;
 import com.a6.projectgroep.bestofbreda.Services.database.WaypointRepository;
 
@@ -14,31 +14,31 @@ import java.util.List;
 
 public class DetailedViewModel extends AndroidViewModel {
     private WaypointRepository waypointRepository;
-    private LiveData<List<WayPointModel>> liveDataWaypoint;
+    private LiveData<List<WaypointModel>> liveDataWaypoint;
     private MultimediaRepository multimediaRepository;
     private LiveData<List<MultimediaModel>> liveDataMedia;
 
     public DetailedViewModel(@NonNull Application application) {
         super(application);
         waypointRepository = new WaypointRepository(application);
-        liveDataWaypoint = waypointRepository.getAllTestData();
+        liveDataWaypoint = waypointRepository.getAllWaypoints();
         multimediaRepository = new MultimediaRepository(application);
-        liveDataMedia = multimediaRepository.getAllTestData();
+        liveDataMedia = multimediaRepository.getAllMultiMedia();
     }
 
-    public void insertWayPointModel(WayPointModel model) {
-        waypointRepository.insertMultiMedia(model);
+    public void insertWayPointModel(WaypointModel model) {
+        waypointRepository.insertWaypoint(model);
     }
 
-    public void updateWayPointModel(WayPointModel model) {
-        waypointRepository.updateTestData(model);
+    public void updateWayPointModel(WaypointModel model) {
+        waypointRepository.updateWaypoint(model);
     }
 
-    public void deleteWayPointModel(WayPointModel model) {
-        waypointRepository.deleteTestData(model);
+    public void deleteWayPointModel(WaypointModel model) {
+        waypointRepository.deleteWaypoint(model);
     }
 
-    public LiveData<List<WayPointModel>> getAllWaypointModels() {
+    public LiveData<List<WaypointModel>> getAllWaypointModels() {
         return liveDataWaypoint;
     }
 
@@ -47,11 +47,11 @@ public class DetailedViewModel extends AndroidViewModel {
     }
 
     public void updateMultimediaModel(MultimediaModel model) {
-        multimediaRepository.updateTestData(model);
+        multimediaRepository.updateMultiMedia(model);
     }
 
     public void deleteMultimediaModel(MultimediaModel model) {
-        multimediaRepository.deleteTestData(model);
+        multimediaRepository.deleteMultiMedia(model);
     }
 
     public LiveData<List<MultimediaModel>> getAllMultimediaModels() {

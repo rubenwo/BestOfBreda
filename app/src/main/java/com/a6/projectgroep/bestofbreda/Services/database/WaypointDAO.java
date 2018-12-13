@@ -4,29 +4,24 @@ import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.a6.projectgroep.bestofbreda.Model.WayPointModel;
+import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 
 import java.util.List;
 
 @Dao
 public interface WaypointDAO {
-    @Query("SELECT * FROM waypoint_model")
-    LiveData<List<WayPointModel>> getAllWaypoints();
+    @Insert
+    void insertWaypoint(WaypointModel model);
 
-    @Query("SELECT * FROM waypoint_model WHERE waypointID = :id")
-    LiveData<WayPointModel> getLiveWaypoint(int id);
+    @Update
+    void updateWaypoint(WaypointModel model);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertWaypoint(WayPointModel wayPoint);
+    @Delete
+    void deleteWaypoint(WaypointModel model);
 
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    void updateWaypoint(WayPointModel wayPointModel);
-
-    @Delete()
-    void deleteWayPoint(WayPointModel model);
+    @Query("SELECT * FROM WAYPOINT_MODEL")
+    LiveData<List<WaypointModel>> getAllWayPoints();
 }

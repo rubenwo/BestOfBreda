@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.a6.projectgroep.bestofbreda.Model.WayPointModel;
+import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.R;
 import com.a6.projectgroep.bestofbreda.ViewModel.DetailedViewModel;
 import com.squareup.picasso.Picasso;
@@ -34,9 +34,9 @@ public class DetailedActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detailed);
 
         viewModel = ViewModelProviders.of(this).get(DetailedViewModel.class);
-        viewModel.getAllWaypointModels().observe(this, new Observer<List<WayPointModel>>() {
+        viewModel.getAllWaypointModels().observe(this, new Observer<List<WaypointModel>>() {
             @Override
-            public void onChanged(@Nullable List<WayPointModel> wayPointModels) {
+            public void onChanged(@Nullable List<WaypointModel> wayPointModels) {
                 Log.i(TAG, "list changed");
             }
         });
@@ -72,7 +72,9 @@ public class DetailedActivity extends AppCompatActivity {
         @Override
         public int getCount()
         {
-            return viewModel.getAllWaypointModels().getValue().get(sightID).getMultimedia().getPictureUrls().size();
+            //return viewModel.getAllWaypointModels().getValue().get(sightID).getMultimediaID().getPictureUrls().size();
+            //TODO: get multimediaID from waypoint and search for it in multimediaDAO.
+            return -1;
         }
 
         @Override

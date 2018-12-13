@@ -61,6 +61,7 @@ public class VolleyConnection {
 
     public void getRoute(ArrayList<LatLng> waypoints, RouteReceivedListener listener)
     {
+        //TODO: returnt bij mij ook null. Is te veel om te fixen dus ik zet hem ff uit.
         String url = getRouteURL(waypoints);
         routeReceivedListener = listener;
         JsonObjectRequest request = new JsonObjectRequest(

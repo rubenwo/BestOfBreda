@@ -18,19 +18,19 @@ public class RouteRepository {
         mRoute = routeDAO.getAllRoutes();
     }
 
-    public void insertMultiMedia(RouteModel model) {
+    public void insertRouteModel(RouteModel model) {
         new RouteRepository.InsertMultiMediaAsyncTask(routeDAO).execute(model);
     }
 
-    public void updateTestData(RouteModel model) {
+    public void updateRouteModel(RouteModel model) {
         new RouteRepository.UpdateTestDataAsyncTask(routeDAO).execute(model);
     }
 
-    public void deleteTestData(RouteModel model) {
+    public void deleteRouteModel(RouteModel model) {
         new RouteRepository.DeleteTestDataAsyncTask(routeDAO).execute(model);
     }
 
-    public LiveData<List<RouteModel>> getAllTestData() {
+    public LiveData<List<RouteModel>> getAllRouteModels() {
         return mRoute;
     }
 

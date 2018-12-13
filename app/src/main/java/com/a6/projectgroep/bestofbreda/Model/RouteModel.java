@@ -1,10 +1,10 @@
 package com.a6.projectgroep.bestofbreda.Model;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity(tableName = "ROUTE_MODEL")
@@ -43,5 +43,15 @@ public class RouteModel {
 
     public void setDone(boolean done) {
         this.done = done;
+    }
+
+    @Ignore
+    @Override
+    public String toString() {
+        return "RouteModel{" +
+                "route=" + route +
+                ", name='" + name + '\'' +
+                ", done=" + done +
+                '}';
     }
 }
