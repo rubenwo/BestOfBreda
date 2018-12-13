@@ -2,18 +2,24 @@ package com.a6.projectgroep.bestofbreda.Services;
 
 import android.content.Context;
 
+import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
+import com.a6.projectgroep.bestofbreda.Model.WayPointModel;
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 
 public class JsonDecoder {
-    public static void DecodeJsonFile(Context context, String path) {
+    public static ArrayList<WayPointModel> DecodeJsonFile(Context context, String path) {
         String json;
-
+        ArrayList<WayPointModel> wayPointModels = new ArrayList<>();
         try {
             InputStream is = context.getAssets().open(path);
 
@@ -25,7 +31,7 @@ public class JsonDecoder {
             json = new String(buffer, "UTF-8");
         } catch (IOException e) {
             e.printStackTrace();
-            return;
+            return null;
         }
 
         try {
@@ -35,9 +41,11 @@ public class JsonDecoder {
                 JSONObject obj = array.getJSONObject(idx);
                 double latitude = obj.getDouble("latitude");
                 double longitude = obj.getDouble("longitude");
-                String videoUrl = obj.getString("videoUrl");
-                String name;
-                String desc;
+                String videoUrl = null;
+                if(!obj.isNull("videoUrl"))
+                    videoUrl = obj.getString("videoUrl");
+
+                String name, desc;
                 if (language.equals("nl")) {
                     name = obj.getJSONObject("title").getString("nl");
                     desc = obj.getJSONObject("description").getString("nl");
@@ -53,10 +61,16 @@ public class JsonDecoder {
                     urls[index] = images.getJSONObject(index).getString("url");
                     files[index] = images.getJSONObject(index).getString("file");
                 }
+
+                MultimediaModel multimedia = new MultimediaModel(Arrays.asList(urls),videoUrl );
+                LatLng latLng = new LatLng(latitude, longitude);
+                WayPointModel wayPoint = new WayPointModel(name, latLng, desc, false, false, multimedia);
+                wayPointModels.add(wayPoint);
             }
+            return wayPointModels;
         } catch (JSONException e) {
             e.printStackTrace();
-            return;
+            return wayPointModels;
         }
     }
 }

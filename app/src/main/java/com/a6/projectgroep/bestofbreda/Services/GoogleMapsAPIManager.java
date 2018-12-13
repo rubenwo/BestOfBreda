@@ -40,9 +40,9 @@ public class GoogleMapsAPIManager {
 
     public ArrayList<WayPointModel> getRouteWaypoints(Application application) {
         ArrayList<WayPointModel> testWayPoints = new ArrayList<>();
-        testWayPoints.add(new WayPointModel("avans breda", GeoCoderService.getInstance(application).getLocationFromName("Avans breda"), "", 0, false, false, null));
-        testWayPoints.add(new WayPointModel("casino", GeoCoderService.getInstance(application).getLocationFromName("holland casino breda"), "", 0, false, false, null));
-        testWayPoints.add(new WayPointModel("station breda", GeoCoderService.getInstance(application).getLocationFromName("station breda"), "", 0, false, false, null));
+        testWayPoints.add(new WayPointModel("avans breda", GeoCoderService.getInstance(application).getLocationFromName("Avans breda"), "", false, false, null));
+        testWayPoints.add(new WayPointModel("casino", GeoCoderService.getInstance(application).getLocationFromName("holland casino breda"), "", false, false, null));
+        testWayPoints.add(new WayPointModel("station breda", GeoCoderService.getInstance(application).getLocationFromName("station breda"), "", false, false, null));
         return testWayPoints;
     }
 
