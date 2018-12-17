@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
         this.savedInstanceState = savedInstanceState;
         askPermission();
-        setupDetailedRouteFragment();
+       // setupDetailedRouteFragment();
         setupToolbar();
         setupDrawerLayout();
         setupViewModel();
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         startService(intent);
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         LocationHandler locationHandler = LocationHandler.getInstance(getApplication());
-
+        locationHandler.setLastKnownLocationListener(location -> setupDetailedRouteFragment());
         locationHandler.setLiveLocationListener(this);
         mainViewModel.getAllWaypointModels().observe(this, new Observer<List<WaypointModel>>() {
             @Override
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
-    
+
     private void setupToolbar() {
         Toolbar toolbar = findViewById(R.id.mainactivity_toolbar);
         setSupportActionBar(toolbar);
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             case GPS_REQUEST:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Intent i = getBaseContext().getPackageManager()
-                            .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+                            .getLaunchIntentForPackage(getBaseContext().getPackageName());
                     assert i != null;
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
@@ -257,7 +257,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             polylineOptions.add(mainViewModel.getCurrentPosition());
 
             mainViewModel.getRoutePoints(waypoints, this);
-            onLocationChanged(mainViewModel.getCurrentPosition());
         }
 
     }
