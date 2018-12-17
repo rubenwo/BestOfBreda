@@ -11,4 +11,5 @@
     <string name="termsofactivity_header">TERMS AND CONDITIONS FOR USE, REPRODUCTION AND DISTRIBUTION</string>
     <string name="termsofactivity_text">Terms of Service example</string>
     <string name="detailedactivity_toast_no_videos">No videos availabe for this sight</string>
+    <string name="detailedfragment_more_information">More Info</string>
 </resources>

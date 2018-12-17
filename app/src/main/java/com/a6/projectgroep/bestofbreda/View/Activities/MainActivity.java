@@ -124,12 +124,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 //TODO navigate to the activities
                 switch (menuItem.getItemId()) {
                     case R.id.menu_nav_sights:
-//                        FragmentManager fragmentManager = getSupportFragmentManager();
-//                        Fragment fragment = fragmentManager.findFragmentById(R.id.detailedactivity_videofragment_placeholder);
-//                        if(fragment == null){
-//                            DetailedVideoFragment detailedVideoFragment = new DetailedVideoFragment();
-//                            detailedVideoFragment.show(fragmentManager, "FRAGMENT_ADD_BRIDGE");
-//                        }
                         break;
                     case R.id.menu_nav_routes:
 
