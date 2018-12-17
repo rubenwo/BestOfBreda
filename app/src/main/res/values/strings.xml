@@ -10,4 +10,9 @@
     <string name="helpactivity_header_instructions">Instructies</string>
     <string name="termsofactivity_header">SERVICEVOORWAARDEN VOOR GEBRUIK, REPRODUCTIE EN DISTRIBUTIE</string>
     <string name="termsofactivity_text">Servicevoorwaarden voorbeeld</string>
+
+    <string name="GPS_off">Je GPS functie staat niet aan</string>
+
+    <string name="NotificationChannel_name">Dichtbijziende bezienswaardigheden</string>
+    <string name="NotificationChannel_Description">De notificatie wordt zichtbaar wanneer de gebruiker in de buurt van een bezienswaardigheid komt waneer de tour loopt</string>
 </resources>

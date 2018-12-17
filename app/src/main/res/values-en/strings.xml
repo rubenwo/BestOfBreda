@@ -10,4 +10,8 @@
     <string name="helpactivity_header_instructions">Instructions</string>
     <string name="termsofactivity_header">TERMS AND CONDITIONS FOR USE, REPRODUCTION AND DISTRIBUTION</string>
     <string name="termsofactivity_text">Terms of Service example</string>
+
+    <string name="GPS_off">Your GPS function is not turned on</string>
+    <string name="NotificationChannel_name">Nearby sight</string>
+    <string name="NotificationChannel_Description">The notification appears when a user is near a sight with the tour running</string>
 </resources>

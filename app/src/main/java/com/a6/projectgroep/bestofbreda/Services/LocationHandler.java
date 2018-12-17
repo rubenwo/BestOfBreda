@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
 
+import com.a6.projectgroep.bestofbreda.R;
 import com.google.android.gms.maps.model.LatLng;
 
 public class LocationHandler {
@@ -67,7 +68,7 @@ public class LocationHandler {
             @Override
             public void onProviderDisabled(String provider) {
                 providerOn = false;
-                Toast.makeText(application.getApplicationContext(), "Je GPS functie staat niet aan", Toast.LENGTH_LONG).show();
+                Toast.makeText(application.getApplicationContext(), R.string.GPS_off, Toast.LENGTH_LONG).show();
             }
         };
 
