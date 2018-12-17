@@ -14,8 +14,8 @@ import android.widget.TextView;
 import com.a6.projectgroep.bestofbreda.R;
 import com.a6.projectgroep.bestofbreda.View.Activities.DetailedActivity;
 
-public class DetailedPreviewFragment extends DialogFragment
-{
+public class DetailedPreviewFragment extends DialogFragment {
+
     public static DetailedPreviewFragment newInstance(String sightTitle)
     {
         DetailedPreviewFragment fragment = new DetailedPreviewFragment();

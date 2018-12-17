@@ -12,6 +12,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -35,6 +37,7 @@ import com.a6.projectgroep.bestofbreda.Services.BackgroundService;
 import com.a6.projectgroep.bestofbreda.Services.GeoCoderService;
 import com.a6.projectgroep.bestofbreda.Services.LiveLocationListener;
 import com.a6.projectgroep.bestofbreda.Services.RouteReceivedListener;
+import com.a6.projectgroep.bestofbreda.View.Fragments.DetailedPreviewFragment;
 import com.a6.projectgroep.bestofbreda.View.Fragments.DetailedRouteFragment;
 import com.a6.projectgroep.bestofbreda.ViewModel.MainViewModel;
 import com.a6.projectgroep.bestofbreda.ViewModel.ViewModelFactory;
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private List<WaypointModel> markers;
     private ArrayList<LatLng> waypoints;
     private Bundle savedInstanceState;
+    private DialogFragment dialogFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,15 +120,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         drawerLayout = findViewById(R.id.mainactivity_drawer_layout);
 
         NavigationView navigationView = findViewById(R.id.mainactivity_nav_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                menuItem.setChecked(true);
-                //TODO navigate to the activities
-                switch (menuItem.getItemId()) {
-                    case R.id.menu_nav_sights:
-                        break;
-                    case R.id.menu_nav_routes:
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
+            menuItem.setChecked(true);
+            //TODO navigate to the activities
+            switch (menuItem.getItemId()) {
+                case R.id.menu_nav_sights:
+                    break;
+                case R.id.menu_nav_routes:
 
                     break;
                 case R.id.menu_nav_help:
@@ -141,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    private void setupDetailedRouteFragment() {
+        private void setupDetailedRouteFragment() {
         //Code to show DetailedRouteFragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         DetailedRouteFragment detailedRouteFragment = new DetailedRouteFragment();
@@ -268,8 +270,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Location currentLocation = new Location("peoplLocation");
                     currentLocation.setLatitude(mainViewModel.getCurrentPosition().latitude);
                     currentLocation.setLongitude(mainViewModel.getCurrentPosition().longitude);
-                    if(currentLocation.distanceTo(modelLocation) < 25) {
-                        
+                    if(currentLocation.distanceTo(modelLocation) < 35) {
+                        if(dialogFragment != null) {
+                            if(!dialogFragment.isVisible()) {
+                                dialogFragment = DetailedPreviewFragment.newInstance(model.getName());
+                                dialogFragment.show(getSupportFragmentManager(), null);
+                            }
+                        }
+                        else {
+                            dialogFragment = DetailedPreviewFragment.newInstance(model.getName());
+                            dialogFragment.show(getSupportFragmentManager(), null);
+                        }
+                        model.setAlreadySeen(true);
                     }
 
                     GeoCoderService.getInstance(getApplication())
