@@ -15,6 +15,7 @@ import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Database(entities = {MultimediaModel.class, RouteModel.class, WaypointModel.class}, version = 1)
 @TypeConverters({Converters.class})
@@ -60,9 +61,12 @@ public abstract class NavigationDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            multiMediaDAO.insertMultiMedia(new MultimediaModel(1, Arrays.asList("test", "test2"), "url"));
-            routeDAO.insertRoute(new RouteModel(Arrays.asList(1, 2, 3, 4), "nameOfRoute", false));
-            waypointDAO.insertWaypoint(new WaypointModel(1, "name", "desc", new LatLng(1.23, 4.56), false, false, 1));
+            List<String> strings = Arrays.asList("Test", "Test2");
+            String string = "testString";
+            MultimediaModel multiMedia = new MultimediaModel(strings, string);
+            multiMediaDAO.insertMultiMedia(multiMedia);
+            routeDAO.insertRoute(new RouteModel(Arrays.asList(1, 2, 3, 4), "nameOfRoute", false, "resource"));
+            waypointDAO.insertWaypoint(new WaypointModel("name", "desc", new LatLng(1.23, 4.56), false, false, multiMedia));
             return null;
         }
     }

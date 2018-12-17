@@ -14,11 +14,13 @@ public class RouteModel {
     @PrimaryKey
     private String name;
     private boolean done;
+    private String resourceID;
 
-    public RouteModel(List<Integer> route, String name, boolean done) {
+    public RouteModel(List<Integer> route, String name, boolean done, String resourceID) {
         this.route = route;
         this.name = name;
         this.done = done;
+        this.resourceID = resourceID;
     }
 
     public List<Integer> getRoute() {
@@ -45,6 +47,14 @@ public class RouteModel {
         this.done = done;
     }
 
+    public String getResourceID() {
+        return resourceID;
+    }
+
+    public void setResourceID(String resourceID) {
+        this.resourceID = resourceID;
+    }
+
     @Ignore
     @Override
     public String toString() {
@@ -52,6 +62,7 @@ public class RouteModel {
                 "route=" + route +
                 ", name='" + name + '\'' +
                 ", done=" + done +
+                ", resourceID='" + resourceID + '\'' +
                 '}';
     }
 }

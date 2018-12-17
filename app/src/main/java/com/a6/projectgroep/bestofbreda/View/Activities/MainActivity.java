@@ -224,6 +224,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         googleMap.setMyLocationEnabled(true);
+        drawMarkers();
+        drawRoute();
+
+        onLocationChanged(mainViewModel.getCurrentPosition());
+    }
+
+    private void drawMarkers() {
         markers = mainViewModel.getAllRouteWaypoints();
         waypoints = new ArrayList<>();
         waypoints.add(mainViewModel.getCurrentPosition());
@@ -237,14 +244,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     GeoCoderService.getInstance(getApplication())
                             .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_GREEN, model.getName(), model.getDescription());
             }
-            polylineOptions.width(10);
-            polylineOptions.color(Color.BLUE);
-            polylineOptions.add(mainViewModel.getCurrentPosition());
-
-            mainViewModel.getRoutePoints(waypoints, this);
-            onLocationChanged(mainViewModel.getCurrentPosition());
         }
+    }
 
+    private void drawRoute() {
+        polylineOptions.width(10);
+        polylineOptions.color(Color.BLUE);
+        polylineOptions.add(mainViewModel.getCurrentPosition());
+
+        mainViewModel.getRoutePoints(waypoints, this);
     }
 
     @Override

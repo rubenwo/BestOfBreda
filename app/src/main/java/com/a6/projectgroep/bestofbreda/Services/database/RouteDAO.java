@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
@@ -19,6 +18,9 @@ public interface RouteDAO {
 
     @Query("SELECT * FROM route_model WHERE name = :routeName")
     LiveData<RouteModel> getLiveRoute(String routeName);
+
+    @Query("SELECT * FROM route_model WHERE name = :routeName")
+    RouteModel getRoute(String routeName);
 
     @Insert
     void insertRoute(RouteModel route);

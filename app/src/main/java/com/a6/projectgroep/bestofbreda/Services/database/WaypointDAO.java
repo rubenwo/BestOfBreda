@@ -24,4 +24,7 @@ public interface WaypointDAO {
 
     @Query("SELECT * FROM WAYPOINT_MODEL")
     LiveData<List<WaypointModel>> getAllWayPoints();
+
+    @Query("SELECT * FROM WAYPOINT_MODEL WHERE waypoint_name = :waypointName")
+    LiveData<WaypointModel> getWaypointModelByID(String waypointName);
 }
