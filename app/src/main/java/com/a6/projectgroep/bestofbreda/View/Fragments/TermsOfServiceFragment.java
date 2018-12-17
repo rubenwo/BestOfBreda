@@ -27,6 +27,10 @@ public class TermsOfServiceFragment extends DialogFragment {
         return fragment;
     }
 
+    public TermsOfServiceFragment()
+    {
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

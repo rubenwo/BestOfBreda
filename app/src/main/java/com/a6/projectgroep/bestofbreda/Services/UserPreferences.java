@@ -107,4 +107,14 @@ public class UserPreferences {
     }
 
 
+    public void setFirstRun(boolean firstRun) {
+        SharedPreferences.Editor editor = this.preferences.edit();
+        editor.putBoolean("firstRun", firstRun);
+        editor.apply();
+    }
+
+    public boolean getFirstRun() {
+        return this.preferences.getBoolean("firstRun", true);
+    }
+
 }

@@ -33,7 +33,7 @@ public class BackgroundService extends IntentService implements LiveLocationList
             @Override
             public void run() {
                 while (true) {
-                    LatLng currentPosition = googleMapsAPIManager.getCurrentPosition();
+                    LatLng currentPosition = LocationHandler.getInstance(getApplication()).getCurrentLocation();
                     if (currentPosition != null) {
                         //TODO: mogelijk null check weghalen en anders oplossen, voor nu werkt dit.
                         Location currentLocation = new Location("currentLocation");
