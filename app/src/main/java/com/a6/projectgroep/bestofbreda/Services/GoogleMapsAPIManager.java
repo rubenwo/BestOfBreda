@@ -1,59 +1,132 @@
 package com.a6.projectgroep.bestofbreda.Services;
 
+import android.Manifest;
 import android.app.Application;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Transformations;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
-import com.google.android.gms.location.GeofencingClient;
-import com.google.android.gms.maps.model.LatLng;
+import com.a6.projectgroep.bestofbreda.Services.database.NavigationDatabase;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class GoogleMapsAPIManager {
     private static GoogleMapsAPIManager instance;
-    private GeofencingClient geoManager;
-    private LocationManager gpsManager;
-    private LatLng currentPosition;
-    private RouteModel currentRoute;
-    private WaypointModel currentWaypoint;
-    private ArrayList<WaypointModel> waypoints;
-    private LocationHandler locationHandler;
+    private Application application;
 
-    private GoogleMapsAPIManager(Application application, LiveLocationListener listener) {
-        locationHandler = LocationHandler.getInstance(application);
-    }
+    private LocationManager locationManager;
+    private LocationListener locationListener;
 
-    public static GoogleMapsAPIManager getInstance(Application application, LiveLocationListener listener) {
+    private LiveData<List<WaypointModel>> availableWayPoints;
+
+    private MutableLiveData<Location> userCurrentLocation;
+    private MutableLiveData<RouteModel> userSelectedRoute;
+    private MutableLiveData<WaypointModel> nearbyWaypoint;
+
+    public static GoogleMapsAPIManager getInstance(Application application) {
         if (instance == null)
-            instance = new GoogleMapsAPIManager(application, listener);
+            instance = new GoogleMapsAPIManager(application);
         return instance;
     }
 
-    public void calculateRoute() {
+    private GoogleMapsAPIManager(Application application) {
+        this.application = application;
 
+        userCurrentLocation = new MutableLiveData<>();
+        userSelectedRoute = new MutableLiveData<>();
+        userSelectedRoute.setValue(null);
+        nearbyWaypoint = new MutableLiveData<>();
+
+
+        locationManager = (LocationManager) application.getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                userCurrentLocation.setValue(location);
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+
+            }
+        };
+
+        startLocationChanges();
+    }
+
+    public LiveData<Location> getCurrentLocation() {
+        return userCurrentLocation;
+    }
+
+    public LiveData<RouteModel> getSelectedRoute() {
+        return userSelectedRoute;
+    }
+
+    public LiveData<List<WaypointModel>> getAvailableWayPoints() {
+        if(availableWayPoints == null) {
+            availableWayPoints = Transformations.switchMap(userSelectedRoute, input -> {
+                if (input != null) {
+                    return NavigationDatabase.getInstance(application).waypointDAO().getAllWaypointModelsFromNames(input.getRoute());
+                } else {
+                    return NavigationDatabase.getInstance(application).waypointDAO().getAllWayPoints();
+                }
+            });
+        }
+        return availableWayPoints;
+    }
+
+    public LiveData<WaypointModel> getNearbyWayPoint() {
+        return nearbyWaypoint;
     }
 
     public void setCurrentRoute(RouteModel route) {
-        this.currentRoute = route;
+        userSelectedRoute.setValue(route);
     }
 
-//    public List<WaypointModel> getRouteWaypoints(Application application) {
-//        List<WaypointModel> testWayPoints = new ArrayList<>();
-//        List<String> strings = Arrays.asList("Test", "Test2");
-//        String string = "testString";
-//        MultimediaModel model = new MultimediaModel(strings, string);
-//        testWayPoints.add(new WaypointModel("avans breda", "avans hogeschool", GeoCoderService.getInstance(application).getLocationFromName("Avans breda"), false, false, model));
-//        testWayPoints.add(new WaypointModel("casino", "Holland Casino Breda", GeoCoderService.getInstance(application).getLocationFromName("holland casino breda"), false, false, model));
-//        testWayPoints.add(new WaypointModel("station breda", "Centraal Station Breda", GeoCoderService.getInstance(application).getLocationFromName("station breda"), false, false, model));
-//        return testWayPoints;
+    public void calculateRoute() {
+        //
+    }
+
+    private void calculateNearbyWaypoint() {
+
+    }
+
+    public void startLocationChanges() {
+        if (ActivityCompat.checkSelfPermission(application, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(application, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 20, locationListener);
+        }
+    }
+
+    public void stopLocationChanges() {
+        locationManager.removeUpdates(locationListener);
+    }
+
+//    public WaypointModel getCurrentWaypoint() {
+//        return this.currentWaypoint;
 //    }
-
-    public WaypointModel getCurrentWaypoint() {
-        return this.currentWaypoint;
-    }
-
-    public void SetCurrentWaypoint(WaypointModel currentWaypoint) {
-        this.currentWaypoint = currentWaypoint;
-    }
+//
+//    public void SetCurrentWaypoint(WaypointModel currentWaypoint) {
+//        this.currentWaypoint = currentWaypoint;
+//    }
 }

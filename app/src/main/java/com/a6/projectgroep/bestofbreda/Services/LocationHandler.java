@@ -17,11 +17,11 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class LocationHandler {
     private static LocationHandler instance;
+
     private Application application;
     private LocationManager locationManager;
     private LocationListener locationListener;
     private LatLng currentLocation;
-    private LastKnownLocationListener lastKnownLocationListener;
     private String provider;
     private boolean providerOn;
     private boolean lastKnownLocationAvailable = false;
@@ -43,18 +43,12 @@ public class LocationHandler {
         return currentLocation;
     }
 
-    public void setLastKnownLocationListener(LastKnownLocationListener lastKnownLocationListener) {
-        this.lastKnownLocationListener = lastKnownLocationListener;
-    }
-
     public void setLiveLocationListener(LiveLocationListener listener) {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                listener.onLocationChanged(new LatLng(location.getLatitude(), location.getLongitude()));
                 if (!lastKnownLocationAvailable) {
-                    lastKnownLocationListener.onLastKnownLocationAvailable(currentLocation);
                     lastKnownLocationAvailable = true;
                 }
             }
@@ -71,6 +65,7 @@ public class LocationHandler {
 
             @Override
             public void onProviderEnabled(String provider) {
+
             }
 
             @Override
@@ -79,6 +74,7 @@ public class LocationHandler {
                 Toast.makeText(application.getApplicationContext(), R.string.GPS_off, Toast.LENGTH_LONG).show();
             }
         };
+
         if (ActivityCompat.checkSelfPermission(application.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (locationManager.getLastKnownLocation(provider) != null) {
                 locationManager.requestLocationUpdates(provider, 5, 2, locationListener);

@@ -25,12 +25,8 @@ public class RouteListViewModel extends AndroidViewModel {
     }
 
     public void selectRoute(int routeNumber) {
-        GoogleMapsAPIManager.getInstance(getApplication(), new LiveLocationListener() {
-            @Override
-            public void onLocationChanged(LatLng latLng) {
-
-            }
-        }).setCurrentRoute(repository.getAllRouteModels().getValue().get(routeNumber));
+        GoogleMapsAPIManager.getInstance(getApplication())
+        .setCurrentRoute(repository.getAllRouteModels().getValue().get(routeNumber));
     }
 
     public void insertRouteModel(RouteModel model) {
