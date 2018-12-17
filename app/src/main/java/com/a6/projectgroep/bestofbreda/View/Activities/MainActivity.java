@@ -1,6 +1,7 @@
 package com.a6.projectgroep.bestofbreda.View.Activities;
 
 import android.Manifest;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -30,7 +31,6 @@ import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.R;
-import com.a6.projectgroep.bestofbreda.Services.BackgroundService;
 import com.a6.projectgroep.bestofbreda.Services.GeoCoderService;
 import com.a6.projectgroep.bestofbreda.Services.LiveLocationListener;
 import com.a6.projectgroep.bestofbreda.Services.LocationHandler;
@@ -59,31 +59,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private List<WaypointModel> markers;
     private ArrayList<LatLng> waypoints;
     private Bundle savedInstanceState;
+    private MutableLiveData<List<WaypointModel>> waypointModels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         this.savedInstanceState = savedInstanceState;
+        setContentView(R.layout.activity_main);
+        waypointModels = new MutableLiveData<>();
+        setupViewModel();
+        mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        LocationHandler locationHandler = LocationHandler.getInstance(getApplication());
+        locationHandler.setLiveLocationListener(this);
         askPermission();
         setupDetailedRouteFragment();
         setupToolbar();
         setupDrawerLayout();
-        setupViewModel();
-        Intent intent = new Intent(getApplicationContext(), BackgroundService.class);
-        startService(intent);
-        mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        LocationHandler locationHandler = LocationHandler.getInstance(getApplication());
-
-        locationHandler.setLiveLocationListener(this);
-        mainViewModel.getAllWaypointModels().observe(this, new Observer<List<WaypointModel>>() {
-            @Override
-            public void onChanged(@Nullable List<WaypointModel> wayPointModels) {
-                Toast.makeText(getApplicationContext(), "onChanged", Toast.LENGTH_LONG).show();
-            }
-        });
     }
-    
+
     private void setupToolbar() {
         Toolbar toolbar = findViewById(R.id.mainactivity_toolbar);
         setSupportActionBar(toolbar);
@@ -110,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Toast.makeText(getApplicationContext(), "routes changed", Toast.LENGTH_SHORT).show();
                 for (RouteModel m : routeModels) {
                     Log.i("DATABASE_MODELS", m.toString());
+                    mainViewModel.createWaypointModelList();
                 }
             }
         });
@@ -120,6 +114,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 for (MultimediaModel m : multimediaModels) {
                     Log.i("DATABASE_MODELS", m.toString());
                 }
+            }
+        });
+
+        waypointModels.observe(this, new Observer<List<WaypointModel>>() {
+            @Override
+            public void onChanged(@Nullable List<WaypointModel> waypointModels) {
+                drawMarkers(waypointModels);
+//                Intent intent = new Intent(getApplicationContext(), BackgroundService.class);
+//                startService(intent);
             }
         });
     }
@@ -193,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             case GPS_REQUEST:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Intent i = getBaseContext().getPackageManager()
-                            .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+                            .getLaunchIntentForPackage(getBaseContext().getPackageName());
                     assert i != null;
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
@@ -239,18 +242,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         googleMap.setMyLocationEnabled(true);
-        drawMarkers();
-        drawRoute();
-
+        //drawMarkers();
+        //drawRoute();
         onLocationChanged(mainViewModel.getCurrentPosition());
     }
 
-    private void drawMarkers() {
-        markers = mainViewModel.getAllRouteWaypoints();
+    private void drawMarkers(List<WaypointModel> way) {
+        markers = waypointModels.getValue();
         waypoints = new ArrayList<>();
         waypoints.add(mainViewModel.getCurrentPosition());
         if (markers != null) {
-            for (WaypointModel model : markers) {
+            for (WaypointModel model : way) {
                 if (!model.isAlreadySeen()) {
                     GeoCoderService.getInstance(getApplication())
                             .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_RED, model.getName(), model.getDescription());

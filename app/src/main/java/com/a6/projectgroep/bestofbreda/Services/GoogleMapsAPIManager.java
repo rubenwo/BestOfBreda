@@ -3,15 +3,12 @@ package com.a6.projectgroep.bestofbreda.Services;
 import android.app.Application;
 import android.location.LocationManager;
 
-import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class GoogleMapsAPIManager {
     private static GoogleMapsAPIManager instance;
@@ -41,16 +38,16 @@ public class GoogleMapsAPIManager {
         this.currentRoute = route;
     }
 
-    public List<WaypointModel> getRouteWaypoints(Application application) {
-        List<WaypointModel> testWayPoints = new ArrayList<>();
-        List<String> strings = Arrays.asList("Test", "Test2");
-        String string = "testString";
-        MultimediaModel model = new MultimediaModel(strings, string);
-        testWayPoints.add(new WaypointModel("avans breda", "avans hogeschool", GeoCoderService.getInstance(application).getLocationFromName("Avans breda"), false, false, model));
-        testWayPoints.add(new WaypointModel("casino", "Holland Casino Breda", GeoCoderService.getInstance(application).getLocationFromName("holland casino breda"), false, false, model));
-        testWayPoints.add(new WaypointModel("station breda", "Centraal Station Breda", GeoCoderService.getInstance(application).getLocationFromName("station breda"), false, false, model));
-        return testWayPoints;
-    }
+//    public List<WaypointModel> getRouteWaypoints(Application application) {
+//        List<WaypointModel> testWayPoints = new ArrayList<>();
+//        List<String> strings = Arrays.asList("Test", "Test2");
+//        String string = "testString";
+//        MultimediaModel model = new MultimediaModel(strings, string);
+//        testWayPoints.add(new WaypointModel("avans breda", "avans hogeschool", GeoCoderService.getInstance(application).getLocationFromName("Avans breda"), false, false, model));
+//        testWayPoints.add(new WaypointModel("casino", "Holland Casino Breda", GeoCoderService.getInstance(application).getLocationFromName("holland casino breda"), false, false, model));
+//        testWayPoints.add(new WaypointModel("station breda", "Centraal Station Breda", GeoCoderService.getInstance(application).getLocationFromName("station breda"), false, false, model));
+//        return testWayPoints;
+//    }
 
     public WaypointModel getCurrentWaypoint() {
         return this.currentWaypoint;

@@ -1,18 +1,18 @@
 package com.a6.projectgroep.bestofbreda.Services.database;
 
+import android.app.Application;
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
-import com.google.android.gms.maps.model.LatLng;
+import com.a6.projectgroep.bestofbreda.Services.GeoCoderService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
 public abstract class NavigationDatabase extends RoomDatabase {
 
     private volatile static NavigationDatabase instance;
-    private static Context mContext;
+    private static Application mApplication;
     private static RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
@@ -31,10 +31,10 @@ public abstract class NavigationDatabase extends RoomDatabase {
         }
     };
 
-    public static synchronized NavigationDatabase getInstance(Context context) {
+    public static synchronized NavigationDatabase getInstance(Application application) {
         if (instance == null) {
-            mContext = context;
-            instance = Room.databaseBuilder(context.getApplicationContext(), NavigationDatabase.class, "navigation-database")
+            mApplication = application;
+            instance = Room.databaseBuilder(application, NavigationDatabase.class, "navigation-database")
                     .addCallback(roomCallback)
                     .fallbackToDestructiveMigration()
                     .build();
@@ -65,8 +65,9 @@ public abstract class NavigationDatabase extends RoomDatabase {
             String string = "testString";
             MultimediaModel multiMedia = new MultimediaModel(strings, string);
             multiMediaDAO.insertMultiMedia(multiMedia);
-            routeDAO.insertRoute(new RouteModel(Arrays.asList(1, 2, 3, 4), "nameOfRoute", false, "resource"));
-            waypointDAO.insertWaypoint(new WaypointModel("name", "desc", new LatLng(1.23, 4.56), false, false, multiMedia));
+            waypointDAO.insertWaypoint(new WaypointModel("Avans", "desc", GeoCoderService.getInstance(mApplication).getLocationFromName("Avans breda"), false, false, multiMedia));
+            waypointDAO.insertWaypoint(new WaypointModel("Casino", "desc", GeoCoderService.getInstance(mApplication).getLocationFromName("Casino Breda"), false, false, multiMedia));
+            routeDAO.insertRoute(new RouteModel(Arrays.asList("Avans", "Casino"), "nameOfRoute", false, "resource"));
             return null;
         }
     }

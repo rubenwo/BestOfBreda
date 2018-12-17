@@ -16,11 +16,8 @@ public interface RouteDAO {
     @Query("SELECT * FROM route_model")
     LiveData<List<RouteModel>> getAllRoutes();
 
-    @Query("SELECT * FROM route_model WHERE name = :routeName")
+    @Query("SELECT * FROM route_model WHERE name LIKE :routeName")
     LiveData<RouteModel> getLiveRoute(String routeName);
-
-    @Query("SELECT * FROM route_model WHERE name = :routeName")
-    RouteModel getRoute(String routeName);
 
     @Insert
     void insertRoute(RouteModel route);

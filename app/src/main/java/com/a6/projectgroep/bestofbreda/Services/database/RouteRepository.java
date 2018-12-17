@@ -79,18 +79,4 @@ public class RouteRepository {
             return null;
         }
     }
-
-//    private static class GetRouteAsyncTask extends AsyncTask<String, Void, Void> {
-//        private RouteDAO routeDAO;
-//
-//        private GetRouteAsyncTask(RouteDAO routeDAO) {
-//            this.routeDAO = routeDAO;
-//        }
-//
-//        @Override
-//        protected Void doInBackground(String... strings) {
-//            routeDAO.getLiveRoute(strings[0]);
-//            return null;
-//        }
-//    }
 }
