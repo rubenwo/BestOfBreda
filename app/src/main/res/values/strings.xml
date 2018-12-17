@@ -14,5 +14,21 @@
     <string name="GPS_off">Je GPS functie staat niet aan</string>
 
     <string name="NotificationChannel_name">Dichtbijziende bezienswaardigheden</string>
-    <string name="NotificationChannel_Description">De notificatie wordt zichtbaar wanneer de gebruiker in de buurt van een bezienswaardigheid komt waneer de tour loopt</string>
+    <string name="NotificationChannel_Description">De notificatie wordt zichtbaar wanneer de gebruiker
+        in de buurt van een bezienswaardigheid komt waneer de tour loopt</string>
+
+    <string name="HelpText">Bij het openen van de app ziet u een map van breda. Als u op het icoon met de
+        drie horisontale streepjes drukt krijgt u een menu te zien. In deze menu heeft u de keuze uit de
+         verschillenderoutes de die gewandeld kunnen worden.
+        \nNadat u een van deze routes heeft gekozen, kunt u deze route bewandelen. Als u tijdens het wandelen
+        weer op het menu icoon drukt, krijgt u een lijst met de bezienswaardigheden die op de route staan. Als
+        u een van deze bezienswaardigheden selecteert, kunt u de detail informatie, afbeeldingen filmpjes bekijken.
+         Het is ook mogelijk om deze informaite in te zien door op het kaart een van de bezienswaarsdigs-marker
+        aan te tikken.
+        \nTijdens het wandelen is het deel van de route die u al heeft gelopen zichtbaar gemarkeerd. Als u tijdens
+        het wandelen zich binnen de 25 meter zone van een bezienswaardigheid komt, krijgt u een melding
+        die aangeeft dat u in de buurt van een bezienswaardigheid bent. Als u op de notificatie tikt, kunt
+        u de informatie over deze bezienswaardigheid bekijken.
+        \nAls u tijdens het wandelen zich van de route afwijkt zal de app een routebeschrijving geven om
+        terug naar de tour te lopen.</string>
 </resources>
