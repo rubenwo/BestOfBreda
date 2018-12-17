@@ -3,6 +3,7 @@ package com.a6.projectgroep.bestofbreda.Services;
 import android.app.Application;
 
 import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
+import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.Services.database.RouteRepository;
 import com.a6.projectgroep.bestofbreda.Services.database.WaypointRepository;
@@ -63,8 +64,6 @@ public class JsonDecoder {
                     urls.add(images.getJSONObject(index).getString("url"));
                     files.add(images.getJSONObject(index).getString("file"));
                 }
-                //TODO: Change ID's to something better
-                // repository.insertWaypoint(new WaypointModel(1, name, desc, new LatLng(latitude, longitude), false, false, 1));
                 repository.insertWaypoint(new WaypointModel(name, desc, new LatLng(latitude, longitude), false, false, new MultimediaModel(urls, videoUrl)));
             }
             return true;
@@ -93,12 +92,13 @@ public class JsonDecoder {
         try {
             JSONObject routeObject = new JSONObject(json);
             String name = routeObject.getString("name");
+            String picturePath = routeObject.getString("picture");
             List<String> points = new ArrayList<>();
             JSONArray pointsArray = new JSONArray("points");
             for (int i = 0; i < pointsArray.length(); i++) {
                 points.add(pointsArray.getString(i));
             }
-            // repository.insertRouteModel(new RouteModel(, , ));
+            repository.insertRouteModel(new RouteModel(points, name, false, picturePath));
             return true;
         } catch (JSONException e) {
             e.printStackTrace();
