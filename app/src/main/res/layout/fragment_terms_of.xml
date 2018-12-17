@@ -24,13 +24,13 @@
     <TextView
         android:id="@+id/termsofactivity_text"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="@string/termsofactivity_text"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="https://www.vvvhartvannoordholland.nl/media/hartvannoordholland/org/documents/algemene%20voorw_vvv_versie041209_%20engels.pdf"
+        android:textAllCaps="false"
+        android:textColor="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/termsofactivity_header"
         app:layout_constraintTop_toBottomOf="@+id/termsofactivity_header" />

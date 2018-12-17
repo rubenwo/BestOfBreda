@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -35,6 +36,7 @@ import com.a6.projectgroep.bestofbreda.Services.GeoCoderService;
 import com.a6.projectgroep.bestofbreda.Services.LiveLocationListener;
 import com.a6.projectgroep.bestofbreda.Services.RouteReceivedListener;
 import com.a6.projectgroep.bestofbreda.View.Fragments.DetailedRouteFragment;
+import com.a6.projectgroep.bestofbreda.View.Fragments.TermsOfServiceFragment;
 import com.a6.projectgroep.bestofbreda.ViewModel.MainViewModel;
 import com.a6.projectgroep.bestofbreda.ViewModel.ViewModelFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -132,6 +134,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         break;
                     case R.id.menu_nav_termsofservice:
+                        DialogFragment fragment = new TermsOfServiceFragment();
+                        fragment.show(getSupportFragmentManager(), "TOS");
+
 
                         break;
                 }
