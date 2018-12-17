@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -65,6 +66,23 @@ public class DetailedActivity extends AppCompatActivity {
         CirclePageIndicator indicator = findViewById(R.id.detailedactivity_circlepageindicator);
         indicator.setViewPager(viewPager);
         indicator.setRadius(getResources().getDisplayMetrics().density * 5);
+
+        FloatingActionButton playMedia = findViewById(R.id.detailedactivity_fab_media);
+        playMedia.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                //TODO get MultimediaModel
+//                if(media.getVideoUrls() != null){
+//                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(media.getVideoUrls()));
+//                    startActivity(browserIntent);
+//                }
+//                else {
+//                    Toast.makeText(getApplicationContext(), R.string.detailedactivity_toast_no_videos, Toast.LENGTH_SHORT).show();
+//                }
+            }
+        });
     }
 
     private class ImageSliderAdapter extends PagerAdapter {

@@ -10,7 +10,6 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.a6.projectgroep.bestofbreda.R;
@@ -76,7 +75,8 @@ public class LocationHandler {
 
             @Override
             public void onProviderDisabled(String provider) {
-                Toast.makeText(application.getApplicationContext(), "Je GPS functie staat niet aan", Toast.LENGTH_LONG).show();
+                providerOn = false;
+                Toast.makeText(application.getApplicationContext(), R.string.GPS_off, Toast.LENGTH_LONG).show();
             }
         };
         if (ActivityCompat.checkSelfPermission(application.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {

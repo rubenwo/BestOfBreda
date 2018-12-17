@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -36,6 +37,7 @@ import com.a6.projectgroep.bestofbreda.Services.LiveLocationListener;
 import com.a6.projectgroep.bestofbreda.Services.LocationHandler;
 import com.a6.projectgroep.bestofbreda.Services.RouteReceivedListener;
 import com.a6.projectgroep.bestofbreda.View.Fragments.DetailedRouteFragment;
+import com.a6.projectgroep.bestofbreda.View.Fragments.TermsOfServiceFragment;
 import com.a6.projectgroep.bestofbreda.ViewModel.MainViewModel;
 import com.a6.projectgroep.bestofbreda.ViewModel.ViewModelFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -140,12 +142,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 //TODO navigate to the activities
                 switch (menuItem.getItemId()) {
                     case R.id.menu_nav_sights:
-//                        FragmentManager fragmentManager = getSupportFragmentManager();
-//                        Fragment fragment = fragmentManager.findFragmentById(R.id.detailedactivity_videofragment_placeholder);
-//                        if(fragment == null){
-//                            DetailedVideoFragment detailedVideoFragment = new DetailedVideoFragment();
-//                            detailedVideoFragment.show(fragmentManager, "FRAGMENT_ADD_BRIDGE");
-//                        }
                         break;
                     case R.id.menu_nav_routes:
 
@@ -154,6 +150,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         break;
                     case R.id.menu_nav_termsofservice:
+                        DialogFragment fragment = new TermsOfServiceFragment();
+                        fragment.show(getSupportFragmentManager(), "TOS");
+
 
                         break;
                 }

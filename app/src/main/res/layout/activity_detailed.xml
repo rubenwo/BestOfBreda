@@ -65,7 +65,7 @@
         app:layout_constraintTop_toBottomOf="@+id/detailedactivity_sight_name" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/detailedactivity_fab_media"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginEnd="8dp"
@@ -76,17 +76,6 @@
         app:fabCustomSize="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_detailed_music_white" />
-    <FrameLayout
-        android:id="@+id/detailedactivity_videofragment_placeholder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:name="com.a6.projectgroep.bestofbreda.View.Fragments.DetailedVideoFragment"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout="@layout/fragment_detailed_video"
-        />
+        app:srcCompat="@drawable/ic_detailed_play_video_white" />
+
 </android.support.constraint.ConstraintLayout>
