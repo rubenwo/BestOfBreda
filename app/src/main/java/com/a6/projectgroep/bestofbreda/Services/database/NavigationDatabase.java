@@ -17,7 +17,7 @@ import com.a6.projectgroep.bestofbreda.Services.GeoCoderService;
 import java.util.Arrays;
 import java.util.List;
 
-@Database(entities = {MultimediaModel.class, RouteModel.class, WaypointModel.class}, version = 1)
+@Database(entities = {MultimediaModel.class, RouteModel.class, WaypointModel.class}, version = 2)
 @TypeConverters({Converters.class})
 public abstract class NavigationDatabase extends RoomDatabase {
 
@@ -65,7 +65,7 @@ public abstract class NavigationDatabase extends RoomDatabase {
             String string = "testString";
             MultimediaModel multiMedia = new MultimediaModel(strings, string);
             multiMediaDAO.insertMultiMedia(multiMedia);
-            waypointDAO.insertWaypoint(new WaypointModel("Avans", "desc", GeoCoderService.getInstance(mApplication).getLocationFromName("Avans breda"), false, false, multiMedia));
+            waypointDAO.insertWaypoint(new WaypointModel("Avans", "desc", GeoCoderService.getInstance(mApplication).getLocationFromName("Avans Breda"), false, false, multiMedia));
             waypointDAO.insertWaypoint(new WaypointModel("Casino", "desc", GeoCoderService.getInstance(mApplication).getLocationFromName("Casino Breda"), false, false, multiMedia));
             routeDAO.insertRoute(new RouteModel(Arrays.asList("Avans", "Casino"), "nameOfRoute", false, "resource"));
             return null;
