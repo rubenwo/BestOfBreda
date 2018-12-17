@@ -29,6 +29,7 @@ public class DetailedPreviewFragment extends DialogFragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_detailed_preview, container, false);
+        getDialog().getWindow().setBackgroundDrawableResource(R.drawable.detailedroutefragment_border);
         return v;
     }
 
