@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -64,13 +65,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.savedInstanceState = savedInstanceState;
+
         askPermission();
         setupDetailedRouteFragment();
         setupToolbar();
         setupDrawerLayout();
         setupViewModel();
-        Intent intent = new Intent(getApplicationContext(), BackgroundService.class);
-        startService(intent);
     }
 
     private void setupToolbar() {
@@ -84,15 +84,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void setupViewModel() {
         mainViewModel = ViewModelProviders.of(this, new ViewModelFactory(getApplication(), this::onLocationChanged)).get(MainViewModel.class);
-        mainViewModel.getAllWaypointModels().observe(this, new Observer<List<WaypointModel>>() {
-            @Override
-            public void onChanged(@Nullable List<WaypointModel> wayPointModels) {
-                Toast.makeText(getApplicationContext(), "waypoints changed", Toast.LENGTH_SHORT).show();
-                for (WaypointModel m : wayPointModels) {
-                    Log.i("DATABASE_MODELS", m.toString());
-                }
+        mainViewModel.getAllWaypointModels().observe(this, wayPointModels -> {
+            Toast.makeText(getApplicationContext(), "waypoints changed", Toast.LENGTH_SHORT).show();
+            for (WaypointModel m : wayPointModels) {
+                Log.i("DATABASE_MODELS", m.toString());
             }
         });
+
         mainViewModel.getAllRouteModels().observe(this, new Observer<List<RouteModel>>() {
             @Override
             public void onChanged(@Nullable List<RouteModel> routeModels) {
@@ -102,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         });
+
         mainViewModel.getAllMultiMediaModels().observe(this, new Observer<List<MultimediaModel>>() {
             @Override
             public void onChanged(@Nullable List<MultimediaModel> multimediaModels) {
@@ -117,33 +116,32 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         drawerLayout = findViewById(R.id.mainactivity_drawer_layout);
 
         NavigationView navigationView = findViewById(R.id.mainactivity_nav_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                menuItem.setChecked(true);
-                //TODO navigate to the activities
-                switch (menuItem.getItemId()) {
-                    case R.id.menu_nav_sights:
+        navigationView.setCheckedItem(R.id.menu_nav_sights);
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
+            menuItem.setChecked(true);
+            //TODO navigate to the activities
+            switch (menuItem.getItemId()) {
+                case R.id.menu_nav_sights:
 //                        FragmentManager fragmentManager = getSupportFragmentManager();
 //                        Fragment fragment = fragmentManager.findFragmentById(R.id.detailedactivity_videofragment_placeholder);
 //                        if(fragment == null){
 //                            DetailedVideoFragment detailedVideoFragment = new DetailedVideoFragment();
 //                            detailedVideoFragment.show(fragmentManager, "FRAGMENT_ADD_BRIDGE");
 //                        }
-                        break;
-                    case R.id.menu_nav_routes:
+                    break;
+                case R.id.menu_nav_routes:
 
-                        break;
-                    case R.id.menu_nav_help:
+                    break;
+                case R.id.menu_nav_help:
+                    Intent intent = new Intent(MainActivity.this, HelpActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.menu_nav_termsofservice:
 
-                        break;
-                    case R.id.menu_nav_termsofservice:
-
-                        break;
-                }
-                drawerLayout.closeDrawers();
-                return true;
+                    break;
             }
+            drawerLayout.closeDrawers();
+            return true;
         });
 
     }
@@ -157,12 +155,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMapView = findViewById(R.id.mainactivity_map_view);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
+
         try {
             MapsInitializer.initialize(getApplicationContext());
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         mMapView.getMapAsync(this);
         polylineOptions = new PolylineOptions();
     }
@@ -227,6 +227,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         markers = mainViewModel.getAllRouteWaypoints();
         waypoints = new ArrayList<>();
         waypoints.add(mainViewModel.getCurrentPosition());
+
         if (markers != null) {
             for (WaypointModel model : markers) {
                 if (!model.isAlreadySeen()) {
@@ -266,12 +267,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (markers != null) {
             for (WaypointModel model : markers) {
                 if (!model.isAlreadySeen()) {
+                    Location modelLocation = new Location("modelLocation");
+                    modelLocation.setLatitude(model.getLocation().latitude);
+                    modelLocation.setLongitude(model.getLocation().longitude);
+                    Location currentLocation = new Location("peoplLocation");
+                    currentLocation.setLatitude(mainViewModel.getCurrentPosition().latitude);
+                    currentLocation.setLongitude(mainViewModel.getCurrentPosition().longitude);
+                    if(currentLocation.distanceTo(modelLocation) < 25) {
+                        
+                    }
+
                     GeoCoderService.getInstance(getApplication())
                             .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_RED, model.getName(), model.getDescription());
                     waypoints.add(model.getLocation());
                 } else
                     GeoCoderService.getInstance(getApplication())
                             .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_GREEN, model.getName(), model.getDescription());
+
             }
             polylineOptions.width(10);
             polylineOptions.color(Color.BLUE);

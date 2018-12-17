@@ -36,6 +36,7 @@ public class LocationHandler {
         provider = LocationManager.NETWORK_PROVIDER;
         locationManager = (LocationManager) application.getSystemService(Context.LOCATION_SERVICE);
         providerOn = false;
+
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
@@ -59,6 +60,7 @@ public class LocationHandler {
                 Toast.makeText(application.getApplicationContext(), "Je GPS functie staat niet aan", Toast.LENGTH_LONG).show();
             }
         };
+
         if (ActivityCompat.checkSelfPermission(application.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (locationManager.getLastKnownLocation(provider) != null) {
                 locationManager.requestLocationUpdates(provider, 5, 2, locationListener);
@@ -70,6 +72,4 @@ public class LocationHandler {
     public LatLng getCurrentLocation() {
         return currentLocation;
     }
-
-
 }

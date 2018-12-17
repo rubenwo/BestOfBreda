@@ -41,9 +41,11 @@ public class GoogleMapsAPIManager {
 
     public List<WaypointModel> getRouteWaypoints(Application application) {
         List<WaypointModel> testWayPoints = new ArrayList<>();
-        testWayPoints.add(new WaypointModel(1, "avans breda", "avans hogeschool", GeoCoderService.getInstance(application).getLocationFromName("Avans breda"), false, false, 1));
-        testWayPoints.add(new WaypointModel(2, "casino", "Holland Casino Breda", GeoCoderService.getInstance(application).getLocationFromName("holland casino breda"), false, false, 2));
-        testWayPoints.add(new WaypointModel(3, "station breda", "Centraal Station Breda", GeoCoderService.getInstance(application).getLocationFromName("station breda"), false, false, 3));
+        if(testWayPoints.isEmpty()) {
+            testWayPoints.add(new WaypointModel(1, "avans breda", "avans hogeschool", GeoCoderService.getInstance(application).getLocationFromName("Avans breda"), false, false, 1));
+            testWayPoints.add(new WaypointModel(2, "casino", "Holland Casino Breda", GeoCoderService.getInstance(application).getLocationFromName("holland casino breda"), false, false, 2));
+            testWayPoints.add(new WaypointModel(3, "station breda", "Centraal Station Breda", GeoCoderService.getInstance(application).getLocationFromName("station breda"), false, false, 3));
+        }
         return testWayPoints;
     }
 
