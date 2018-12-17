@@ -26,7 +26,6 @@ public class BackgroundService extends IntentService implements LiveLocationList
     @Override
     protected void onHandleIntent(Intent workIntent) {
         googleMapsAPIManager = GoogleMapsAPIManager.getInstance(getApplication(), this);
-        wayPoints = googleMapsAPIManager.getRouteWaypoints(getApplication());
         pushNotification = PushNotification.getInstance(getApplicationContext());
 
         Thread thread = new Thread(new Runnable() {

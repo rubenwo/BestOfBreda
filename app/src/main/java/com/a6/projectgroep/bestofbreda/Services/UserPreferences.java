@@ -1,6 +1,5 @@
 package com.a6.projectgroep.bestofbreda.Services;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -18,17 +17,17 @@ public class UserPreferences {
     private ArrayList<String> routeKeys;
     private String currentRouteKey;
 
-    private UserPreferences(Application application) {
-        preferences = application.getSharedPreferences("user_preferences", Context.MODE_PRIVATE);
+    private UserPreferences(Context context) {
+        preferences = context.getSharedPreferences("user_preferences", Context.MODE_PRIVATE);
         waypointKeys = new ArrayList<>();
         routeKeys = new ArrayList<>();
         currentRouteKey = "";
         createAllKeys();
     }
 
-    public static UserPreferences getInstance(Application application) {
+    public static UserPreferences getInstance(Context context) {
         if (instance == null)
-            instance = new UserPreferences(application);
+            instance = new UserPreferences(context);
         return instance;
     }
 

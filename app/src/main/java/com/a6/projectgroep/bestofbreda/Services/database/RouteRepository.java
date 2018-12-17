@@ -19,25 +19,29 @@ public class RouteRepository {
     }
 
     public void insertRouteModel(RouteModel model) {
-        new RouteRepository.InsertMultiMediaAsyncTask(routeDAO).execute(model);
+        new InsertRouteModelAsyncTask(routeDAO).execute(model);
     }
 
     public void updateRouteModel(RouteModel model) {
-        new RouteRepository.UpdateTestDataAsyncTask(routeDAO).execute(model);
+        new UpdateRouteModelAsyncTask(routeDAO).execute(model);
     }
 
     public void deleteRouteModel(RouteModel model) {
-        new RouteRepository.DeleteTestDataAsyncTask(routeDAO).execute(model);
+        new DeleteRouteModelAsycTask(routeDAO).execute(model);
     }
 
     public LiveData<List<RouteModel>> getAllRouteModels() {
         return mRoute;
     }
 
-    private static class InsertMultiMediaAsyncTask extends AsyncTask<RouteModel, Void, Void> {
+    public LiveData<RouteModel> getRouteModel(String routeString) {
+        return routeDAO.getLiveRoute(routeString);
+    }
+
+    private static class InsertRouteModelAsyncTask extends AsyncTask<RouteModel, Void, Void> {
         private RouteDAO routeDAO;
 
-        private InsertMultiMediaAsyncTask(RouteDAO routeDAO) {
+        private InsertRouteModelAsyncTask(RouteDAO routeDAO) {
             this.routeDAO = routeDAO;
         }
 
@@ -48,10 +52,10 @@ public class RouteRepository {
         }
     }
 
-    private static class UpdateTestDataAsyncTask extends AsyncTask<RouteModel, Void, Void> {
+    private static class UpdateRouteModelAsyncTask extends AsyncTask<RouteModel, Void, Void> {
         private RouteDAO routeDAO;
 
-        private UpdateTestDataAsyncTask(RouteDAO routeDAO) {
+        private UpdateRouteModelAsyncTask(RouteDAO routeDAO) {
             this.routeDAO = routeDAO;
         }
 
@@ -62,10 +66,10 @@ public class RouteRepository {
         }
     }
 
-    private static class DeleteTestDataAsyncTask extends AsyncTask<RouteModel, Void, Void> {
+    private static class DeleteRouteModelAsycTask extends AsyncTask<RouteModel, Void, Void> {
         private RouteDAO routeDAO;
 
-        private DeleteTestDataAsyncTask(RouteDAO routeDAO) {
+        private DeleteRouteModelAsycTask(RouteDAO routeDAO) {
             this.routeDAO = routeDAO;
         }
 
