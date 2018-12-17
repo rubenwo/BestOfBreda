@@ -22,7 +22,7 @@ public class GoogleMapsAPIManager {
     private LocationHandler locationHandler;
 
     private GoogleMapsAPIManager(Application application, LiveLocationListener listener) {
-        locationHandler = LocationHandler.getInstance(application, listener);
+        locationHandler = LocationHandler.getInstance(application);
     }
 
     public static GoogleMapsAPIManager getInstance(Application application, LiveLocationListener listener) {
@@ -53,10 +53,5 @@ public class GoogleMapsAPIManager {
 
     public void SetCurrentWaypoint(WaypointModel currentWaypoint) {
         this.currentWaypoint = currentWaypoint;
-    }
-
-    public LatLng getCurrentPosition() {
-        currentPosition = locationHandler.getCurrentLocation();
-        return this.currentPosition;
     }
 }

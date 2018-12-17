@@ -22,25 +22,36 @@ public class LocationHandler {
     private String provider;
     private boolean providerOn;
 
-    public static LocationHandler getInstance(Application application, LiveLocationListener liveLocationListener)
+    public static LocationHandler getInstance(Application application)
     {
-        if(instance == null)
-        {
-            instance = new LocationHandler(application, liveLocationListener);
+        if(instance == null) {
+            instance = new LocationHandler(application);
         }
         return instance;
     }
 
-    private LocationHandler(Application application, LiveLocationListener liveLocationListener) {
+    private LocationHandler(Application application) {
         this.application = application;
         provider = LocationManager.NETWORK_PROVIDER;
         locationManager = (LocationManager) application.getSystemService(Context.LOCATION_SERVICE);
         providerOn = false;
+    }
+
+    public LatLng getCurrentLocation() {
+        try {
+            return new LatLng(locationManager.getLastKnownLocation(provider).getLatitude(), locationManager.getLastKnownLocation(provider).getLongitude());
+        }
+        catch(SecurityException e) {
+            return null;
+        }
+    }
+
+    public void setLiveLocationListener(LiveLocationListener listener){
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                liveLocationListener.onLocationChanged(new LatLng(location.getLatitude(), location.getLongitude()));
+                listener.onLocationChanged(new LatLng(location.getLatitude(), location.getLongitude()));
             }
 
             @Override
@@ -59,6 +70,7 @@ public class LocationHandler {
                 Toast.makeText(application.getApplicationContext(), "Je GPS functie staat niet aan", Toast.LENGTH_LONG).show();
             }
         };
+
         if (ActivityCompat.checkSelfPermission(application.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (locationManager.getLastKnownLocation(provider) != null) {
                 locationManager.requestLocationUpdates(provider, 5, 2, locationListener);
@@ -66,10 +78,4 @@ public class LocationHandler {
             }
         }
     }
-
-    public LatLng getCurrentLocation() {
-        return currentLocation;
-    }
-
-
 }
