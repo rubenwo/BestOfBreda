@@ -259,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         waypoints.add(latLng);
         polylineOptions = new PolylineOptions();
         polylineOptions.add(latLng);
-        Toast.makeText(this, "Route updated to " + latLng, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Route updated to " + latLng, Toast.LENGTH_SHORT).show();
 //        Commented because of max requests!
         if (markers != null) {
             for (WaypointModel model : markers) {
