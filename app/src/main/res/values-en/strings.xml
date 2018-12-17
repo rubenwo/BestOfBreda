@@ -11,20 +11,20 @@
     <string name="termsofactivity_header">TERMS AND CONDITIONS FOR USE, REPRODUCTION AND DISTRIBUTION</string>
     <string name="termsofactivity_text">Terms of Service example</string>
 
-    <string name="GPS_off">Your GPS function is not turned on</string>
+    <string name="GPS_off">Your GPS function is off</string>
 
-    <string name="NotificationChannel_name">Nearby sight</string>
+    <string name="NotificationChannel_name">Nearest sight</string>
     <string name="NotificationChannel_Description">The notification appears when a user is near a sight with the tour running</string>
 
-    <string name="HelpText">After opening het app you will get to see the map of Breda. When you select the
-        icon with the three horizontal stripes, you will get to see a menu. In this menu you have a choice between
-        the possible routes that you can walk.
-    \nAfter you have chosen one of these routes, you can walk them. If you select the menu icon while walking the
-        tour, you will find a list of the sight that are along the route. When you select on of these sights, you
+    <string name="HelpText">After opening the app you will see the map of Breda. When you select the
+        icon with the three horizontal stripes, you will see a menu. When you press the button Routes,
+        the app will navigate to a screen with the list of possible routes.
+    \nAfter you have chosen one of these routes, the route between the sights will appear. If you select the menu icon while walking the
+        tour, the menu will appear again. When you press the button Sights, you will find a list of the sights that are along the route. When you select on of these sights, you
         can view the detailed information, pictures and videos. It is also possible to view this information by
-        selecting one of the sight-markers.
-    \nAs you walk, the part of the route that you have walked will be visibly marked. When you come within the 25
-        meter zone of a sight, you will receive a notification informing you that you are near a sight. if you tap
-        on the notification, you can vies the information of this sight.
-    \nIf you stray form the tour, the app will give the directions to return to the tour.</string>
+        selecting one of the markers on the map.
+    \nAs you walk, the part of the route that you have walked will have a different color. When you come within the 20
+        meter zone of a sight, you will receive a notification informing you that you are near a sight. When you tap
+        on the notification, you can view the information of this sight.
+    \nIf you deviate from the tour, the app will give the directions to return to the tour.</string>
 </resources>
