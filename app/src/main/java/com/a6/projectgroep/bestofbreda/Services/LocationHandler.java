@@ -22,9 +22,8 @@ public class LocationHandler {
     private String provider;
     private boolean providerOn;
 
-    public static LocationHandler getInstance(Application application)
-    {
-        if(instance == null) {
+    public static LocationHandler getInstance(Application application) {
+        if (instance == null) {
             instance = new LocationHandler(application);
         }
         return instance;
@@ -40,13 +39,12 @@ public class LocationHandler {
     public LatLng getCurrentLocation() {
         try {
             return new LatLng(locationManager.getLastKnownLocation(provider).getLatitude(), locationManager.getLastKnownLocation(provider).getLongitude());
-        }
-        catch(SecurityException e) {
+        } catch (SecurityException e) {
             return null;
         }
     }
 
-    public void setLiveLocationListener(LiveLocationListener listener){
+    public void setLiveLocationListener(LiveLocationListener listener) {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {

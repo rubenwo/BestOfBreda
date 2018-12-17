@@ -12,12 +12,14 @@ import android.support.annotation.NonNull;
 import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
+import com.a6.projectgroep.bestofbreda.Services.JsonDecoder;
+import com.a6.projectgroep.bestofbreda.Services.UserPreferences;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Arrays;
 import java.util.List;
 
-@Database(entities = {MultimediaModel.class, RouteModel.class, WaypointModel.class}, version = 1)
+@Database(entities = {MultimediaModel.class, RouteModel.class, WaypointModel.class}, version = 2)
 @TypeConverters({Converters.class})
 public abstract class NavigationDatabase extends RoomDatabase {
 
@@ -65,8 +67,19 @@ public abstract class NavigationDatabase extends RoomDatabase {
             String string = "testString";
             MultimediaModel multiMedia = new MultimediaModel(strings, string);
             multiMediaDAO.insertMultiMedia(multiMedia);
-            routeDAO.insertRoute(new RouteModel(Arrays.asList(1, 2, 3, 4), "nameOfRoute", false, "resource"));
+            routeDAO.insertRoute(new RouteModel(Arrays.asList("1", "2", "3", "4"), "nameOfRoute", false, "resource"));
             waypointDAO.insertWaypoint(new WaypointModel("name", "desc", new LatLng(1.23, 4.56), false, false, multiMedia));
+
+            UserPreferences preferences = UserPreferences.getInstance(mContext);
+            if (preferences.getFirstRun()) {
+                if (!JsonDecoder.decodeJsonRouteFile(mContext, "BlindwallsRoute.json", routeDAO)) {
+                    return null;
+                }
+                JsonDecoder.decodeJsonRouteFile(mContext, "HistorischeRoute.json", routeDAO);
+                JsonDecoder.decodeJsonWaypointsFile(mContext, "Blindwalls.json", waypointDAO);
+                JsonDecoder.decodeJsonWaypointsFile(mContext, "HistorsicheRouteWaypoints.json", waypointDAO);
+                preferences.setFirstRun(false);
+            }
             return null;
         }
     }
