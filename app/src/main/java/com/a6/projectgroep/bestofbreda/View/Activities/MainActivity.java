@@ -29,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.a6.projectgroep.bestofbreda.BestOfBreda;
 import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ArrayList<LatLng> waypoints;
     private Bundle savedInstanceState;
     private DialogFragment dialogFragment;
+    private boolean isSaveStated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,10 +142,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             drawerLayout.closeDrawers();
             return true;
         });
-
     }
 
-        private void setupDetailedRouteFragment() {
+    private void setupDetailedRouteFragment() {
         //Code to show DetailedRouteFragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         DetailedRouteFragment detailedRouteFragment = new DetailedRouteFragment();
@@ -171,6 +172,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     GPS_REQUEST);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isSaveStated = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isSaveStated = false;
     }
 
     @Override
@@ -270,18 +283,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Location currentLocation = new Location("peoplLocation");
                     currentLocation.setLatitude(mainViewModel.getCurrentPosition().latitude);
                     currentLocation.setLongitude(mainViewModel.getCurrentPosition().longitude);
-                    if(currentLocation.distanceTo(modelLocation) < 35) {
-                        if(dialogFragment != null) {
-                            if(!dialogFragment.isVisible()) {
+                    if (currentLocation.distanceTo(modelLocation) < 35) {
+                        if(isSaveStated) {
+                            if (dialogFragment != null) {
+                                if (!dialogFragment.isVisible()) {
+                                    dialogFragment = DetailedPreviewFragment.newInstance(model.getName());
+                                    dialogFragment.show(getSupportFragmentManager(), null);
+                                }
+                            } else {
                                 dialogFragment = DetailedPreviewFragment.newInstance(model.getName());
                                 dialogFragment.show(getSupportFragmentManager(), null);
                             }
+                            model.setAlreadySeen(true);
                         }
-                        else {
-                            dialogFragment = DetailedPreviewFragment.newInstance(model.getName());
-                            dialogFragment.show(getSupportFragmentManager(), null);
-                        }
-                        model.setAlreadySeen(true);
                     }
 
                     GeoCoderService.getInstance(getApplication())

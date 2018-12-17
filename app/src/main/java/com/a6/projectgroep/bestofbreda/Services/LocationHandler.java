@@ -63,7 +63,7 @@ public class LocationHandler {
 
         if (ActivityCompat.checkSelfPermission(application.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             if (locationManager.getLastKnownLocation(provider) != null) {
-                locationManager.requestLocationUpdates(provider, 5, 2, locationListener);
+                locationManager.requestLocationUpdates(provider, 5, 0, locationListener);
                 currentLocation = new LatLng(locationManager.getLastKnownLocation(provider).getLatitude(), locationManager.getLastKnownLocation(provider).getLongitude());
             }
         }
