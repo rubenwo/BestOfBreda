@@ -67,7 +67,7 @@
         app:layout_constraintTop_toBottomOf="@+id/detailedactivity_sight_name" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/detailedactivity_fab_media"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginEnd="8dp"
@@ -78,7 +78,7 @@
         app:fabCustomSize="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_detailed_music_white" />
+        app:srcCompat="@drawable/ic_detailed_play_video_white" />
     <FrameLayout
         android:id="@+id/detailedactivity_videofragment_placeholder"
         android:layout_width="wrap_content"
