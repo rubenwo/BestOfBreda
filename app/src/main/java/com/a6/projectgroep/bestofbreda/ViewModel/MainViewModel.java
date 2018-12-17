@@ -10,6 +10,7 @@ import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.Services.GoogleMapsAPIManager;
 import com.a6.projectgroep.bestofbreda.Services.LiveLocationListener;
+import com.a6.projectgroep.bestofbreda.Services.LocationHandler;
 import com.a6.projectgroep.bestofbreda.Services.RouteReceivedListener;
 import com.a6.projectgroep.bestofbreda.Services.VolleyConnection;
 import com.a6.projectgroep.bestofbreda.Services.database.MultimediaRepository;
@@ -99,7 +100,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public void getRoutePoints(ArrayList<LatLng> waypoints, RouteReceivedListener listener) {
         volleyConnection = VolleyConnection.getInstance(getApplication().getApplicationContext());
-        volleyConnection.getRoute(waypoints, listener);
+    //    volleyConnection.getRoute(waypoints, listener);
     }
 
     public List<WaypointModel> getAllRouteWaypoints() {
@@ -107,7 +108,7 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public LatLng getCurrentPosition() {
-        return mapsApiManager.getCurrentPosition();
+        return LocationHandler.getInstance(getApplication()).getCurrentLocation();
     }
 
 }

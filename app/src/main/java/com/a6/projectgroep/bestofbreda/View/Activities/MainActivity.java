@@ -33,6 +33,7 @@ import com.a6.projectgroep.bestofbreda.R;
 import com.a6.projectgroep.bestofbreda.Services.BackgroundService;
 import com.a6.projectgroep.bestofbreda.Services.GeoCoderService;
 import com.a6.projectgroep.bestofbreda.Services.LiveLocationListener;
+import com.a6.projectgroep.bestofbreda.Services.LocationHandler;
 import com.a6.projectgroep.bestofbreda.Services.RouteReceivedListener;
 import com.a6.projectgroep.bestofbreda.View.Fragments.DetailedRouteFragment;
 import com.a6.projectgroep.bestofbreda.ViewModel.MainViewModel;
@@ -71,8 +72,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setupViewModel();
         Intent intent = new Intent(getApplicationContext(), BackgroundService.class);
         startService(intent);
-    }
+        mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        LocationHandler locationHandler = LocationHandler.getInstance(getApplication());
 
+        locationHandler.setLiveLocationListener(this);
+        mainViewModel.getAllWaypointModels().observe(this, new Observer<List<WaypointModel>>() {
+            @Override
+            public void onChanged(@Nullable List<WaypointModel> wayPointModels) {
+                Toast.makeText(getApplicationContext(), "onChanged", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+    
     private void setupToolbar() {
         Toolbar toolbar = findViewById(R.id.mainactivity_toolbar);
         setSupportActionBar(toolbar);
@@ -181,9 +192,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         switch (requestCode) {
             case GPS_REQUEST:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    googleMap.clear();
+                    Intent i = getBaseContext().getPackageManager()
+                            .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+                    assert i != null;
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
                 } else {
-                    System.out.println("geen locatie");
+                    Toast.makeText(getApplicationContext(), "geen locatie", Toast.LENGTH_SHORT).show();
                     finish();
                 }
         }
