@@ -44,18 +44,20 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, RouteReceivedListener, LiveLocationListener {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, RouteReceivedListener, LiveLocationListener, GoogleMap.OnInfoWindowClickListener {
     private static final int GPS_REQUEST = 50;
     private MainViewModel mainViewModel;
     private DrawerLayout drawerLayout;
     private MapView mMapView;
     private GoogleMap googleMap;
     private PolylineOptions polylineOptions;
+    private PolylineOptions walkedRouteOptions;
     private List<WaypointModel> markers;
     private ArrayList<LatLng> waypoints;
     private Bundle savedInstanceState;
@@ -66,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
         this.savedInstanceState = savedInstanceState;
         askPermission();
-       // setupDetailedRouteFragment();
         setupToolbar();
         setupDrawerLayout();
         setupViewModel();
@@ -82,6 +83,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Toast.makeText(getApplicationContext(), "onChanged", Toast.LENGTH_LONG).show();
             }
         });
+
+        polylineOptions = new PolylineOptions();
+        walkedRouteOptions = new PolylineOptions();
+
+        polylineOptions.width(10);
+        polylineOptions.color(Color.BLUE);
+        polylineOptions.add(mainViewModel.getCurrentPosition());
+        walkedRouteOptions.width(10);
+        walkedRouteOptions.color(Color.CYAN);
+        walkedRouteOptions.add(mainViewModel.getCurrentPosition());
     }
 
     private void setupToolbar() {
@@ -175,7 +186,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             e.printStackTrace();
         }
         mMapView.getMapAsync(this);
-        polylineOptions = new PolylineOptions();
     }
 
     private void askPermission() {
@@ -234,6 +244,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap mMap) {
         googleMap = mMap;
+        googleMap.setOnInfoWindowClickListener(this);
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -252,13 +263,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     GeoCoderService.getInstance(getApplication())
                             .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_GREEN, model.getName(), model.getDescription());
             }
-            polylineOptions.width(10);
-            polylineOptions.color(Color.BLUE);
-            polylineOptions.add(mainViewModel.getCurrentPosition());
 
             mainViewModel.getRoutePoints(waypoints, this);
         }
-
     }
 
     @Override
@@ -269,14 +276,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onLocationChanged(LatLng latLng) {
-        if (googleMap != null)
-            googleMap.clear();
-        waypoints = new ArrayList<>();
-        waypoints.add(latLng);
         polylineOptions = new PolylineOptions();
         polylineOptions.add(latLng);
+        walkedRouteOptions.add(latLng);
+
+        if (googleMap != null) {
+            googleMap.clear();
+            googleMap.addPolyline(walkedRouteOptions);
+        }
+
+        waypoints = new ArrayList<>();
+        waypoints.add(latLng);
         Toast.makeText(this, "Route updated to " + latLng, Toast.LENGTH_SHORT).show();
-//        Commented because of max requests!
+
         if (markers != null) {
             for (WaypointModel model : markers) {
                 if (!model.isAlreadySeen()) {
@@ -287,9 +299,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     GeoCoderService.getInstance(getApplication())
                             .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_GREEN, model.getName(), model.getDescription());
             }
-            polylineOptions.width(10);
-            polylineOptions.color(Color.BLUE);
+
             mainViewModel.getRoutePoints(waypoints, this);
         }
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Intent intent = new Intent(this, DetailedActivity.class);
+        intent.putExtra("POSITION", marker.getPosition());
+        startActivity(intent);
     }
 }

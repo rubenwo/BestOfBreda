@@ -13,10 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.R;
 import com.a6.projectgroep.bestofbreda.ViewModel.DetailedViewModel;
+import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.Picasso;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -28,10 +30,20 @@ public class DetailedActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private DetailedViewModel viewModel;
     private int sightID;
+    private WaypointModel model;
+    private TextView titleTextView;
+    private TextView descriptionTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed);
+
+        titleTextView = findViewById(R.id.detailedactivity_sight_name);
+        descriptionTextView = findViewById(R.id.detailedactivity_sight_description);
+        viewPager = findViewById(R.id.detailedactivity_viewpager);
+
+        viewPager.setAdapter(new ImageSliderAdapter());
 
         viewModel = ViewModelProviders.of(this).get(DetailedViewModel.class);
         viewModel.getAllWaypointModels().observe(this, new Observer<List<WaypointModel>>() {
@@ -41,9 +53,14 @@ public class DetailedActivity extends AppCompatActivity {
             }
         });
         sightID = getIntent().getIntExtra("ROUTE_ADAPTERPOS", 0);
-
-        viewPager = findViewById(R.id.detailedactivity_viewpager);
-        viewPager.setAdapter(new ImageSliderAdapter());
+        LatLng position = getIntent().getParcelableExtra("POSITION");
+        viewModel.getAllWaypointModels().observe(this, (List<WaypointModel> waypointModels) -> {
+            for (WaypointModel m : waypointModels)
+                if (position.equals(m.getLocation()))
+                    model = m;
+            titleTextView.setText(model.getName());
+            descriptionTextView.setText(model.getDescription());
+        });
 
         CirclePageIndicator indicator = findViewById(R.id.detailedactivity_circlepageindicator);
         indicator.setViewPager(viewPager);
@@ -53,15 +70,15 @@ public class DetailedActivity extends AppCompatActivity {
     private class ImageSliderAdapter extends PagerAdapter {
 
         private LayoutInflater inflater;
+
         public ImageSliderAdapter() {
             inflater = LayoutInflater.from(getApplicationContext());
         }
 
         @NonNull
         @Override
-        public Object instantiateItem(@NonNull ViewGroup container, int position)
-        {
-            ViewGroup imageLayout= (ViewGroup) inflater.inflate(R.layout.detailedactivity_viewpager_item, container, false);
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
+            ViewGroup imageLayout = (ViewGroup) inflater.inflate(R.layout.detailedactivity_viewpager_item, container, false);
             ImageView imageView = imageLayout.findViewById(R.id.detailedactivity_viewpager_item_imageview);
             String url = viewModel.getAllMultimediaModels().getValue().get(sightID).getPictureUrls().get(position);
             Picasso.get().load(url).into(imageView);
@@ -70,16 +87,14 @@ public class DetailedActivity extends AppCompatActivity {
         }
 
         @Override
-        public int getCount()
-        {
+        public int getCount() {
             //return viewModel.getAllWaypointModels().getValue().get(sightID).getMultimediaID().getPictureUrls().size();
             //TODO: get multimediaID from waypoint and search for it in multimediaDAO.
             return -1;
         }
 
         @Override
-        public boolean isViewFromObject(@NonNull View view, @NonNull Object o)
-        {
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object o) {
             return view == o;
         }
     }
