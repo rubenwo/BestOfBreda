@@ -2,9 +2,12 @@ package com.a6.projectgroep.bestofbreda.View.Activities;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +16,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.R;
 import com.a6.projectgroep.bestofbreda.ViewModel.DetailedViewModel;
@@ -28,6 +33,8 @@ public class DetailedActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private DetailedViewModel viewModel;
     private int sightID;
+    private WaypointModel sight;
+    private MultimediaModel media;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +48,8 @@ public class DetailedActivity extends AppCompatActivity {
             }
         });
         sightID = getIntent().getIntExtra("ROUTE_ADAPTERPOS", 0);
+        sight = viewModel.getAllWaypointModels().getValue().get(sightID);
+        media = viewModel.getAllMultimediaModels().getValue().get(sight.getMultimediaID());
 
         viewPager = findViewById(R.id.detailedactivity_viewpager);
         viewPager.setAdapter(new ImageSliderAdapter());
@@ -48,6 +57,22 @@ public class DetailedActivity extends AppCompatActivity {
         CirclePageIndicator indicator = findViewById(R.id.detailedactivity_circlepageindicator);
         indicator.setViewPager(viewPager);
         indicator.setRadius(getResources().getDisplayMetrics().density * 5);
+
+        FloatingActionButton playMedia = findViewById(R.id.detailedactivity_fab_media);
+        playMedia.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if(media.getVideoUrls() != null){
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(media.getVideoUrls()));
+                    startActivity(browserIntent);
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), R.string.detailedactivity_toast_no_videos, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private class ImageSliderAdapter extends PagerAdapter {

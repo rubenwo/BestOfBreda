@@ -116,20 +116,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         drawerLayout = findViewById(R.id.mainactivity_drawer_layout);
 
         NavigationView navigationView = findViewById(R.id.mainactivity_nav_view);
-        navigationView.setCheckedItem(R.id.menu_nav_sights);
-        navigationView.setNavigationItemSelectedListener(menuItem -> {
-            menuItem.setChecked(true);
-            //TODO navigate to the activities
-            switch (menuItem.getItemId()) {
-                case R.id.menu_nav_sights:
-//                        FragmentManager fragmentManager = getSupportFragmentManager();
-//                        Fragment fragment = fragmentManager.findFragmentById(R.id.detailedactivity_videofragment_placeholder);
-//                        if(fragment == null){
-//                            DetailedVideoFragment detailedVideoFragment = new DetailedVideoFragment();
-//                            detailedVideoFragment.show(fragmentManager, "FRAGMENT_ADD_BRIDGE");
-//                        }
-                    break;
-                case R.id.menu_nav_routes:
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                menuItem.setChecked(true);
+                //TODO navigate to the activities
+                switch (menuItem.getItemId()) {
+                    case R.id.menu_nav_sights:
+                        break;
+                    case R.id.menu_nav_routes:
 
                     break;
                 case R.id.menu_nav_help:

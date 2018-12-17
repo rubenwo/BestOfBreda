@@ -10,4 +10,6 @@
     <string name="helpactivity_header_instructions">Instructies</string>
     <string name="termsofactivity_header">SERVICEVOORWAARDEN VOOR GEBRUIK, REPRODUCTIE EN DISTRIBUTIE</string>
     <string name="termsofactivity_text">Servicevoorwaarden voorbeeld</string>
+    <string name="detailedactivity_toast_no_videos">Er zijn geen videos beschikbaar voor deze bezienswaardigheid</string>
+    <string name="detailedfragment_more_information">Meer informatie</string>
 </resources>
