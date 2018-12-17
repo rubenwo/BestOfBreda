@@ -2,9 +2,11 @@ package com.a6.projectgroep.bestofbreda.Services;
 
 import android.app.Application;
 
+import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.Services.database.RouteRepository;
 import com.a6.projectgroep.bestofbreda.Services.database.WaypointRepository;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,7 +64,8 @@ public class JsonDecoder {
                     files.add(images.getJSONObject(index).getString("file"));
                 }
                 //TODO: Change ID's to something better
-                //  repository.insertWaypoint(new WaypointModel(1, name, desc, new LatLng(latitude, longitude), false, false, 1));
+                // repository.insertWaypoint(new WaypointModel(1, name, desc, new LatLng(latitude, longitude), false, false, 1));
+                repository.insertWaypoint(new WaypointModel(name, desc, new LatLng(latitude, longitude), false, false, new MultimediaModel(urls, videoUrl)));
             }
             return true;
         } catch (JSONException e) {
