@@ -18,19 +18,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/helpactivity_text"
-        android:scrollbars="vertical"
+    <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:text="@string/HelpText"
-        android:textColor="@color/colorPrimary"
+        android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/helpactivity_header"
-        app:layout_constraintTop_toBottomOf="@+id/helpactivity_header" />
+        app:layout_constraintTop_toBottomOf="@+id/helpactivity_header">
+
+        <TextView
+            android:id="@+id/helpactivity_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="@string/HelpText"
+            android:textColor="@color/colorPrimary" />
+    </ScrollView>
+
 
 </android.support.constraint.ConstraintLayout>
