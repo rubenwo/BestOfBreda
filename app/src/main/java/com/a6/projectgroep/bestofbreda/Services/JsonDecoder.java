@@ -1,7 +1,6 @@
 package com.a6.projectgroep.bestofbreda.Services;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
@@ -34,7 +33,6 @@ public class JsonDecoder {
 
             json = new String(buffer, "UTF-8");
         } catch (IOException e) {
-            Log.e(TAG, e.getMessage() + " | IO Exception");
             return false;
         }
         try {
@@ -63,7 +61,6 @@ public class JsonDecoder {
             }
             return true;
         } catch (JSONException e) {
-            Log.e(TAG, e.getMessage() + " | " + path);
             return false;
         }
     }
@@ -80,7 +77,6 @@ public class JsonDecoder {
 
             json = new String(buffer, "UTF-8");
         } catch (IOException e) {
-            Log.e(TAG, e.getMessage());
             return false;
         }
         try {
@@ -95,7 +91,6 @@ public class JsonDecoder {
             dao.insertRoute(new RouteModel(points, name, false, picturePath));
             return true;
         } catch (JSONException e) {
-            Log.e(TAG, e.getMessage() + " | " + path);
             return false;
         }
     }
