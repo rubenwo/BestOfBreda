@@ -4,12 +4,15 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.Serializable;
+
 @Entity(tableName = "WAYPOINT_MODEL")
-public class WaypointModel {
+public class WaypointModel implements Serializable {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "waypoint_name")
