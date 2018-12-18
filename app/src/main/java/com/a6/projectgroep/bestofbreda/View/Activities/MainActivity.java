@@ -208,9 +208,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setOnSearchClickListener(view -> {
-            //TODO open sightlistfragment???
+            Intent intent = new Intent(this, SightListActivity.class);
+            startActivity(intent);
         });
-
         return super.onCreateOptionsMenu(menu);
     }
 
