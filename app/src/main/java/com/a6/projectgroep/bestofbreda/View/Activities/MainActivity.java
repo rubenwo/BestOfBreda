@@ -66,18 +66,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.savedInstanceState = savedInstanceState;
+
         askPermission();
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        viewModel.setRoute(new RouteModel(Arrays.asList("Avans", "Casino"), "nameOfRoute", false, "resource"));
+        //viewModel.setRoute(new RouteModel(Arrays.asList("Avans", "Casino"), "nameOfRoute", false, "resource"));
 
         setupGoogleMaps(savedInstanceState);
         setupDetailedRouteFragment();
         setupToolbar();
         setupDrawerLayout();
         setupViewModel();
-        Intent intent = new Intent(getApplicationContext(), BackgroundService.class);
-        startService(intent);
     }
 
     @Override
@@ -188,18 +186,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        isSaveStated = true;
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        isSaveStated = false;
-    }
-
-    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case GPS_REQUEST:
@@ -262,8 +248,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         viewModel.getCurrentLocation().observe(this, location -> {
             System.out.println("De huidige locatie is..." + location.toString());
-            walkedRouteOptions.add(new LatLng(location.getLatitude(),location.getLongitude()));
-            googleMap.addPolyline(walkedRouteOptions);
+//            walkedRouteOptions.add(new LatLng(location.getLatitude(),location.getLongitude()));
+//            googleMap.addPolyline(walkedRouteOptions);
         });
 
         viewModel.getWayPoints().observe(this, points -> {

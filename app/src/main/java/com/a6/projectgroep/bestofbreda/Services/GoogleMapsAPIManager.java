@@ -55,7 +55,6 @@ public class GoogleMapsAPIManager {
         nearbyWaypoint = new MutableLiveData<>();
         nearbyWaypoint.setValue(null);
 
-
         locationManager = (LocationManager) application.getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override

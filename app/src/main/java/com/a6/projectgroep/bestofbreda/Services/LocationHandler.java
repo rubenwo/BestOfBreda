@@ -82,10 +82,4 @@ public class LocationHandler {
             }
         }
     }
-
-    public LatLng getCurrentLocation() {
-        return currentLocation;
-    }
-
-
 }

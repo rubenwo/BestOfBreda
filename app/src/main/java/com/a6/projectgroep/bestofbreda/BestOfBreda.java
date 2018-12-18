@@ -25,15 +25,15 @@ public class BestOfBreda extends Application {
         super.onCreate();
         appLifecycle = new ApplicationLifecycle(this);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(appLifecycle);
-    }
+
 
         List<WaypointModel> testWayPoints = new ArrayList<>();
         List<String> strings = Arrays.asList("Test", "Test2");
         String string = "testString";
         MultimediaModel model = new MultimediaModel(strings, string);
-     //   testWayPoints.add(new WaypointModel("avans breda", "avans hogeschool", GeoCoderService.getInstance(this).getLocationFromName("Avans breda"), false, false, model));
-    //    testWayPoints.add(new WaypointModel("casino", "Holland Casino Breda", GeoCoderService.getInstance(this).getLocationFromName("holland casino breda"), false, false, model));
-     //   testWayPoints.add(new WaypointModel("station breda", "Centraal Station Breda", GeoCoderService.getInstance(this).getLocationFromName("station breda"), false, false, model));
+        testWayPoints.add(new WaypointModel("avans breda", "avans hogeschool", "avans hogeschool", GeoCoderService.getInstance(this).getLocationFromName("Avans breda"), false, false, model));
+        testWayPoints.add(new WaypointModel("casino", "Holland Casino Breda", "Holland Casino Breda", GeoCoderService.getInstance(this).getLocationFromName("holland casino breda"), false, false, model));
+        testWayPoints.add(new WaypointModel("station breda", "Centraal Station Breda", "Centraal Station Breda", GeoCoderService.getInstance(this).getLocationFromName("station breda"), false, false, model));
 
 //        new Thread(() -> {
 //            NavigationDatabase.getInstance(this).waypointDAO().insertWaypoint(testWayPoints.get(0));
@@ -41,11 +41,12 @@ public class BestOfBreda extends Application {
 //            NavigationDatabase.getInstance(this).waypointDAO().insertWaypoint(testWayPoints.get(2));
 //            NavigationDatabase.getInstance(this).routeDAO().insertRoute(new RouteModel(Arrays.asList("Avans", "Casino"), "nameOfRoute", false, "resource"));
 //        }).start();
+
+    }
+
     @Override
     public void onTerminate() {
         super.onTerminate();
         ProcessLifecycleOwner.get().getLifecycle().removeObserver(appLifecycle);
-    }
-
     }
 }

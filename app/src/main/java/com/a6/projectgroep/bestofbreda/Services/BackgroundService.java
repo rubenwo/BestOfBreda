@@ -1,8 +1,11 @@
 package com.a6.projectgroep.bestofbreda.Services;
 
 import android.app.IntentService;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleOwner;
 import android.content.Intent;
 import android.location.Location;
+import android.support.annotation.NonNull;
 
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.google.android.gms.maps.model.LatLng;
@@ -28,21 +31,22 @@ public class BackgroundService extends IntentService {
         googleMapsAPIManager = GoogleMapsAPIManager.getInstance(getApplication());
         pushNotification = PushNotification.getInstance(getApplicationContext());
 
+        GoogleMapsAPIManager.getInstance(getApplication()).getAvailableWayPoints().observe((LifecycleOwner) this.getApplicationContext(), waypointModels -> {
+            wayPoints = waypointModels;
+        });
+
         Thread thread = new Thread(() -> {
             while (true) {
-                LatLng currentPosition = googleMapsAPIManager.getCurrentPosition();
+                Location currentPosition = googleMapsAPIManager.getCurrentLocation().getValue();
                 if (currentPosition != null) {
                     //TODO: mogelijk null check weghalen en anders oplossen, voor nu werkt dit.
-                    Location currentLocation = new Location("currentLocation");
-                    currentLocation.setLatitude(currentPosition.latitude);
-                    currentLocation.setLongitude(currentPosition.longitude);
                     for (WaypointModel waypointModel : wayPoints) {
                         Location waypointLocation = new Location("WayPointLocation");
                         waypointLocation.setLongitude(waypointModel.getLocation().longitude);
                         waypointLocation.setLatitude(waypointModel.getLocation().latitude);
-                        if (currentLocation.distanceTo(waypointLocation) < 200) {
+                        if (currentPosition.distanceTo(waypointLocation) < 200) {
                             if (!waypointModel.isAlreadySeen()) {
-                                pushNotification.SendSightNotification(waypointModel.getName(), waypointModel.getDescription(), getApplicationContext());
+                                pushNotification.SendSightNotification(waypointModel.getName(), waypointModel.getDescriptionEN(), getApplicationContext());
                                 waypointModel.setAlreadySeen(true);
                             }
                         }
