@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -30,12 +29,9 @@ import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.R;
 import com.a6.projectgroep.bestofbreda.Services.GeoCoderService;
-import com.a6.projectgroep.bestofbreda.Services.RouteReceivedListener;
-import com.a6.projectgroep.bestofbreda.View.Fragments.DetailedPreviewFragment;
 import com.a6.projectgroep.bestofbreda.View.Fragments.DetailedRouteFragment;
 import com.a6.projectgroep.bestofbreda.View.Fragments.TermsOfServiceFragment;
 import com.a6.projectgroep.bestofbreda.ViewModel.MainViewModel;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -46,11 +42,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, RouteReceivedListener, GoogleMap.OnInfoWindowClickListener {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
     private static final int GPS_REQUEST = 50;
 
     private MainViewModel viewModel;
@@ -69,8 +64,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         askPermission();
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        //viewModel.setRoute(new RouteModel(Arrays.asList("Avans", "Casino"), "nameOfRoute", false, "resource"));
 
+        setPolylineOptions();
         setupGoogleMaps(savedInstanceState);
         setupDetailedRouteFragment();
         setupToolbar();
@@ -93,7 +88,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable("CamPos", googleMap.getCameraPosition());
+        if(googleMap != null) {
+            outState.putParcelable("CamPos", googleMap.getCameraPosition());
+        }
     }
 
     @Override
@@ -150,14 +147,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             //TODO navigate to the activities
             switch (menuItem.getItemId()) {
                 case R.id.menu_nav_sights:
+                    Intent sightIntent = new Intent(this, SightListActivity.class);
+                    startActivity(sightIntent);
                     break;
                 case R.id.menu_nav_routes:
-
+                    Intent intent = new Intent(this, RouteActivity.class);
+                    startActivity(intent);
                     break;
                 case R.id.menu_nav_help:
-                    Intent intent = new Intent(MainActivity.this, HelpActivity.class);
-                    startActivity(intent);
-
+                    Intent helpIntent = new Intent(this, HelpActivity.class);
+                    startActivity(helpIntent);
                     break;
                 case R.id.menu_nav_termsofservice:
                     DialogFragment fragment = new TermsOfServiceFragment();
@@ -209,9 +208,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setOnSearchClickListener(view -> {
-            //TODO open sightlistfragment???
+            Intent intent = new Intent(this, SightListActivity.class);
+            startActivity(intent);
         });
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -237,10 +236,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         } else {
             //request again for permission of location....
             googleMap.setMyLocationEnabled(true);
-            if(cameraPosition != null) {
+            if (cameraPosition != null) {
                 googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            }
-            else {
+            } else {
                 googleMap.moveCamera(CameraUpdateFactory.zoomTo(14));
                 googleMap.animateCamera(CameraUpdateFactory.newLatLng(GeoCoderService.getInstance(getApplication()).getLocationFromName("Breda Centrum")));
             }
@@ -248,12 +246,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         viewModel.getCurrentLocation().observe(this, location -> {
             System.out.println("De huidige locatie is..." + location.toString());
-//            walkedRouteOptions.add(new LatLng(location.getLatitude(),location.getLongitude()));
+            walkedRouteOptions.add(new LatLng(location.getLatitude(), location.getLongitude()));
+            googleMap.addPolyline(walkedRouteOptions);
+
 //            googleMap.addPolyline(walkedRouteOptions);
         });
 
         viewModel.getWayPoints().observe(this, points -> {
+            googleMap.clear();
             drawMarkers(points);
+        });
+        
+        viewModel.getRoutePoints().observe(this, latLngs -> {
+            for (LatLng l: latLngs) {
+                polylineOptions.add(l);
+            }
+            googleMap.addPolyline(polylineOptions);
         });
     }
 
@@ -271,12 +279,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void setPolylineOptions()
-    {
+    private void setPolylineOptions() {
         polylineOptions = new PolylineOptions();
         polylineOptions.width(10);
         polylineOptions.color(Color.BLUE);
-        polylineOptions.add(viewModel.getCurrentPosition());
         walkedRouteOptions = new PolylineOptions();
         walkedRouteOptions.width(10);
         walkedRouteOptions.color(Color.GREEN);
@@ -287,15 +293,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void onRoutePointReceived(LatLng latLng) {
-        polylineOptions.add(latLng);
-        googleMap.addPolyline(polylineOptions);
-    }
-
-    @Override
     public void onInfoWindowClick(Marker marker) {
         Intent intent = new Intent(this, DetailedActivity.class);
-        intent.putExtra("POSITION", marker.getPosition());
+        intent.putExtra("SightName", marker.getTitle());
         startActivity(intent);
     }
 }

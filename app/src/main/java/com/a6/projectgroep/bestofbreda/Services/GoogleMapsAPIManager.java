@@ -17,7 +17,6 @@ import android.util.Log;
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.Services.database.NavigationDatabase;
-import com.android.volley.Response;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
@@ -32,6 +31,8 @@ public class GoogleMapsAPIManager {
 
     private LocationManager locationManager;
     private LocationListener locationListener;
+
+    private LatLng userLocation;
 
     private LiveData<List<WaypointModel>> availableWayPoints;
 
@@ -48,18 +49,23 @@ public class GoogleMapsAPIManager {
 
     private GoogleMapsAPIManager(Application application) {
         this.application = application;
+        userLocation = null;
 
         userCurrentLocation = new MutableLiveData<>();
         userSelectedRoute = new MutableLiveData<>();
-        userSelectedRoute.setValue(null);
         nearbyWaypoint = new MutableLiveData<>();
+        routePoints = new MutableLiveData<>();
+
+        userSelectedRoute.setValue(null);
         nearbyWaypoint.setValue(null);
 
         locationManager = (LocationManager) application.getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+                System.out.println("LOCATIE GEVONDEN!!!!!!!!!!!!!!!!!!!!!");
                 userCurrentLocation.setValue(location);
+                userLocation = new LatLng(location.getLatitude(), location.getLongitude());
             }
 
             @Override
@@ -106,40 +112,54 @@ public class GoogleMapsAPIManager {
         return nearbyWaypoint;
     }
 
+    public LiveData<List<LatLng>> routePoints() {
+        return routePoints;
+    }
+
     public void setCurrentRoute(RouteModel route) {
         userSelectedRoute.setValue(route);
         calculateRoute();
     }
 
     private void calculateRoute() {
-        new Thread(() -> {
-            VolleyConnection connection = VolleyConnection.getInstance(application);
-            List<LatLng> routePositions = new ArrayList<>();
-            List<WaypointModel> points = NavigationDatabase.getInstance(application).waypointDAO().getAllWaypointModelsFromNamesNotLive(userSelectedRoute.getValue().getRoute());
-
-            for (WaypointModel model : points) {
-                routePositions.add(model.getLocation());
+        while(userLocation == null) {
+            if (ActivityCompat.checkSelfPermission(application, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(application, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             }
+        }
 
-            connection.getRoute(routePositions,
-                    response -> {
-                        try {
-                            System.out.println(response);
-                            routePositions.clear();
-                            JSONArray jsonArray = response.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONArray("steps");
-                            for (int idx = 0; idx < jsonArray.length(); idx++) {
-                                LatLng latLng = new LatLng(jsonArray.getJSONObject(idx).getJSONObject("end_location").getDouble("lat"), jsonArray.getJSONObject(idx).getJSONObject("end_location").getDouble("lng"));
-                                routePositions.add(latLng);
+        if(userLocation != null) {
+            new Thread(() -> {
+                VolleyConnection connection = VolleyConnection.getInstance(application);
+                List<LatLng> routePositions = new ArrayList<>();
+                List<WaypointModel> points = NavigationDatabase.getInstance(application).waypointDAO().getAllWaypointModelsFromNamesNotLive(userSelectedRoute.getValue().getRoute());
+
+                routePositions.add(userLocation);
+                for (WaypointModel model : points) {
+                    routePositions.add(model.getLocation());
+                }
+
+                connection.getRoute(routePositions,
+                        response -> {
+                            try {
+                                System.out.println(response);
+                                routePositions.clear();
+                                JSONArray jsonArray = response.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONArray("steps");
+                                for (int idx = 0; idx < jsonArray.length(); idx++) {
+                                    LatLng latLng = new LatLng(jsonArray.getJSONObject(idx).getJSONObject("end_location").getDouble("lat"), jsonArray.getJSONObject(idx).getJSONObject("end_location").getDouble("lng"));
+                                    routePositions.add(latLng);
+                                }
+
+                                routePoints.postValue(routePositions);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-
-                            routePoints.postValue(routePositions);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }, error -> {
-                        Log.i("route", "NOK");
-                    });
-        }).start();
+                        }, error -> {
+                            Log.i("route", "NOK");
+                        });
+            }).start();
+        }
     }
 
     private void calculateNearbyWaypoint() {
@@ -150,7 +170,7 @@ public class GoogleMapsAPIManager {
         if (ActivityCompat.checkSelfPermission(application, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(application, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 20, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 20, locationListener);
         }
     }
 

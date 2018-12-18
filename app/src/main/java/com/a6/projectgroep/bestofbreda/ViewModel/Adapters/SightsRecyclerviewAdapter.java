@@ -1,7 +1,9 @@
 package com.a6.projectgroep.bestofbreda.ViewModel.Adapters;
 
+import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,18 +12,25 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.a6.projectgroep.bestofbreda.Model.RouteModel;
+import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.R;
 import com.a6.projectgroep.bestofbreda.View.Activities.DetailedActivity;
 import com.a6.projectgroep.bestofbreda.ViewModel.SightsListViewModel;
 
-public class SightsRecyclerviewAdapter extends RecyclerView.Adapter<SightsRecyclerviewAdapter.ViewHolder> {
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-    private SightsListViewModel sightsListViewModel;
+public class SightsRecyclerviewAdapter extends RecyclerView.Adapter<SightsRecyclerviewAdapter.ViewHolder> {
+    private List<WaypointModel> sightList;
+    private List<WaypointModel> defaultSightList;
     private LayoutInflater inflater;
     private Context context;
 
-    public SightsRecyclerviewAdapter(Context context, SightsListViewModel viewModel) {
-        sightsListViewModel = viewModel;
+    public SightsRecyclerviewAdapter(Context context, List<WaypointModel> sightList) {
+        this.sightList = sightList;
+        this.defaultSightList = sightList;
         inflater = LayoutInflater.from(context);
         this.context = context;
     }
@@ -39,12 +48,29 @@ public class SightsRecyclerviewAdapter extends RecyclerView.Adapter<SightsRecycl
         //viewHolder.nameTextView.setText(wayPoint.getName());
         //Picasso.get().load(wayPoint.getMultimediaID().getPictureUrls().get(0)).into(viewHolder.backgroundImage);
         // TODO: get multimediaID from waypoint and search for it in multimediaDAO.
+        WaypointModel waypointModel = sightList.get(i);
+        viewHolder.nameTextView.setText(waypointModel.getName());
     }
 
     @Override
     public int getItemCount() {
         //return sightsListViewModel.getValue().size(); TODO:aanpassen
-        return -1;
+        return sightList.size();
+    }
+
+    public void setDataset(String filter){
+        if(filter.equals("")){
+            sightList = defaultSightList;
+        }
+        else {
+            List<WaypointModel> filteredList = new ArrayList<>();
+            for (WaypointModel m : defaultSightList) {
+                if (m.getName().toLowerCase().contains(filter.toLowerCase()))
+                    filteredList.add(m);
+            }
+            sightList = filteredList;
+            notifyDataSetChanged();
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -59,8 +85,15 @@ public class SightsRecyclerviewAdapter extends RecyclerView.Adapter<SightsRecycl
             itemView.setOnClickListener(view ->
             {
                 Intent intent = new Intent(context, DetailedActivity.class);
-                intent.putExtra("ROUTE_ADAPTERPOS", getAdapterPosition());
+                WaypointModel waypointModel = sightList.get(getAdapterPosition());
+                intent.putExtra("SightName", waypointModel.getName());
+                context.startActivity(intent);
             });
         }
+    }
+
+    public void setSightList(List<WaypointModel> s) {
+        this.sightList = s;
+        defaultSightList = sightList;
     }
 }
