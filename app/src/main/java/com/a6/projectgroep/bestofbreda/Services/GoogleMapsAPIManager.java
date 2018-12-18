@@ -122,6 +122,13 @@ public class GoogleMapsAPIManager {
     }
 
     private void calculateRoute() {
+        while(userLocation == null) {
+            if (ActivityCompat.checkSelfPermission(application, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(application, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            }
+        }
+
         if(userLocation != null) {
             new Thread(() -> {
                 VolleyConnection connection = VolleyConnection.getInstance(application);
@@ -163,7 +170,7 @@ public class GoogleMapsAPIManager {
         if (ActivityCompat.checkSelfPermission(application, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(application, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 20, locationListener);
         }
     }
 
