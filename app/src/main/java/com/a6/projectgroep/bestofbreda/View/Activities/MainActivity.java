@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -30,12 +29,9 @@ import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.R;
 import com.a6.projectgroep.bestofbreda.Services.GeoCoderService;
-import com.a6.projectgroep.bestofbreda.Services.RouteReceivedListener;
-import com.a6.projectgroep.bestofbreda.View.Fragments.DetailedPreviewFragment;
 import com.a6.projectgroep.bestofbreda.View.Fragments.DetailedRouteFragment;
 import com.a6.projectgroep.bestofbreda.View.Fragments.TermsOfServiceFragment;
 import com.a6.projectgroep.bestofbreda.ViewModel.MainViewModel;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -46,7 +42,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -259,7 +254,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
         
         viewModel.getRoutePoints().observe(this, latLngs -> {
-
+            for (LatLng l: latLngs) {
+                polylineOptions.add(l);
+            }
+            googleMap.addPolyline(polylineOptions);
         });
     }
 

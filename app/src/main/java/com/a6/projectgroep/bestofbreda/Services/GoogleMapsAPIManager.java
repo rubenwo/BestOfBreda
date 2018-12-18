@@ -17,7 +17,6 @@ import android.util.Log;
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.Services.database.NavigationDatabase;
-import com.android.volley.Response;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
