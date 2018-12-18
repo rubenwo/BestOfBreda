@@ -1,7 +1,8 @@
 {
-  "name":"Historische Route",
-  "points":[
+  "name": "Historische Route",
+  "points": [
     "VVV",
+    "The Light House",
     "Nassau Baronie Monument",
     "Valkenberg",
     "valkenberg II",
@@ -16,12 +17,11 @@
     "Antonius van Paduakerk",
     "Bibliotheek",
     "Kloosterkazerne",
-    "Binding van Isaac",
     "Gasthuispoort",
     "Veemarktstraat",
     "Begijnenhof",
     "Einde stadswandeling"
   ],
-  "length":20,
-  "picture":"route_historic_kilometer"
+  "length": 20,
+  "picture": "route_historic_kilometer"
 }
