@@ -45,25 +45,28 @@ public class DetailedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed);
 
+        viewModel = ViewModelProviders.of(this).get(DetailedViewModel.class);
+        sightName = getIntent().getStringExtra("SightName");
+
         titleTextView = findViewById(R.id.detailedactivity_sight_name);
         descriptionTextView = findViewById(R.id.detailedactivity_sight_description);
         viewPager = findViewById(R.id.detailedactivity_viewpager);
         ImageSliderAdapter adapter = new ImageSliderAdapter();
-
         viewPager.setAdapter(adapter);
 
-        viewModel = ViewModelProviders.of(this).get(DetailedViewModel.class);
         viewModel.getAllWaypointModels().observe(this, new Observer<List<WaypointModel>>() {
             @Override
             public void onChanged(@Nullable List<WaypointModel> wayPointModels) {
                 Log.i(TAG, "list changed");
             }
         });
-        sightName = getIntent().getStringExtra("SightName");
-        viewModel.getAllWaypointModels().observe(this, (List<WaypointModel> waypointModels) -> {
+
+
+        viewModel.getAllWaypointModels().observe(this, waypointModels -> {
             for (WaypointModel m : waypointModels)
                 if (sightName.equals(m.getName()))
                     model = m;
+
             titleTextView.setText(model.getName());
             if (Locale.getDefault().getLanguage().equals("nl"))
                 descriptionTextView.setText(model.getDescriptionNL());
@@ -77,6 +80,7 @@ public class DetailedActivity extends AppCompatActivity {
         indicator.setRadius(getResources().getDisplayMetrics().density * 5);
 
         FloatingActionButton playMedia = findViewById(R.id.detailedactivity_fab_media);
+
         playMedia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

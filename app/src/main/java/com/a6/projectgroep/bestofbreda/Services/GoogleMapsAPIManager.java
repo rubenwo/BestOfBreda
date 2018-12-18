@@ -123,14 +123,16 @@ public class GoogleMapsAPIManager {
     }
 
     private void calculateRoute() {
-        while(userLocation == null) {
-            if (ActivityCompat.checkSelfPermission(application, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(application, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        Location currentLoc = null;
+        if (ActivityCompat.checkSelfPermission(application, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(application, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            while (currentLoc == null) {
+                currentLoc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             }
         }
 
-        if(userLocation != null) {
+        userLocation = new LatLng(currentLoc.getLatitude(), currentLoc.getLongitude());
+        if (userLocation != null) {
             new Thread(() -> {
                 VolleyConnection connection = VolleyConnection.getInstance(application);
                 List<LatLng> routePositions = new ArrayList<>();
@@ -165,30 +167,29 @@ public class GoogleMapsAPIManager {
 
     private void calculateNearbyWaypoint() {
         Location currentLocation = userCurrentLocation.getValue();
-        List<WaypointModel> waypointOnRoute = availableWayPoints.getValue();
+        if (availableWayPoints != null) {
+            List<WaypointModel> waypointOnRoute = availableWayPoints.getValue();
+            if (waypointOnRoute != null) {
+                WaypointModel nearby = null;
+                for (WaypointModel model : waypointOnRoute) {
+                    Location modelLocation = new Location(model.getName());
+                    modelLocation.setLatitude(model.getLocation().latitude);
+                    modelLocation.setLongitude(model.getLocation().longitude);
 
-        if(waypointOnRoute != null) {
-
-            WaypointModel nearby = null;
-            for (WaypointModel model : waypointOnRoute) {
-                Location modelLocation = new Location(model.getName());
-                modelLocation.setLatitude(model.getLocation().latitude);
-                modelLocation.setLongitude(model.getLocation().longitude);
-
-                if (currentLocation.distanceTo(modelLocation) <= 30) {
-                    nearby = model;
-                    break;
+                    if (currentLocation.distanceTo(modelLocation) <= 30) {
+                        nearby = model;
+                        break;
+                    }
                 }
-            }
 
-            if (nearby != null) {
-                System.out.println("IN DE BUUUUUUUUUUUUUUUUUUUUUUUUUURRRRRRRRRTTTT");
-            }
-            else {
-                System.out.println("NIET IN DE BUUUUUUUUUUUUUUUUUUUUUUUUUUURRRRRRRRRRRRTTTTTTT");
-            }
+                if (nearby != null) {
+                    System.out.println("IN DE BUUUUUUUUUUUUUUUUUUUUUUUUUURRRRRRRRRTTTT");
+                } else {
+                    System.out.println("NIET IN DE BUUUUUUUUUUUUUUUUUUUUUUUUUUURRRRRRRRRRRRTTTTTTT");
+                }
 
-            nearbyWaypoint.setValue(nearby);
+                nearbyWaypoint.setValue(nearby);
+            }
         }
     }
 
@@ -196,7 +197,7 @@ public class GoogleMapsAPIManager {
         if (ActivityCompat.checkSelfPermission(application, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(application, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 20, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 20, locationListener);
         }
     }
 

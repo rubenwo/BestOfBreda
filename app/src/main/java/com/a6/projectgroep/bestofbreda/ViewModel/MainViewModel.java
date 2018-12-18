@@ -74,6 +74,10 @@ public class MainViewModel extends AndroidViewModel {
         return waypointRepository.getWaypointByName(name);
     }
 
+    public LiveData<WaypointModel> getNearbyWayPoint() {
+        return mapsApiManager.getNearbyWayPoint();
+    }
+
     public LiveData<List<WaypointModel>> getAllWaypointModelsByNames(List<String> waypointNames) {
         return waypointRepository.getAllWaypointModelsByNames(waypointNames);
     }

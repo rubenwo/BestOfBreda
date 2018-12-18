@@ -7,12 +7,15 @@ import android.support.annotation.NonNull;
 
 import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
+import com.a6.projectgroep.bestofbreda.Services.GoogleMapsAPIManager;
 import com.a6.projectgroep.bestofbreda.Services.database.MultimediaRepository;
 import com.a6.projectgroep.bestofbreda.Services.database.WaypointRepository;
 
 import java.util.List;
 
 public class DetailedViewModel extends AndroidViewModel {
+    private GoogleMapsAPIManager manager;
+
     private WaypointRepository waypointRepository;
     private LiveData<List<WaypointModel>> liveDataWaypoint;
     private MultimediaRepository multimediaRepository;
@@ -20,6 +23,7 @@ public class DetailedViewModel extends AndroidViewModel {
 
     public DetailedViewModel(@NonNull Application application) {
         super(application);
+        manager = GoogleMapsAPIManager.getInstance(application);
         waypointRepository = new WaypointRepository(application);
         liveDataWaypoint = waypointRepository.getAllWaypoints();
         multimediaRepository = new MultimediaRepository(application);
@@ -39,7 +43,7 @@ public class DetailedViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<WaypointModel>> getAllWaypointModels() {
-        return liveDataWaypoint;
+        return manager.getAvailableWayPoints();
     }
 
     public void insertMultimediaModel(MultimediaModel model) {

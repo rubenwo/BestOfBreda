@@ -29,6 +29,7 @@ import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.R;
 import com.a6.projectgroep.bestofbreda.Services.GeoCoderService;
+import com.a6.projectgroep.bestofbreda.View.Fragments.DetailedPreviewFragment;
 import com.a6.projectgroep.bestofbreda.View.Fragments.DetailedRouteFragment;
 import com.a6.projectgroep.bestofbreda.View.Fragments.TermsOfServiceFragment;
 import com.a6.projectgroep.bestofbreda.ViewModel.MainViewModel;
@@ -40,6 +41,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.List;
@@ -54,8 +56,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap googleMap;
     private CameraPosition cameraPosition;
 
-    private PolylineOptions polylineOptions;
     private PolylineOptions walkedRouteOptions;
+    private Polyline routePolyline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setupDetailedRouteFragment();
         setupToolbar();
         setupDrawerLayout();
-        setupViewModel();
     }
 
     @Override
@@ -112,30 +113,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_nav);
-    }
-
-    private void setupViewModel() {
-        viewModel.getAllWaypointModels().observe(this, wayPointModels -> {
-            Toast.makeText(getApplicationContext(), "waypoints changed", Toast.LENGTH_SHORT).show();
-            for (WaypointModel m : wayPointModels) {
-                Log.i("DATABASE_MODELS", m.toString());
-            }
-        });
-
-        viewModel.getAllRouteModels().observe(this, routeModels -> {
-            Toast.makeText(getApplicationContext(), "routes changed", Toast.LENGTH_SHORT).show();
-            for (RouteModel m : routeModels) {
-                Log.i("DATABASE_MODELS", m.toString());
-                viewModel.createWaypointModelList();
-            }
-        });
-
-        viewModel.getAllMultiMediaModels().observe(this, multimediaModels -> {
-            Toast.makeText(getApplicationContext(), "multimedia changed", Toast.LENGTH_SHORT).show();
-            for (MultimediaModel m : multimediaModels) {
-                Log.i("DATABASE_MODELS", m.toString());
-            }
-        });
     }
 
     private void setupDrawerLayout() {
@@ -261,10 +238,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
         
         viewModel.getRoutePoints().observe(this, latLngs -> {
-            for (LatLng l: latLngs) {
-                polylineOptions.add(l);
+            if(routePolyline != null) {
+                routePolyline.remove();
             }
-            googleMap.addPolyline(polylineOptions);
+
+            PolylineOptions polylineOptions = new PolylineOptions();
+            polylineOptions.width(10);
+            polylineOptions.color(Color.BLUE);
+
+            polylineOptions.addAll(latLngs);
+
+            routePolyline = googleMap.addPolyline(polylineOptions);
+            routePolyline.getPoints();
+        });
+
+        viewModel.getNearbyWayPoint().observe(this, waypointModel -> {
+            if(waypointModel != null) {
+                DetailedPreviewFragment dFrag = DetailedPreviewFragment.newInstance(waypointModel.getName());
+                dFrag.show(getSupportFragmentManager(), "");
+            }
         });
     }
 
@@ -274,7 +266,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (!model.isAlreadySeen()) {
                     GeoCoderService.getInstance(getApplication())
                             .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_RED, model.getName(), Locale.getDefault().getLanguage().equals("nl") ? model.getDescriptionNL() : model.getDescriptionEN());
-                    //waypoints.add(model.getLocation());
                 } else
                     GeoCoderService.getInstance(getApplication())
                             .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_GREEN, model.getName(), Locale.getDefault().getLanguage().equals("nl") ? model.getDescriptionNL() : model.getDescriptionEN());
@@ -283,16 +274,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void setPolylineOptions() {
-        polylineOptions = new PolylineOptions();
-        polylineOptions.width(10);
-        polylineOptions.color(Color.BLUE);
         walkedRouteOptions = new PolylineOptions();
         walkedRouteOptions.width(10);
         walkedRouteOptions.color(Color.GREEN);
-    }
-
-    private void drawRoute() {
-
     }
 
     @Override
