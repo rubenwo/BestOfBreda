@@ -253,6 +253,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         viewModel.getWayPoints().observe(this, points -> {
+            googleMap.clear();
             drawMarkers(points);
         });
     }

@@ -13,8 +13,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class BestOfBreda extends Application {
+    public static final String CHANNEL_SIGHT_PASSED_ID = "sightPassed";
     private ApplicationLifecycle appLifecycle;
-
+    
     @Override
     public void onCreate() {
         super.onCreate();
