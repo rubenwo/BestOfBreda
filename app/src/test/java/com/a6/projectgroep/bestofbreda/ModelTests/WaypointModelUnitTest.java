@@ -1,4 +1,4 @@
-package com.a6.projectgroep.bestofbreda;
+package com.a6.projectgroep.bestofbreda.ModelTests;
 
 import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
