@@ -2,15 +2,16 @@ package com.a6.projectgroep.bestofbreda.Model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
 
-@Entity(tableName = "WAYPOINT_MODEL", primaryKeys = {"waypoint_id"})
+@Entity(tableName = "WAYPOINT_MODEL")
 public class WaypointModel {
-    @ColumnInfo(name = "waypoint_id")
+    @PrimaryKey
     @NonNull
-    private int id;
     @ColumnInfo(name = "waypoint_name")
     private String name;
     @ColumnInfo(name = "waypoint_description")
@@ -22,31 +23,23 @@ public class WaypointModel {
     @ColumnInfo(name = "waypoint_is_favorite")
     private boolean isFavorite;
     @ColumnInfo(name = "waypoint_multimedia_id")
-    private int multimediaID;
+    private MultimediaModel multiMediaModel;
 
-    public WaypointModel(@NonNull int id, String name, String description, LatLng location, boolean alreadySeen, boolean isFavorite, int multimediaID) {
-        this.id = id;
+    public WaypointModel(@NonNull String name, String description, LatLng location, boolean alreadySeen, boolean isFavorite, MultimediaModel multiMediaModel) {
         this.name = name;
         this.description = description;
         this.location = location;
         this.alreadySeen = alreadySeen;
         this.isFavorite = isFavorite;
-        this.multimediaID = multimediaID;
+        this.multiMediaModel = multiMediaModel;
     }
 
     @NonNull
-    public int getId() {
-        return id;
-    }
-
-    public void setId(@NonNull int id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
 
+    @NonNull
     public void setName(String name) {
         this.name = name;
     }
@@ -84,24 +77,24 @@ public class WaypointModel {
         isFavorite = favorite;
     }
 
-    public int getMultimediaID() {
-        return multimediaID;
+    public MultimediaModel getMultiMediaModel() {
+        return multiMediaModel;
     }
 
-    public void setMultimediaID(int multimediaID) {
-        this.multimediaID = multimediaID;
+    public void setMultiMediaModel(MultimediaModel multiMediaModel) {
+        this.multiMediaModel = multiMediaModel;
     }
 
+    @Ignore
     @Override
     public String toString() {
         return "WaypointModel{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", location=" + location +
                 ", alreadySeen=" + alreadySeen +
                 ", isFavorite=" + isFavorite +
-                ", multimediaID=" + multimediaID +
+                ", multiMediaModel=" + multiMediaModel +
                 '}';
     }
 }

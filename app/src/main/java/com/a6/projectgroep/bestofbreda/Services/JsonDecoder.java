@@ -1,10 +1,14 @@
 package com.a6.projectgroep.bestofbreda.Services;
 
-import android.app.Application;
+import android.content.Context;
+import android.util.Log;
 
+import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
+import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
-import com.a6.projectgroep.bestofbreda.Services.database.RouteRepository;
-import com.a6.projectgroep.bestofbreda.Services.database.WaypointRepository;
+import com.a6.projectgroep.bestofbreda.Services.database.RouteDAO;
+import com.a6.projectgroep.bestofbreda.Services.database.WaypointDAO;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,11 +21,12 @@ import java.util.List;
 import java.util.Locale;
 
 public class JsonDecoder {
-    public static boolean decodeJsonWaypointsFile(Application application, String path) {
+    private static final String TAG = "JSONDECODER_TAG";
+
+    public static boolean decodeJsonWaypointsFile(Context context, String path, WaypointDAO dao) {
         String json;
-        ArrayList<WaypointModel> wayPointModels = new ArrayList<>();
         try {
-            InputStream is = application.getAssets().open(path);
+            InputStream is = context.getAssets().open(path);
 
             int size = is.available();
             byte[] buffer = new byte[size];
@@ -30,10 +35,9 @@ public class JsonDecoder {
 
             json = new String(buffer, "UTF-8");
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
             return false;
         }
-        WaypointRepository repository = new WaypointRepository(application);
         try {
             JSONArray array = new JSONArray(json);
             String language = Locale.getDefault().getLanguage();
@@ -61,20 +65,19 @@ public class JsonDecoder {
                     urls.add(images.getJSONObject(index).getString("url"));
                     files.add(images.getJSONObject(index).getString("file"));
                 }
-                //TODO: Change ID's to something better
-                //  repository.insertWaypoint(new WaypointModel(1, name, desc, new LatLng(latitude, longitude), false, false, 1));
+                dao.insertWaypoint(new WaypointModel(name, desc, new LatLng(latitude, longitude), false, false, new MultimediaModel(urls, videoUrl)));
             }
             return true;
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
             return false;
         }
     }
 
-    public static boolean decodeJsonRouteFile(Application application, String path) {
+    public static boolean decodeJsonRouteFile(Context context, String path, RouteDAO dao) {
         String json;
         try {
-            InputStream is = application.getAssets().open(path);
+            InputStream is = context.getAssets().open(path);
 
             int size = is.available();
             byte[] buffer = new byte[size];
@@ -83,22 +86,22 @@ public class JsonDecoder {
 
             json = new String(buffer, "UTF-8");
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
             return false;
         }
-        RouteRepository repository = new RouteRepository(application);
         try {
             JSONObject routeObject = new JSONObject(json);
             String name = routeObject.getString("name");
+            String picturePath = routeObject.getString("picture");
             List<String> points = new ArrayList<>();
             JSONArray pointsArray = new JSONArray("points");
             for (int i = 0; i < pointsArray.length(); i++) {
                 points.add(pointsArray.getString(i));
             }
-            // repository.insertRouteModel(new RouteModel(, , ));
+            dao.insertRoute(new RouteModel(points, name, false, picturePath));
             return true;
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
             return false;
         }
     }

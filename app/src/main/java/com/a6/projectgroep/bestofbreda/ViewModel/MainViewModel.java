@@ -3,7 +3,10 @@ package com.a6.projectgroep.bestofbreda.ViewModel;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Transformations;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
@@ -30,6 +33,7 @@ public class MainViewModel extends AndroidViewModel {
     private LiveData<List<WaypointModel>> mWaypointModels;
     private LiveData<List<RouteModel>> mRouteModels;
     private LiveData<List<MultimediaModel>> mMultiMediaModels;
+    private LiveData<List<WaypointModel>> liveData;
 
     public MainViewModel(@NonNull Application application, LiveLocationListener listener) {
         super(application);
@@ -55,6 +59,14 @@ public class MainViewModel extends AndroidViewModel {
         waypointRepository.deleteWaypoint(model);
     }
 
+    public LiveData<WaypointModel> getWaypointModelByName(String name) {
+        return waypointRepository.getWaypointByName(name);
+    }
+
+    public LiveData<List<WaypointModel>> getAllWaypointModelsByNames(List<String> waypointNames) {
+        return waypointRepository.getAllWaypointModelsByNames(waypointNames);
+    }
+
     public LiveData<List<WaypointModel>> getAllWaypointModels() {
         return mWaypointModels;
     }
@@ -71,6 +83,10 @@ public class MainViewModel extends AndroidViewModel {
 
     public void deleteRouteModel(RouteModel model) {
         routeRepository.deleteRouteModel(model);
+    }
+
+    public LiveData<RouteModel> getRouteByName(String routeName) {
+        return routeRepository.getRouteModel(routeName);
     }
 
     public LiveData<List<RouteModel>> getAllRouteModels() {
@@ -100,15 +116,30 @@ public class MainViewModel extends AndroidViewModel {
 
     public void getRoutePoints(ArrayList<LatLng> waypoints, RouteReceivedListener listener) {
         volleyConnection = VolleyConnection.getInstance(getApplication().getApplicationContext());
-    //    volleyConnection.getRoute(waypoints, listener);
-    }
-
-    public List<WaypointModel> getAllRouteWaypoints() {
-        return mapsApiManager.getRouteWaypoints(getApplication());
+        //    volleyConnection.getRoute(waypoints, listener);
     }
 
     public LatLng getCurrentPosition() {
         return LocationHandler.getInstance(getApplication()).getCurrentLocation();
     }
 
+    public void createWaypointModelList() {
+        liveData = Transformations.switchMap(getRouteByName("nameOfRoute"), routeModel -> {
+            List<WaypointModel> waypoints = new ArrayList<>();
+            Log.i("ROUTEMODEL", routeModel.toString());
+            for (String w : routeModel.getRoute()) {
+                getWaypointModelByName(w).observe(getApplication(), waypointModel -> {
+                    waypoints.add(waypointModel);
+                });
+            }
+            return liveData;
+        });
+    }
+
+    public LiveData<List<WaypointModel>> getLiveData() {
+        if (liveData == null) {
+            liveData = new MutableLiveData<>();
+        }
+        return liveData;
+    }
 }

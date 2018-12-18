@@ -1,6 +1,5 @@
 package com.a6.projectgroep.bestofbreda.Model;
 
-import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
@@ -11,13 +10,12 @@ import java.util.List;
 @Entity(tableName = "MULTIMEDIA_MODEL")
 public class MultimediaModel {
     @NonNull
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int id;
     private List<String> pictureUrls;
     private String videoUrls;
 
-    public MultimediaModel(int id, List<String> pictureUrls, String videoUrls) {
-        this.id = id;
+    public MultimediaModel(List<String> pictureUrls, String videoUrls) {
         this.pictureUrls = pictureUrls;
         this.videoUrls = videoUrls;
     }

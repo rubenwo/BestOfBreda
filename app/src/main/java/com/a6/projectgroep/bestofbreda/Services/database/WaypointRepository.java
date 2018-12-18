@@ -3,6 +3,7 @@ package com.a6.projectgroep.bestofbreda.Services.database;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
+
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 
 import java.util.List;
@@ -17,8 +18,16 @@ public class WaypointRepository {
         mData = waypointDAO.getAllWayPoints();
     }
 
+    public LiveData<WaypointModel> getWaypointByName(String waypointName) {
+        return waypointDAO.getWaypointModelByName(waypointName);
+    }
+
     public LiveData<List<WaypointModel>> getAllWaypoints() {
         return mData;
+    }
+
+    public LiveData<List<WaypointModel>> getAllWaypointModelsByNames(List<String> names){
+        return waypointDAO.getAllWaypointModelsFromNames(names);
     }
 
     public void insertWaypoint(WaypointModel model) {
