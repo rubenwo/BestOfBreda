@@ -38,10 +38,9 @@ public class BestOfBreda extends Application {
 //        }).start();
 
 
-        ArrayList<String> stringRoutes = new ArrayList<>();
-        stringRoutes.add("test");
-        RouteModel testModel = new RouteModel(stringRoutes, "testRoute", false, "route_blindwalls");
-
+//        ArrayList<String> stringRoutes = new ArrayList<>();
+//        stringRoutes.add("test");
+//        RouteModel testModel = new RouteModel(stringRoutes, "testRoute", false, "route_blindwalls");
 //        new Thread(() -> NavigationDatabase.getInstance(this).routeDAO().insertRoute(testModel)).start();
 
         createNotificationChannel();

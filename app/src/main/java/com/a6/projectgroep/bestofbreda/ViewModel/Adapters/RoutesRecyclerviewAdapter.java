@@ -17,8 +17,11 @@ import com.a6.projectgroep.bestofbreda.Services.GoogleMapsAPIManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.Route;
+
 public class RoutesRecyclerviewAdapter extends RecyclerView.Adapter<RoutesRecyclerviewAdapter.ViewHolder>
 {
+    private List<RouteModel> currentList;
     private List<RouteModel> routesList;
     private LayoutInflater inflater;
     private Context context;
@@ -27,8 +30,8 @@ public class RoutesRecyclerviewAdapter extends RecyclerView.Adapter<RoutesRecycl
     public RoutesRecyclerviewAdapter(Context context, List<RouteModel> viewModel, OnSelectRouteListener listener)
     {
         routesList = viewModel;
+        currentList = viewModel;
         inflater = LayoutInflater.from(context);
-        routesList = viewModel;
         this.context = context;
         this.listener = listener;
     }
@@ -44,7 +47,7 @@ public class RoutesRecyclerviewAdapter extends RecyclerView.Adapter<RoutesRecycl
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i)
     {
-        RouteModel routeModel = routesList.get(i);
+        RouteModel routeModel = currentList.get(i);
 
         viewHolder.nameTextView.setText(routeModel.getName());
         viewHolder.distanceTextView.setText("TODO");
@@ -57,12 +60,23 @@ public class RoutesRecyclerviewAdapter extends RecyclerView.Adapter<RoutesRecycl
 
     public void setRoutes(List<RouteModel> routes){
         this.routesList = routes;
+        currentList = routesList;
     }
 
     @Override
     public int getItemCount()
     {
-        return routesList.size();
+        return currentList.size();
+    }
+
+    public void setDataset(String filter){
+        List<RouteModel> filteredList = new ArrayList<>();
+        for (RouteModel m : routesList) {
+            if(m.getName().toLowerCase().contains(filter.toLowerCase()))
+                filteredList.add(m);
+        }
+        currentList = filteredList;
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder
@@ -79,7 +93,6 @@ public class RoutesRecyclerviewAdapter extends RecyclerView.Adapter<RoutesRecycl
 
             itemView.setOnClickListener(view ->
             {
-
             });
         }
     }
