@@ -30,4 +30,7 @@ public interface WaypointDAO {
 
     @Query("SELECT * FROM WAYPOINT_MODEL WHERE waypoint_name = :waypointName")
     LiveData<WaypointModel> getWaypointModelByName(String waypointName);
+
+    @Query("SELECT * FROM WAYPOINT_MODEL WHERE waypoint_name IN (:waypointNames)")
+    List<WaypointModel> getAllWaypointModelsFromNamesNotLive(List<String> waypointNames);
 }

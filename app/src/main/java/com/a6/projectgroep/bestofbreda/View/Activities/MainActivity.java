@@ -42,6 +42,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, RouteReceivedListener, GoogleMap.OnInfoWindowClickListener {
@@ -61,19 +62,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         askPermission();
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-
-
+        viewModel.setRoute(new RouteModel(Arrays.asList("Avans", "Casino"), "nameOfRoute", false, "resource"));
 
         setupGoogleMaps(savedInstanceState);
         setupDetailedRouteFragment();
         setupToolbar();
         setupDrawerLayout();
-
-        //setupViewModel();
-
-//        NavigationDatabase.getInstance(getApplication()).routeDAO().getLiveRoute("nameOfRoute").observe(this, routeModel -> {
-//            viewModel.setRoute(routeModel);
-//        });
     }
 
     @Override
@@ -153,25 +147,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-
-
     private void setupDetailedRouteFragment() {
-        //Code to show DetailedRouteFragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         DetailedRouteFragment detailedRouteFragment = new DetailedRouteFragment();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.mainactivity_detailed_route_placeholder, detailedRouteFragment).commit();
-
-//        mMapView = findViewById(R.id.mainactivity_map_view);
-//        //mMapView.onCreate(savedInstanceState);
-//        mMapView.onResume();
-//        try {
-//            MapsInitializer.initialize(getApplicationContext());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        mMapView.getMapAsync(this);
     }
 
     private void askPermission() {
@@ -245,19 +225,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         viewModel.getWayPoints().observe(this, points -> {
             drawMarkers(points);
         });
-
-//        NavigationDatabase.getInstance(getApplication()).waypointDAO().getAllWayPoints().observe(this, waypointModels1 -> {
-//            drawMarkers(waypointModels1);
-//        });
-        //drawMarkers();
-        //drawRoute();
-        //onLocationChanged(viewModel.getCurrentPosition());
     }
 
     private void drawMarkers(List<WaypointModel> markerPoints) {
-//        markers = waypointModels.getValue();
-//        waypoints = new ArrayList<>();
-//        waypoints.add(viewModel.getCurrentPosition());
         if (markerPoints != null) {
             for (WaypointModel model : markerPoints) {
                 if (!model.isAlreadySeen()) {
@@ -286,40 +256,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         polylineOptions.add(latLng);
         googleMap.addPolyline(polylineOptions);
     }
-
-//    @Override
-//    public void onLocationChanged(LatLng latLng) {
-//        if(latLng == null)
-//            return;
-//        if (googleMap != null) {
-//            googleMap.clear();
-//        }
-//        waypoints = new ArrayList<>();
-//        waypoints.add(latLng);
-//
-//
-////        if (googleMap != null) {
-////            googleMap.clear();
-////            googleMap.addPolyline(walkedRouteOptions);
-////        }
-//
-//
-//        //Toast.makeText(this, "Route updated to " + latLng, Toast.LENGTH_SHORT).show();
-//
-//        if (markers != null) {
-//            for (WaypointModel model : markers) {
-//                if (!model.isAlreadySeen()) {
-//                    GeoCoderService.getInstance(getApplication())
-//                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_RED, model.getName(), model.getDescription());
-//                    waypoints.add(model.getLocation());
-//                } else
-//                    GeoCoderService.getInstance(getApplication())
-//                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_GREEN, model.getName(), model.getDescription());
-//            }
-//
-//            viewModel.getRoutePoints(waypoints, this);
-//        }
-//    }
 
     @Override
     public void onInfoWindowClick(Marker marker) {

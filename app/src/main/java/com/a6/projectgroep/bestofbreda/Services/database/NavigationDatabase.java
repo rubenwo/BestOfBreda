@@ -43,9 +43,7 @@ public abstract class NavigationDatabase extends RoomDatabase {
     }
 
     public abstract MultimediaDAO multiMediaDAO();
-
     public abstract RouteDAO routeDAO();
-
     public abstract WaypointDAO waypointDAO();
 
     private static class PopulateWithTestDataAsyncTask extends AsyncTask<Void, Void, Void> {

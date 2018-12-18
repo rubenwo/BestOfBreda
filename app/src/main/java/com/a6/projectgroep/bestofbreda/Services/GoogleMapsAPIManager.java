@@ -12,11 +12,18 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.Services.database.NavigationDatabase;
+import com.android.volley.Response;
+import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class GoogleMapsAPIManager {
@@ -31,6 +38,7 @@ public class GoogleMapsAPIManager {
     private MutableLiveData<Location> userCurrentLocation;
     private MutableLiveData<RouteModel> userSelectedRoute;
     private MutableLiveData<WaypointModel> nearbyWaypoint;
+    private MutableLiveData<List<LatLng>> routePoints;
 
     public static GoogleMapsAPIManager getInstance(Application application) {
         if (instance == null)
@@ -45,6 +53,7 @@ public class GoogleMapsAPIManager {
         userSelectedRoute = new MutableLiveData<>();
         userSelectedRoute.setValue(null);
         nearbyWaypoint = new MutableLiveData<>();
+        nearbyWaypoint.setValue(null);
 
 
         locationManager = (LocationManager) application.getSystemService(Context.LOCATION_SERVICE);
@@ -82,7 +91,7 @@ public class GoogleMapsAPIManager {
     }
 
     public LiveData<List<WaypointModel>> getAvailableWayPoints() {
-        if(availableWayPoints == null) {
+        if (availableWayPoints == null) {
             availableWayPoints = Transformations.switchMap(userSelectedRoute, input -> {
                 if (input != null) {
                     return NavigationDatabase.getInstance(application).waypointDAO().getAllWaypointModelsFromNames(input.getRoute());
@@ -100,10 +109,38 @@ public class GoogleMapsAPIManager {
 
     public void setCurrentRoute(RouteModel route) {
         userSelectedRoute.setValue(route);
+        calculateRoute();
     }
 
-    public void calculateRoute() {
-        //
+    private void calculateRoute() {
+        new Thread(() -> {
+            VolleyConnection connection = VolleyConnection.getInstance(application);
+            List<LatLng> routePositions = new ArrayList<>();
+            List<WaypointModel> points = NavigationDatabase.getInstance(application).waypointDAO().getAllWaypointModelsFromNamesNotLive(userSelectedRoute.getValue().getRoute());
+
+            for (WaypointModel model : points) {
+                routePositions.add(model.getLocation());
+            }
+
+            connection.getRoute(routePositions,
+                    response -> {
+                        try {
+                            System.out.println(response);
+                            routePositions.clear();
+                            JSONArray jsonArray = response.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONArray("steps");
+                            for (int idx = 0; idx < jsonArray.length(); idx++) {
+                                LatLng latLng = new LatLng(jsonArray.getJSONObject(idx).getJSONObject("end_location").getDouble("lat"), jsonArray.getJSONObject(idx).getJSONObject("end_location").getDouble("lng"));
+                                routePositions.add(latLng);
+                            }
+
+                            routePoints.postValue(routePositions);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }, error -> {
+                        Log.i("route", "NOK");
+                    });
+        }).start();
     }
 
     private void calculateNearbyWaypoint() {
@@ -121,12 +158,4 @@ public class GoogleMapsAPIManager {
     public void stopLocationChanges() {
         locationManager.removeUpdates(locationListener);
     }
-
-//    public WaypointModel getCurrentWaypoint() {
-//        return this.currentWaypoint;
-//    }
-//
-//    public void SetCurrentWaypoint(WaypointModel currentWaypoint) {
-//        this.currentWaypoint = currentWaypoint;
-//    }
 }
