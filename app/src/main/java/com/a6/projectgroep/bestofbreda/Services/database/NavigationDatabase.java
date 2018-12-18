@@ -6,16 +6,14 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
-import com.a6.projectgroep.bestofbreda.Services.GeoCoderService;
-
-import java.util.Arrays;
-import java.util.List;
+import com.a6.projectgroep.bestofbreda.Services.JsonDecoder;
 
 @Database(entities = {MultimediaModel.class, RouteModel.class, WaypointModel.class}, version = 2)
 @TypeConverters({Converters.class})
@@ -61,13 +59,11 @@ public abstract class NavigationDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            List<String> strings = Arrays.asList("Test", "Test2");
-            String string = "testString";
-            MultimediaModel multiMedia = new MultimediaModel(strings, string);
-            multiMediaDAO.insertMultiMedia(multiMedia);
-            waypointDAO.insertWaypoint(new WaypointModel("Avans", "desc", GeoCoderService.getInstance(mApplication).getLocationFromName("Avans Breda"), false, false, multiMedia));
-            waypointDAO.insertWaypoint(new WaypointModel("Casino", "desc", GeoCoderService.getInstance(mApplication).getLocationFromName("Casino Breda"), false, false, multiMedia));
-            routeDAO.insertRoute(new RouteModel(Arrays.asList("Avans", "Casino"), "nameOfRoute", false, "resource"));
+            JsonDecoder.decodeJsonRouteFile(mApplication, "BlindwallsRoute.json", routeDAO);
+            JsonDecoder.decodeJsonRouteFile(mApplication, "HistorischeRoute.json", routeDAO);
+            JsonDecoder.decodeJsonWaypointsFile(mApplication, "Blindwalls.json", waypointDAO);
+            JsonDecoder.decodeJsonWaypointsFile(mApplication, "HistorischeRouteWaypoints.json", waypointDAO);
+
             return null;
         }
     }

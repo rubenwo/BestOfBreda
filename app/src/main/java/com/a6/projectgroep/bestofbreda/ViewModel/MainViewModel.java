@@ -5,6 +5,7 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
+import android.location.Location;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -12,8 +13,6 @@ import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.Services.GoogleMapsAPIManager;
-import com.a6.projectgroep.bestofbreda.Services.LiveLocationListener;
-import com.a6.projectgroep.bestofbreda.Services.LocationHandler;
 import com.a6.projectgroep.bestofbreda.Services.RouteReceivedListener;
 import com.a6.projectgroep.bestofbreda.Services.VolleyConnection;
 import com.a6.projectgroep.bestofbreda.Services.database.MultimediaRepository;
@@ -25,38 +24,50 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainViewModel extends AndroidViewModel {
-    public GoogleMapsAPIManager mapsApiManager;
-    public VolleyConnection volleyConnection;
+    private GoogleMapsAPIManager mapsApiManager;
+    private VolleyConnection volleyConnection;
+
     private WaypointRepository waypointRepository;
     private RouteRepository routeRepository;
     private MultimediaRepository multimediaRepository;
+
     private LiveData<List<WaypointModel>> mWaypointModels;
     private LiveData<List<RouteModel>> mRouteModels;
     private LiveData<List<MultimediaModel>> mMultiMediaModels;
     private LiveData<List<WaypointModel>> liveData;
 
-    public MainViewModel(@NonNull Application application, LiveLocationListener listener) {
+    private LiveData<Location> currentLocation;
+
+    public MainViewModel(@NonNull Application application) {
         super(application);
-        mapsApiManager = GoogleMapsAPIManager.getInstance(application, listener);
+        mapsApiManager = GoogleMapsAPIManager.getInstance(application);
+
         waypointRepository = new WaypointRepository(application);
         routeRepository = new RouteRepository(application);
         multimediaRepository = new MultimediaRepository(application);
+
         mWaypointModels = waypointRepository.getAllWaypoints();
         mRouteModels = routeRepository.getAllRouteModels();
         mMultiMediaModels = multimediaRepository.getAllMultiMedia();
     }
 
-    //region waypoint
-    public void insertWayPointModel(WaypointModel model) {
-        waypointRepository.insertWaypoint(model);
+    public LiveData<Location> getCurrentLocation() {
+        if(currentLocation == null) {
+            currentLocation = mapsApiManager.getCurrentLocation();
+        }
+        return currentLocation;
     }
 
-    public void updateWayPointModel(WaypointModel model) {
-        waypointRepository.updateWaypoint(model);
+    public LiveData<List<LatLng>> getRoutePoints() {
+        return mapsApiManager.routePoints();
     }
 
-    public void deleteWayPointModel(WaypointModel model) {
-        waypointRepository.deleteWaypoint(model);
+    public void setRoute(RouteModel route) {
+        mapsApiManager.setCurrentRoute(route);
+    }
+
+    public LiveData<List<WaypointModel>> getWayPoints() {
+        return mapsApiManager.getAvailableWayPoints();
     }
 
     public LiveData<WaypointModel> getWaypointModelByName(String name) {
@@ -113,14 +124,9 @@ public class MainViewModel extends AndroidViewModel {
 
     //endregion
 
-
     public void getRoutePoints(ArrayList<LatLng> waypoints, RouteReceivedListener listener) {
         volleyConnection = VolleyConnection.getInstance(getApplication().getApplicationContext());
         //    volleyConnection.getRoute(waypoints, listener);
-    }
-
-    public LatLng getCurrentPosition() {
-        return LocationHandler.getInstance(getApplication()).getCurrentLocation();
     }
 
     public void createWaypointModelList() {

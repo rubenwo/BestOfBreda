@@ -1,7 +1,10 @@
 package com.a6.projectgroep.bestofbreda.View.Activities;
 
+
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,53 +14,54 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.R;
-import com.a6.projectgroep.bestofbreda.Services.GoogleMapsAPIManager;
-import com.a6.projectgroep.bestofbreda.ViewModel.Adapters.RoutesRecyclerviewAdapter;
-import com.a6.projectgroep.bestofbreda.ViewModel.RouteListViewModel;
+import com.a6.projectgroep.bestofbreda.ViewModel.Adapters.SightsRecyclerviewAdapter;
+import com.a6.projectgroep.bestofbreda.ViewModel.SightsListViewModel;
 
 import java.util.ArrayList;
 
-public class RouteActivity extends AppCompatActivity implements RoutesRecyclerviewAdapter.OnSelectRouteListener {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class SightListActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private RoutesRecyclerviewAdapter adapter;
-    private RouteListViewModel viewModel;
+    private SightsRecyclerviewAdapter adapter;
+    private SightsListViewModel viewModel;
+    private MenuItem searchItem;
+    private SearchView searchView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_route);
-        viewModel = ViewModelProviders.of(this).get(RouteListViewModel.class);
+        setContentView(R.layout.fragment_sight_list);
 
-        Toolbar toolbar = findViewById(R.id.routeactivity_toolbar);
+        viewModel = ViewModelProviders.of(this).get(SightsListViewModel.class);
+
+        Toolbar toolbar = findViewById(R.id.sightlistfragment_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        recyclerView = findViewById(R.id.routeactivity_recyclerview);
+        recyclerView = findViewById(R.id.sightlistfragment_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
-        viewModel.getAllRouteModels().observe(this, routeModels -> {
-            assert routeModels != null;
-            if(!routeModels.isEmpty())
-                adapter.setRoutes(routeModels);
+        adapter = new SightsRecyclerviewAdapter(this, new ArrayList<>());
+        recyclerView.setAdapter(adapter);
+        viewModel.getAllWaypoinModels().observe(this, waypointModels -> {
+            assert waypointModels != null;
+            if(!waypointModels.isEmpty())
+                adapter.setSightList(waypointModels);
             adapter.notifyDataSetChanged();
         });
-
-        adapter = new RoutesRecyclerviewAdapter(getApplicationContext(), new ArrayList<>(), this);
-        recyclerView.setAdapter(adapter);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_mainactivity_toolbar, menu);
-
-        MenuItem searchItem = menu.findItem(R.id.toolbar_search);
-        SearchView searchView = (SearchView) searchItem.getActionView();
-        //TODO filter recyclerview adapter
+        searchItem = menu.findItem(R.id.toolbar_search);
+        searchView = (SearchView) searchItem.getActionView();
+        searchItem.expandActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -75,12 +79,12 @@ public class RouteActivity extends AppCompatActivity implements RoutesRecyclervi
         });
 
         return super.onCreateOptionsMenu(menu);
-
     }
 
     @Override
-    public void onSelectRoute(RouteModel routeModel) {
-        GoogleMapsAPIManager.getInstance(getApplication()).setCurrentRoute(routeModel);
-        super.onBackPressed();
+    protected void onStop() {
+        super.onStop();
+        searchItem.collapseActionView();
+        searchView.setIconified(true);
     }
 }

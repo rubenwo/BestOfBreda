@@ -1,7 +1,7 @@
 package com.a6.projectgroep.bestofbreda.Services;
 
-import com.google.android.gms.maps.model.LatLng;
+import android.location.Location;
 
 public interface LiveLocationListener {
-    void onLocationChanged(LatLng latLng);
+    void onLocationChanged(Location latLng);
 }

@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class JsonDecoder {
     private static final String TAG = "JSONDECODER_TAG";
@@ -35,12 +34,11 @@ public class JsonDecoder {
 
             json = new String(buffer, "UTF-8");
         } catch (IOException e) {
-            Log.e(TAG, e.getMessage());
+            Log.e(TAG, e.getMessage() + " | IO Exception");
             return false;
         }
         try {
             JSONArray array = new JSONArray(json);
-            String language = Locale.getDefault().getLanguage();
             for (int idx = 0; idx < array.length(); idx++) {
                 JSONObject obj = array.getJSONObject(idx);
                 double latitude = obj.getDouble("latitude");
@@ -49,15 +47,10 @@ public class JsonDecoder {
                 if (!obj.isNull("videoUrl"))
                     videoUrl = obj.getString("videoUrl");
 
-                String name, desc;
-                if (language.equals("nl")) {
-                    name = obj.getJSONObject("title").getString("nl");
-                    desc = obj.getJSONObject("description").getString("nl");
-                } else {
-                    name = obj.getJSONObject("title").getString("en");
-                    desc = obj.getJSONObject("description").getString("en");
-                }
-
+                String name, descNL, descEN;
+                name = obj.getJSONObject("title").getString("nl");
+                descNL = obj.getJSONObject("description").getString("nl");
+                descEN = obj.getJSONObject("description").getString("en");
                 JSONArray images = obj.getJSONArray("images");
                 ArrayList<String> urls = new ArrayList<>();
                 ArrayList<String> files = new ArrayList<>();
@@ -65,11 +58,12 @@ public class JsonDecoder {
                     urls.add(images.getJSONObject(index).getString("url"));
                     files.add(images.getJSONObject(index).getString("file"));
                 }
-                dao.insertWaypoint(new WaypointModel(name, desc, new LatLng(latitude, longitude), false, false, new MultimediaModel(urls, videoUrl)));
+
+                dao.insertWaypoint(new WaypointModel(name, descNL, descEN, new LatLng(latitude, longitude), false, false, new MultimediaModel(urls, videoUrl)));
             }
             return true;
         } catch (JSONException e) {
-            Log.e(TAG, e.getMessage());
+            Log.e(TAG, e.getMessage() + " | " + path);
             return false;
         }
     }
@@ -94,14 +88,14 @@ public class JsonDecoder {
             String name = routeObject.getString("name");
             String picturePath = routeObject.getString("picture");
             List<String> points = new ArrayList<>();
-            JSONArray pointsArray = new JSONArray("points");
+            JSONArray pointsArray = routeObject.getJSONArray("points");
             for (int i = 0; i < pointsArray.length(); i++) {
                 points.add(pointsArray.getString(i));
             }
             dao.insertRoute(new RouteModel(points, name, false, picturePath));
             return true;
         } catch (JSONException e) {
-            Log.e(TAG, e.getMessage());
+            Log.e(TAG, e.getMessage() + " | " + path);
             return false;
         }
     }

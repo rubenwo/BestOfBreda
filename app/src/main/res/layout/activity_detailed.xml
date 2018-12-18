@@ -49,31 +49,45 @@
         android:id="@+id/detailedactivity_sight_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="TextView"
         android:textColor="@color/colorPrimary"
         android:textSize="30sp"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="235dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detailedactivity_circlepageindicator" />
 
-    <TextView
-        android:id="@+id/detailedactivity_sight_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        android:text="TextView"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/detailedactivity_sight_name"
-        app:layout_constraintTop_toBottomOf="@+id/detailedactivity_sight_name" />
+        app:layout_constraintTop_toBottomOf="@+id/detailedactivity_sight_name">
+
+        <TextView
+            android:id="@+id/detailedactivity_sight_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView" />
+    </ScrollView>
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/detailedactivity_fab_media"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:backgroundTint="@color/colorPrimary"
         android:clickable="true"
-        android:scaleType="centerCrop"
-        app:fabCustomSize="50dp"
+        android:scaleType="center"
+        app:fabSize="normal"
+        app:fabCustomSize="64dp"
+        app:maxImageSize="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_detailed_play_video_white" />

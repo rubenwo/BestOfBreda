@@ -4,18 +4,23 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.Serializable;
+
 @Entity(tableName = "WAYPOINT_MODEL")
-public class WaypointModel {
+public class WaypointModel implements Serializable {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "waypoint_name")
     private String name;
-    @ColumnInfo(name = "waypoint_description")
-    private String description;
+    @ColumnInfo(name = "waypoint_description_nl")
+    private String descriptionNL;
+    @ColumnInfo(name = "waypoint_description_en")
+    private String descriptionEN;
     @ColumnInfo(name = "waypoint_location")
     private LatLng location;
     @ColumnInfo(name = "waypoint_already_seen")
@@ -25,9 +30,10 @@ public class WaypointModel {
     @ColumnInfo(name = "waypoint_multimedia_id")
     private MultimediaModel multiMediaModel;
 
-    public WaypointModel(@NonNull String name, String description, LatLng location, boolean alreadySeen, boolean isFavorite, MultimediaModel multiMediaModel) {
+    public WaypointModel(@NonNull String name, String descriptionNL, String descriptionEN, LatLng location, boolean alreadySeen, boolean isFavorite, MultimediaModel multiMediaModel) {
         this.name = name;
-        this.description = description;
+        this.descriptionNL = descriptionNL;
+        this.descriptionEN = descriptionEN;
         this.location = location;
         this.alreadySeen = alreadySeen;
         this.isFavorite = isFavorite;
@@ -39,18 +45,24 @@ public class WaypointModel {
         return name;
     }
 
-    @NonNull
-    public void setName(String name) {
+    public void setName(@NonNull String name) {
         this.name = name;
     }
 
-
-    public String getDescription() {
-        return description;
+    public String getDescriptionNL() {
+        return descriptionNL;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescriptionNL(String descriptionNL) {
+        this.descriptionNL = descriptionNL;
+    }
+
+    public String getDescriptionEN() {
+        return descriptionEN;
+    }
+
+    public void setDescriptionEN(String descriptionEN) {
+        this.descriptionEN = descriptionEN;
     }
 
     public LatLng getLocation() {
@@ -90,7 +102,8 @@ public class WaypointModel {
     public String toString() {
         return "WaypointModel{" +
                 "name='" + name + '\'' +
-                ", description='" + description + '\'' +
+                ", descriptionNL='" + descriptionNL + '\'' +
+                ", descriptionEN='" + descriptionEN + '\'' +
                 ", location=" + location +
                 ", alreadySeen=" + alreadySeen +
                 ", isFavorite=" + isFavorite +
