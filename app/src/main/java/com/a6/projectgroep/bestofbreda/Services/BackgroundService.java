@@ -8,6 +8,7 @@ import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
+import java.util.Locale;
 
 public class BackgroundService extends IntentService {
 
@@ -42,7 +43,12 @@ public class BackgroundService extends IntentService {
                         waypointLocation.setLatitude(waypointModel.getLocation().latitude);
                         if (currentLocation.distanceTo(waypointLocation) < 200) {
                             if (!waypointModel.isAlreadySeen()) {
-                                pushNotification.SendSightNotification(waypointModel.getName(), waypointModel.getDescription(), getApplicationContext());
+                                String language = Locale.getDefault().getLanguage();
+                                if (language.equals("nl"))
+                                    pushNotification.SendSightNotification(waypointModel.getName(), waypointModel.getDescriptionNL(), getApplicationContext());
+                                else
+                                    pushNotification.SendSightNotification(waypointModel.getName(), waypointModel.getDescriptionEN(), getApplicationContext());
+
                                 waypointModel.setAlreadySeen(true);
                             }
                         }

@@ -30,7 +30,6 @@ import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.R;
 import com.a6.projectgroep.bestofbreda.Services.GeoCoderService;
 import com.a6.projectgroep.bestofbreda.Services.RouteReceivedListener;
-import com.a6.projectgroep.bestofbreda.Services.database.NavigationDatabase;
 import com.a6.projectgroep.bestofbreda.View.Fragments.DetailedRouteFragment;
 import com.a6.projectgroep.bestofbreda.View.Fragments.TermsOfServiceFragment;
 import com.a6.projectgroep.bestofbreda.ViewModel.MainViewModel;
@@ -43,6 +42,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, RouteReceivedListener, GoogleMap.OnInfoWindowClickListener {
     private static final int GPS_REQUEST = 50;
@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         askPermission();
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-
 
 
         setupGoogleMaps(savedInstanceState);
@@ -154,7 +153,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-
     private void setupDetailedRouteFragment() {
         //Code to show DetailedRouteFragment
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -232,8 +230,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             return;
-        }
-        else {
+        } else {
             //request again for permission of location....
             googleMap.setMyLocationEnabled(true);
         }
@@ -262,11 +259,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             for (WaypointModel model : markerPoints) {
                 if (!model.isAlreadySeen()) {
                     GeoCoderService.getInstance(getApplication())
-                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_RED, model.getName(), model.getDescription());
+                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_RED, model.getName(), Locale.getDefault().getLanguage().equals("nl") ? model.getDescriptionNL() : model.getDescriptionEN());
                     //waypoints.add(model.getLocation());
                 } else
                     GeoCoderService.getInstance(getApplication())
-                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_GREEN, model.getName(), model.getDescription());
+                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_GREEN, model.getName(), Locale.getDefault().getLanguage().equals("nl") ? model.getDescriptionNL() : model.getDescriptionEN());
             }
         }
     }

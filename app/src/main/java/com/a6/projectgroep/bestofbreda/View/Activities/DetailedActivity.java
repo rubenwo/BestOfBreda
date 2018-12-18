@@ -24,6 +24,7 @@ import com.squareup.picasso.Picasso;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.List;
+import java.util.Locale;
 
 public class DetailedActivity extends AppCompatActivity {
 
@@ -60,19 +61,19 @@ public class DetailedActivity extends AppCompatActivity {
                 if (position.equals(m.getLocation()))
                     model = m;
             titleTextView.setText(model.getName());
-            descriptionTextView.setText(model.getDescription());
-        });
+            if (Locale.getDefault().getLanguage().equals("nl"))
+                descriptionTextView.setText(model.getDescriptionNL());
+            else descriptionTextView.setText(model.getDescriptionEN());
 
+        });
         CirclePageIndicator indicator = findViewById(R.id.detailedactivity_circlepageindicator);
         indicator.setViewPager(viewPager);
         indicator.setRadius(getResources().getDisplayMetrics().density * 5);
 
         FloatingActionButton playMedia = findViewById(R.id.detailedactivity_fab_media);
-        playMedia.setOnClickListener(new View.OnClickListener()
-        {
+        playMedia.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 //TODO get MultimediaModel
 //                if(media.getVideoUrls() != null){
 //                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(media.getVideoUrls()));
