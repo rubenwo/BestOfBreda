@@ -10,7 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -37,6 +41,8 @@ public class SightListActivity extends AppCompatActivity {
 
         viewModel = ViewModelProviders.of(this).get(SightsListViewModel.class);
 
+        Toolbar toolbar = findViewById(R.id.sightlistfragment_toolbar);
+        setSupportActionBar(toolbar);
 
         recyclerView = findViewById(R.id.sightlistfragment_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -52,4 +58,30 @@ public class SightListActivity extends AppCompatActivity {
             adapter.notifyDataSetChanged();
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_mainactivity_toolbar, menu);
+        MenuItem searchItem = menu.findItem(R.id.toolbar_search);
+
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                adapter.setDataset(s);
+                adapter.notifyDataSetChanged();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                adapter.setDataset(s);
+                adapter.notifyDataSetChanged();
+                return false;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
 }
