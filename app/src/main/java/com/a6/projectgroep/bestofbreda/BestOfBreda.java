@@ -3,6 +3,7 @@ package com.a6.projectgroep.bestofbreda;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.arch.lifecycle.ProcessLifecycleOwner;
 import android.os.Build;
 
 import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
@@ -16,11 +17,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class BestOfBreda extends Application {
+    private ApplicationLifecycle appLifecycle;
     public static final String CHANNEL_SIGHT_PASSED_ID = "sightPassed";
 
     @Override
     public void onCreate() {
         super.onCreate();
+        appLifecycle = new ApplicationLifecycle(this);
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(appLifecycle);
+    }
 
         List<WaypointModel> testWayPoints = new ArrayList<>();
         List<String> strings = Arrays.asList("Test", "Test2");
@@ -36,5 +41,11 @@ public class BestOfBreda extends Application {
 //            NavigationDatabase.getInstance(this).waypointDAO().insertWaypoint(testWayPoints.get(2));
 //            NavigationDatabase.getInstance(this).routeDAO().insertRoute(new RouteModel(Arrays.asList("Avans", "Casino"), "nameOfRoute", false, "resource"));
 //        }).start();
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        ProcessLifecycleOwner.get().getLifecycle().removeObserver(appLifecycle);
+    }
+
     }
 }

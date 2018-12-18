@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -30,6 +31,7 @@ import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.R;
 import com.a6.projectgroep.bestofbreda.Services.GeoCoderService;
 import com.a6.projectgroep.bestofbreda.Services.RouteReceivedListener;
+import com.a6.projectgroep.bestofbreda.View.Fragments.DetailedPreviewFragment;
 import com.a6.projectgroep.bestofbreda.View.Fragments.DetailedRouteFragment;
 import com.a6.projectgroep.bestofbreda.View.Fragments.TermsOfServiceFragment;
 import com.a6.projectgroep.bestofbreda.ViewModel.MainViewModel;
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        this.savedInstanceState = savedInstanceState;
         askPermission();
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         viewModel.setRoute(new RouteModel(Arrays.asList("Avans", "Casino"), "nameOfRoute", false, "resource"));
@@ -72,6 +75,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setupDetailedRouteFragment();
         setupToolbar();
         setupDrawerLayout();
+        setupViewModel();
+        Intent intent = new Intent(getApplicationContext(), BackgroundService.class);
+        startService(intent);
     }
 
     @Override
@@ -151,6 +157,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     break;
                 case R.id.menu_nav_help:
+                    Intent intent = new Intent(MainActivity.this, HelpActivity.class);
+                    startActivity(intent);
 
                     break;
                 case R.id.menu_nav_termsofservice:
@@ -177,6 +185,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     GPS_REQUEST);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isSaveStated = true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        isSaveStated = false;
     }
 
     @Override

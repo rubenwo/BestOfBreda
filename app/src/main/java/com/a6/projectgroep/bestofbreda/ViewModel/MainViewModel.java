@@ -124,7 +124,6 @@ public class MainViewModel extends AndroidViewModel {
 
     //endregion
 
-
     public void getRoutePoints(ArrayList<LatLng> waypoints, RouteReceivedListener listener) {
         volleyConnection = VolleyConnection.getInstance(getApplication().getApplicationContext());
         //    volleyConnection.getRoute(waypoints, listener);
