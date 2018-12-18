@@ -1,9 +1,7 @@
 package com.a6.projectgroep.bestofbreda.ViewModel.Adapters;
 
-import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,13 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.R;
 import com.a6.projectgroep.bestofbreda.View.Activities.DetailedActivity;
-import com.a6.projectgroep.bestofbreda.ViewModel.SightsListViewModel;
+import com.squareup.picasso.Picasso;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,17 +40,20 @@ public class SightsRecyclerviewAdapter extends RecyclerView.Adapter<SightsRecycl
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        //WaypointModel wayPoint = sightsListViewModel.getWayPoint(i);
-        //viewHolder.nameTextView.setText(wayPoint.getName());
-        //Picasso.get().load(wayPoint.getMultimediaID().getPictureUrls().get(0)).into(viewHolder.backgroundImage);
-        // TODO: get multimediaID from waypoint and search for it in multimediaDAO.
         WaypointModel waypointModel = sightList.get(i);
+        String url = null;
+        if(waypointModel.getMultiMediaModel().getPictureUrls().size() > 0)
+            url = waypointModel.getMultiMediaModel().getPictureUrls().get(0);
+        if(url != null && !url.equals("")) {
+            if (url.startsWith("api"))
+                url = "https://" + url;
+            Picasso.get().load(url).into(viewHolder.backgroundImage);
+        }
         viewHolder.nameTextView.setText(waypointModel.getName());
     }
 
     @Override
     public int getItemCount() {
-        //return sightsListViewModel.getValue().size(); TODO:aanpassen
         return sightList.size();
     }
 

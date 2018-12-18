@@ -38,7 +38,7 @@ public class RouteActivity extends AppCompatActivity implements RoutesRecyclervi
         recyclerView = findViewById(R.id.routeactivity_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         viewModel.getAllRouteModels().observe(this, routeModels -> {
             assert routeModels != null;
