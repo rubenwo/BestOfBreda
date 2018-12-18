@@ -152,12 +152,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 case R.id.menu_nav_sights:
                     break;
                 case R.id.menu_nav_routes:
-
+                    Intent intent = new Intent(this, RouteActivity.class);
+                    startActivity(intent);
                     break;
                 case R.id.menu_nav_help:
-                    Intent intent = new Intent(MainActivity.this, HelpActivity.class);
-                    startActivity(intent);
-
+                    Intent helpIntent = new Intent(this, HelpActivity.class);
+                    startActivity(helpIntent);
                     break;
                 case R.id.menu_nav_termsofservice:
                     DialogFragment fragment = new TermsOfServiceFragment();

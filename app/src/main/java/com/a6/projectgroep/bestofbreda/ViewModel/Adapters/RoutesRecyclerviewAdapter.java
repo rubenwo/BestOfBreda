@@ -1,6 +1,7 @@
 package com.a6.projectgroep.bestofbreda.ViewModel.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,20 +12,28 @@ import android.widget.TextView;
 
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.R;
-import com.a6.projectgroep.bestofbreda.ViewModel.RouteListViewModel;
+import com.a6.projectgroep.bestofbreda.Services.GoogleMapsAPIManager;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.Route;
 
 public class RoutesRecyclerviewAdapter extends RecyclerView.Adapter<RoutesRecyclerviewAdapter.ViewHolder>
 {
-    private RouteListViewModel routeListViewModel;
+    private List<RouteModel> currentList;
+    private List<RouteModel> routesList;
     private LayoutInflater inflater;
     private Context context;
+    private OnSelectRouteListener listener;
 
-    public RoutesRecyclerviewAdapter(Context context, RouteListViewModel viewModel)
+    public RoutesRecyclerviewAdapter(Context context, List<RouteModel> viewModel, OnSelectRouteListener listener)
     {
-        routeListViewModel = viewModel;
+        routesList = viewModel;
+        currentList = viewModel;
         inflater = LayoutInflater.from(context);
-        routeListViewModel = viewModel;
         this.context = context;
+        this.listener = listener;
     }
 
     @NonNull
@@ -38,17 +47,36 @@ public class RoutesRecyclerviewAdapter extends RecyclerView.Adapter<RoutesRecycl
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i)
     {
-        RouteModel routeModel = routeListViewModel.getAllRouteModels().getValue().get(i);
+        RouteModel routeModel = currentList.get(i);
 
         viewHolder.nameTextView.setText(routeModel.getName());
         viewHolder.distanceTextView.setText("TODO");
-        //TODO add image to RouteModel and load here
+        viewHolder.backgroundImage.setImageResource(
+                context.getResources().getIdentifier(routeModel.getResourceID(),
+                "drawable",
+                context.getPackageName()));
+        viewHolder.backgroundImage.setOnClickListener(view -> listener.onSelectRoute(routeModel));
+    }
+
+    public void setRoutes(List<RouteModel> routes){
+        this.routesList = routes;
+        currentList = routesList;
     }
 
     @Override
     public int getItemCount()
     {
-        return routeListViewModel.getAllRouteModels().getValue().size();
+        return currentList.size();
+    }
+
+    public void setDataset(String filter){
+        List<RouteModel> filteredList = new ArrayList<>();
+        for (RouteModel m : routesList) {
+            if(m.getName().toLowerCase().contains(filter.toLowerCase()))
+                filteredList.add(m);
+        }
+        currentList = filteredList;
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder
@@ -65,8 +93,11 @@ public class RoutesRecyclerviewAdapter extends RecyclerView.Adapter<RoutesRecycl
 
             itemView.setOnClickListener(view ->
             {
-                //TODO load route
             });
         }
+    }
+
+    public interface OnSelectRouteListener{
+        void onSelectRoute(RouteModel routeModel);
     }
 }
