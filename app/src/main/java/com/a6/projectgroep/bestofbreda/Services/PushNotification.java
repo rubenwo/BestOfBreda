@@ -44,7 +44,7 @@ public class PushNotification {
 
     public void SendSightNotification(String sightName, String sightDescription, Context context) {
         Intent resultIntent = new Intent(context, DetailedActivity.class);
-        resultIntent.putExtra("NotificationMessage", sightName);
+        resultIntent.putExtra("SightName", sightName);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);

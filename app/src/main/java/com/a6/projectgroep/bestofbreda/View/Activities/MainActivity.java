@@ -205,9 +205,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_mainactivity_toolbar, menu);
         MenuItem searchItem = menu.findItem(R.id.toolbar_search);
-
         SearchView searchView = (SearchView) searchItem.getActionView();
+        searchItem.collapseActionView();
         searchView.setOnSearchClickListener(view -> {
+            searchItem.collapseActionView();
+            searchView.clearFocus();
+            searchView.setIconified(true);
             Intent intent = new Intent(this, SightListActivity.class);
             startActivity(intent);
         });
