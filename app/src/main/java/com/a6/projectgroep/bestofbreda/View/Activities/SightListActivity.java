@@ -28,6 +28,8 @@ public class SightListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private SightsRecyclerviewAdapter adapter;
     private SightsListViewModel viewModel;
+    private MenuItem searchItem;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,9 +59,9 @@ public class SightListActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_mainactivity_toolbar, menu);
-        MenuItem searchItem = menu.findItem(R.id.toolbar_search);
-
-        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchItem = menu.findItem(R.id.toolbar_search);
+        searchView = (SearchView) searchItem.getActionView();
+        searchItem.expandActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -79,4 +81,10 @@ public class SightListActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        searchItem.collapseActionView();
+        searchView.setIconified(true);
+    }
 }
