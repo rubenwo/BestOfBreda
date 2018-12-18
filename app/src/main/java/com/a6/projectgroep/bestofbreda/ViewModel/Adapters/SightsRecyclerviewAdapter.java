@@ -66,9 +66,10 @@ public class SightsRecyclerviewAdapter extends RecyclerView.Adapter<SightsRecycl
 
             itemView.setOnClickListener(view ->
             {
-//                Intent intent = new Intent(context, DetailedActivity.class);
-//                intent.putExtra("ROUTE_ADAPTERPOS", getAdapterPosition());
-//                context.startActivity(intent);
+                Intent intent = new Intent(context, DetailedActivity.class);
+                WaypointModel waypointModel = sightList.get(getAdapterPosition());
+                intent.putExtra("SightName", waypointModel.getName());
+                context.startActivity(intent);
             });
         }
     }
