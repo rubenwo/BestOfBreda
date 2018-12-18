@@ -14,6 +14,10 @@
     <string name="detailedfragment_more_information">"More Info     "</string>
 
     <string name="GPS_off">Your GPS function is off</string>
+    <string name="Geen_Locatie">No location</string>
+    <string name="Multimedia_Changed">multimedia changed</string>
+    <string name="Route_Changed">routes changed</string>
+    <string name="Waypoints_Changed">waypoints changed</string>
 
     <string name="NotificationChannel_name">Nearest sight</string>
     <string name="NotificationChannel_Description">The notification appears when a user is near a sight with the tour running</string>

@@ -14,6 +14,10 @@
     <string name="detailedfragment_more_information">"Meer informatie     "</string>
 
     <string name="GPS_off">Je GPS functie staat uit</string>
+    <string name="Geen_Locatie">geen locatie</string>
+    <string name="Multimedia_Changed">multimedia veranderd</string>
+    <string name="Route_Changed">routes veranderd</string>
+    <string name="Waypoints_Changed">waypoints veranderd</string>
 
     <string name="NotificationChannel_name">Dichtbijzijnde bezienswaardigheid</string>
     <string name="NotificationChannel_Description">De notificatie wordt zichtbaar wanneer de gebruiker in de buurt van een bezienswaardigheid komt waneer de tour loopt</string>

@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mainViewModel.getAllWaypointModels().observe(this, new Observer<List<WaypointModel>>() {
             @Override
             public void onChanged(@Nullable List<WaypointModel> wayPointModels) {
-                Toast.makeText(getApplicationContext(), "waypoints changed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.Waypoints_Changed, Toast.LENGTH_SHORT).show();
                 for (WaypointModel m : wayPointModels) {
                     Log.i("DATABASE_MODELS", m.toString());
                 }
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mainViewModel.getAllRouteModels().observe(this, new Observer<List<RouteModel>>() {
             @Override
             public void onChanged(@Nullable List<RouteModel> routeModels) {
-                Toast.makeText(getApplicationContext(), "routes changed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.Route_Changed, Toast.LENGTH_SHORT).show();
                 for (RouteModel m : routeModels) {
                     Log.i("DATABASE_MODELS", m.toString());
                     mainViewModel.createWaypointModelList();
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mainViewModel.getAllMultiMediaModels().observe(this, new Observer<List<MultimediaModel>>() {
             @Override
             public void onChanged(@Nullable List<MultimediaModel> multimediaModels) {
-                Toast.makeText(getApplicationContext(), "multimedia changed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.Multimedia_Changed, Toast.LENGTH_SHORT).show();
                 for (MultimediaModel m : multimediaModels) {
                     Log.i("DATABASE_MODELS", m.toString());
                 }
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
                 } else {
-                    Toast.makeText(getApplicationContext(), "geen locatie", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.Geen_Locatie, Toast.LENGTH_SHORT).show();
                     finish();
                 }
         }
