@@ -50,7 +50,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, RouteReceivedListener, GoogleMap.OnInfoWindowClickListener {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
     private static final int GPS_REQUEST = 50;
 
     private MainViewModel viewModel;
@@ -69,8 +69,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         askPermission();
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        //viewModel.setRoute(new RouteModel(Arrays.asList("Avans", "Casino"), "nameOfRoute", false, "resource"));
 
+        setPolylineOptions();
         setupGoogleMaps(savedInstanceState);
         setupDetailedRouteFragment();
         setupToolbar();
@@ -237,10 +237,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         } else {
             //request again for permission of location....
             googleMap.setMyLocationEnabled(true);
-            if(cameraPosition != null) {
+            if (cameraPosition != null) {
                 googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            }
-            else {
+            } else {
                 googleMap.moveCamera(CameraUpdateFactory.zoomTo(14));
                 googleMap.animateCamera(CameraUpdateFactory.newLatLng(GeoCoderService.getInstance(getApplication()).getLocationFromName("Breda Centrum")));
             }
@@ -248,13 +247,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         viewModel.getCurrentLocation().observe(this, location -> {
             System.out.println("De huidige locatie is..." + location.toString());
-//            walkedRouteOptions.add(new LatLng(location.getLatitude(),location.getLongitude()));
+            walkedRouteOptions.add(new LatLng(location.getLatitude(), location.getLongitude()));
+            googleMap.addPolyline(walkedRouteOptions);
+
 //            googleMap.addPolyline(walkedRouteOptions);
         });
 
         viewModel.getWayPoints().observe(this, points -> {
             googleMap.clear();
             drawMarkers(points);
+        });
+        
+        viewModel.getRoutePoints().observe(this, latLngs -> {
+
         });
     }
 
@@ -272,12 +277,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void setPolylineOptions()
-    {
+    private void setPolylineOptions() {
         polylineOptions = new PolylineOptions();
         polylineOptions.width(10);
         polylineOptions.color(Color.BLUE);
-        polylineOptions.add(viewModel.getCurrentPosition());
         walkedRouteOptions = new PolylineOptions();
         walkedRouteOptions.width(10);
         walkedRouteOptions.color(Color.GREEN);
@@ -285,12 +288,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void drawRoute() {
 
-    }
-
-    @Override
-    public void onRoutePointReceived(LatLng latLng) {
-        polylineOptions.add(latLng);
-        googleMap.addPolyline(polylineOptions);
     }
 
     @Override

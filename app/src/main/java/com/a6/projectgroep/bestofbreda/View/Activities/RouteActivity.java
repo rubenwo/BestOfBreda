@@ -1,9 +1,7 @@
 package com.a6.projectgroep.bestofbreda.View.Activities;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,9 +17,7 @@ import com.a6.projectgroep.bestofbreda.Services.GoogleMapsAPIManager;
 import com.a6.projectgroep.bestofbreda.ViewModel.Adapters.RoutesRecyclerviewAdapter;
 import com.a6.projectgroep.bestofbreda.ViewModel.RouteListViewModel;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 public class RouteActivity extends AppCompatActivity implements RoutesRecyclerviewAdapter.OnSelectRouteListener {
 

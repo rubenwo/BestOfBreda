@@ -40,18 +40,8 @@ public class VolleyConnection {
                 Request.Method.GET,
                 url,
                 null,
-                response -> {
-                    Log.i("route", "OK");
-                    try {
-                        System.out.println(response);
-                        JSONArray jsonArray = response.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONArray("steps");
-                        for (int idx = 0; idx < jsonArray.length(); idx++) {
-                            LatLng latLng = new LatLng(jsonArray.getJSONObject(idx).getJSONObject("end_location").getDouble("lat"), jsonArray.getJSONObject(idx).getJSONObject("end_location").getDouble("lng"));
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }, error -> Log.i("route", "NOK"));
+                onSuccess,
+                onError);
         queue.add(request);
     }
 

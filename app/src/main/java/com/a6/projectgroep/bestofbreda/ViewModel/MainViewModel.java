@@ -2,7 +2,6 @@ package com.a6.projectgroep.bestofbreda.ViewModel;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Transformations;
@@ -14,12 +13,9 @@ import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.Services.GoogleMapsAPIManager;
-import com.a6.projectgroep.bestofbreda.Services.LiveLocationListener;
-import com.a6.projectgroep.bestofbreda.Services.LocationHandler;
 import com.a6.projectgroep.bestofbreda.Services.RouteReceivedListener;
 import com.a6.projectgroep.bestofbreda.Services.VolleyConnection;
 import com.a6.projectgroep.bestofbreda.Services.database.MultimediaRepository;
-import com.a6.projectgroep.bestofbreda.Services.database.NavigationDatabase;
 import com.a6.projectgroep.bestofbreda.Services.database.RouteRepository;
 import com.a6.projectgroep.bestofbreda.Services.database.WaypointRepository;
 import com.google.android.gms.maps.model.LatLng;
@@ -60,6 +56,10 @@ public class MainViewModel extends AndroidViewModel {
             currentLocation = mapsApiManager.getCurrentLocation();
         }
         return currentLocation;
+    }
+
+    public LiveData<List<LatLng>> getRoutePoints() {
+        return mapsApiManager.routePoints();
     }
 
     public void setRoute(RouteModel route) {
@@ -127,10 +127,6 @@ public class MainViewModel extends AndroidViewModel {
     public void getRoutePoints(ArrayList<LatLng> waypoints, RouteReceivedListener listener) {
         volleyConnection = VolleyConnection.getInstance(getApplication().getApplicationContext());
         //    volleyConnection.getRoute(waypoints, listener);
-    }
-
-    public LatLng getCurrentPosition() {
-        return LocationHandler.getInstance(getApplication()).getCurrentLocation();
     }
 
     public void createWaypointModelList() {

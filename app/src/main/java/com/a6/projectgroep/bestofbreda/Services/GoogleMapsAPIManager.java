@@ -51,8 +51,10 @@ public class GoogleMapsAPIManager {
 
         userCurrentLocation = new MutableLiveData<>();
         userSelectedRoute = new MutableLiveData<>();
-        userSelectedRoute.setValue(null);
         nearbyWaypoint = new MutableLiveData<>();
+        routePoints = new MutableLiveData<>();
+
+        userSelectedRoute.setValue(null);
         nearbyWaypoint.setValue(null);
 
         locationManager = (LocationManager) application.getSystemService(Context.LOCATION_SERVICE);
@@ -104,6 +106,10 @@ public class GoogleMapsAPIManager {
 
     public LiveData<WaypointModel> getNearbyWayPoint() {
         return nearbyWaypoint;
+    }
+
+    public LiveData<List<LatLng>> routePoints() {
+        return routePoints;
     }
 
     public void setCurrentRoute(RouteModel route) {

@@ -15,7 +15,7 @@ import java.util.List;
 public class BestOfBreda extends Application {
     public static final String CHANNEL_SIGHT_PASSED_ID = "sightPassed";
     private ApplicationLifecycle appLifecycle;
-    
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -36,7 +36,6 @@ public class BestOfBreda extends Application {
 //            NavigationDatabase.getInstance(this).waypointDAO().insertWaypoint(testWayPoints.get(2));
 //            NavigationDatabase.getInstance(this).routeDAO().insertRoute(new RouteModel(Arrays.asList("Avans", "Casino"), "nameOfRoute", false, "resource"));
 //        }).start();
-
     }
 
     @Override
@@ -44,6 +43,5 @@ public class BestOfBreda extends Application {
         super.onTerminate();
         ProcessLifecycleOwner.get().getLifecycle().removeObserver(appLifecycle);
     }
-
 }
 
