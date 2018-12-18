@@ -14,10 +14,8 @@ import android.widget.TextView;
 import com.a6.projectgroep.bestofbreda.R;
 import com.a6.projectgroep.bestofbreda.View.Activities.DetailedActivity;
 
-public class DetailedPreviewFragment extends DialogFragment
-{
-    public static DetailedPreviewFragment newInstance(String sightTitle)
-    {
+public class DetailedPreviewFragment extends DialogFragment {
+    public static DetailedPreviewFragment newInstance(String sightTitle) {
         DetailedPreviewFragment fragment = new DetailedPreviewFragment();
         Bundle args = new Bundle();
         args.putString("SIGHTNAME", sightTitle);
@@ -34,8 +32,7 @@ public class DetailedPreviewFragment extends DialogFragment
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
-    {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         TextView sightTitle = view.findViewById(R.id.detailedfragment_textview_sight_name);

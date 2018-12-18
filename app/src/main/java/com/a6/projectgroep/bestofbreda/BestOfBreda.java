@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.os.Build;
 
 import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
+import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.Services.GeoCoderService;
 import com.a6.projectgroep.bestofbreda.Services.database.NavigationDatabase;
@@ -33,22 +34,7 @@ public class BestOfBreda extends Application {
 //            NavigationDatabase.getInstance(this).waypointDAO().insertWaypoint(testWayPoints.get(0));
 //            NavigationDatabase.getInstance(this).waypointDAO().insertWaypoint(testWayPoints.get(1));
 //            NavigationDatabase.getInstance(this).waypointDAO().insertWaypoint(testWayPoints.get(2));
+//            NavigationDatabase.getInstance(this).routeDAO().insertRoute(new RouteModel(Arrays.asList("Avans", "Casino"), "nameOfRoute", false, "resource"));
 //        }).start();
-
-        createNotificationChannel();
-    }
-
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel sightChannel = new NotificationChannel(
-                    CHANNEL_SIGHT_PASSED_ID,
-                    "Nearby sight",
-                    NotificationManager.IMPORTANCE_HIGH
-            );
-            sightChannel.setDescription("the notification appears when a user is near a sight with the tour running");
-
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(sightChannel);
-        }
     }
 }
