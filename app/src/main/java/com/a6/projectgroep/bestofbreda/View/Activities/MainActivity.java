@@ -145,6 +145,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             //TODO navigate to the activities
             switch (menuItem.getItemId()) {
                 case R.id.menu_nav_sights:
+                    Intent sightIntent = new Intent(this, SightListActivity.class);
+                    startActivity(sightIntent);
                     break;
                 case R.id.menu_nav_routes:
                     Intent intent = new Intent(this, RouteActivity.class);
@@ -291,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onInfoWindowClick(Marker marker) {
         Intent intent = new Intent(this, DetailedActivity.class);
-        intent.putExtra("POSITION", marker.getPosition());
+        intent.putExtra("SightName", marker.getTitle());
         startActivity(intent);
     }
 }
