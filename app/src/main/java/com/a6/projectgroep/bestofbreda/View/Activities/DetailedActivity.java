@@ -2,6 +2,8 @@ package com.a6.projectgroep.bestofbreda.View.Activities;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,14 +17,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.R;
 import com.a6.projectgroep.bestofbreda.ViewModel.DetailedViewModel;
-import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.Picasso;
 import com.viewpagerindicator.CirclePageIndicator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -44,8 +48,9 @@ public class DetailedActivity extends AppCompatActivity {
         titleTextView = findViewById(R.id.detailedactivity_sight_name);
         descriptionTextView = findViewById(R.id.detailedactivity_sight_description);
         viewPager = findViewById(R.id.detailedactivity_viewpager);
+        ImageSliderAdapter adapter = new ImageSliderAdapter();
 
-        viewPager.setAdapter(new ImageSliderAdapter());
+        viewPager.setAdapter(adapter);
 
         viewModel = ViewModelProviders.of(this).get(DetailedViewModel.class);
         viewModel.getAllWaypointModels().observe(this, new Observer<List<WaypointModel>>() {
@@ -64,6 +69,8 @@ public class DetailedActivity extends AppCompatActivity {
                 descriptionTextView.setText(model.getDescriptionNL());
             else descriptionTextView.setText(model.getDescriptionEN());
 
+            adapter.pictureUrls = model.getMultiMediaModel().getPictureUrls();
+            adapter.notifyDataSetChanged();
         });
         CirclePageIndicator indicator = findViewById(R.id.detailedactivity_circlepageindicator);
         indicator.setViewPager(viewPager);
@@ -74,13 +81,14 @@ public class DetailedActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //TODO get MultimediaModel
-//                if(media.getVideoUrls() != null){
-//                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(media.getVideoUrls()));
-//                    startActivity(browserIntent);
-//                }
-//                else {
-//                    Toast.makeText(getApplicationContext(), R.string.detailedactivity_toast_no_videos, Toast.LENGTH_SHORT).show();
-//                }
+                MultimediaModel media = model.getMultiMediaModel();
+                if(media.getVideoUrls() != null && !media.getVideoUrls().equals("")){
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(media.getVideoUrls()));
+                    startActivity(browserIntent);
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), R.string.detailedactivity_toast_no_videos, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -88,9 +96,11 @@ public class DetailedActivity extends AppCompatActivity {
     private class ImageSliderAdapter extends PagerAdapter {
 
         private LayoutInflater inflater;
+        private List<String> pictureUrls;
 
         public ImageSliderAdapter() {
             inflater = LayoutInflater.from(getApplicationContext());
+            pictureUrls = new ArrayList<>();
         }
 
         @NonNull
@@ -98,22 +108,35 @@ public class DetailedActivity extends AppCompatActivity {
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             ViewGroup imageLayout = (ViewGroup) inflater.inflate(R.layout.detailedactivity_viewpager_item, container, false);
             ImageView imageView = imageLayout.findViewById(R.id.detailedactivity_viewpager_item_imageview);
-            String url = model.getMultiMediaModel().getPictureUrls().get(position);
-            Picasso.get().load(url).into(imageView);
+            String url = pictureUrls.get(position);
+            if(url.equals(""))
+                return null;
+            else if(url.startsWith("api"))
+                url = "https://" + url;
+            Picasso picasso = Picasso.get();
+            picasso.setLoggingEnabled(true);
+            picasso.load(url).into(imageView);
             container.addView(imageLayout);
             return imageLayout;
         }
 
         @Override
         public int getCount() {
-            //return viewModel.getAllWaypointModels().getValue().get(sightID).getMultimediaID().getPictureUrls().size();
-            //TODO: get multimediaID from waypoint and search for it in multimediaDAO.
-            return -1;
+            return pictureUrls.size();
         }
 
         @Override
         public boolean isViewFromObject(@NonNull View view, @NonNull Object o) {
             return view == o;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+
+            ViewPager vp = (ViewPager) container;
+            View view = (View) object;
+            vp.removeView(view);
+
         }
     }
 }
