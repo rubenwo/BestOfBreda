@@ -31,10 +31,10 @@ public class DetailedActivity extends AppCompatActivity {
     private final String TAG = "DETAILEDACTIVITY";
     private ViewPager viewPager;
     private DetailedViewModel viewModel;
-    private int sightID;
     private WaypointModel model;
     private TextView titleTextView;
     private TextView descriptionTextView;
+    private String sightName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,11 +54,10 @@ public class DetailedActivity extends AppCompatActivity {
                 Log.i(TAG, "list changed");
             }
         });
-        sightID = getIntent().getIntExtra("ROUTE_ADAPTERPOS", 0);
-        LatLng position = getIntent().getParcelableExtra("POSITION");
+        sightName = getIntent().getStringExtra("SightName");
         viewModel.getAllWaypointModels().observe(this, (List<WaypointModel> waypointModels) -> {
             for (WaypointModel m : waypointModels)
-                if (position.equals(m.getLocation()))
+                if (sightName.equals(m.getName()))
                     model = m;
             titleTextView.setText(model.getName());
             if (Locale.getDefault().getLanguage().equals("nl"))
@@ -99,7 +98,7 @@ public class DetailedActivity extends AppCompatActivity {
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             ViewGroup imageLayout = (ViewGroup) inflater.inflate(R.layout.detailedactivity_viewpager_item, container, false);
             ImageView imageView = imageLayout.findViewById(R.id.detailedactivity_viewpager_item_imageview);
-            String url = viewModel.getAllMultimediaModels().getValue().get(sightID).getPictureUrls().get(position);
+            String url = model.getMultiMediaModel().getPictureUrls().get(position);
             Picasso.get().load(url).into(imageView);
             container.addView(imageLayout);
             return imageLayout;

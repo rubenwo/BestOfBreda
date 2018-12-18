@@ -356,7 +356,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onInfoWindowClick(Marker marker) {
         Intent intent = new Intent(this, DetailedActivity.class);
-        intent.putExtra("POSITION", marker.getPosition());
+        intent.putExtra("SightName", marker.getTitle());
         startActivity(intent);
     }
 }
