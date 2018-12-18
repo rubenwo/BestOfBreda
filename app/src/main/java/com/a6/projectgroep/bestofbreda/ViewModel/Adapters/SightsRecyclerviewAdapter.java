@@ -19,15 +19,18 @@ import com.a6.projectgroep.bestofbreda.View.Activities.DetailedActivity;
 import com.a6.projectgroep.bestofbreda.ViewModel.SightsListViewModel;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SightsRecyclerviewAdapter extends RecyclerView.Adapter<SightsRecyclerviewAdapter.ViewHolder> {
     private List<WaypointModel> sightList;
+    private List<WaypointModel> defaultSightList;
     private LayoutInflater inflater;
     private Context context;
 
     public SightsRecyclerviewAdapter(Context context, List<WaypointModel> sightList) {
         this.sightList = sightList;
+        this.defaultSightList = sightList;
         inflater = LayoutInflater.from(context);
         this.context = context;
     }
@@ -55,6 +58,21 @@ public class SightsRecyclerviewAdapter extends RecyclerView.Adapter<SightsRecycl
         return sightList.size();
     }
 
+    public void setDataset(String filter){
+        if(filter.equals("")){
+            sightList = defaultSightList;
+        }
+        else {
+            List<WaypointModel> filteredList = new ArrayList<>();
+            for (WaypointModel m : defaultSightList) {
+                if (m.getName().toLowerCase().contains(filter.toLowerCase()))
+                    filteredList.add(m);
+            }
+            sightList = filteredList;
+            notifyDataSetChanged();
+        }
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView backgroundImage;
         TextView nameTextView;
@@ -74,7 +92,8 @@ public class SightsRecyclerviewAdapter extends RecyclerView.Adapter<SightsRecycl
         }
     }
 
-    public void setSightList(List<WaypointModel> sightList) {
-        this.sightList = sightList;
+    public void setSightList(List<WaypointModel> s) {
+        this.sightList = s;
+        defaultSightList = sightList;
     }
 }
