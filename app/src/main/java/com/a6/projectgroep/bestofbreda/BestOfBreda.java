@@ -6,10 +6,12 @@ import android.app.NotificationManager;
 import android.os.Build;
 
 import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
+import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.Services.GeoCoderService;
 import com.a6.projectgroep.bestofbreda.Services.database.NavigationDatabase;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,6 +36,13 @@ public class BestOfBreda extends Application {
 //            NavigationDatabase.getInstance(this).waypointDAO().insertWaypoint(testWayPoints.get(1));
 //            NavigationDatabase.getInstance(this).waypointDAO().insertWaypoint(testWayPoints.get(2));
 //        }).start();
+
+
+        ArrayList<String> stringRoutes = new ArrayList<>();
+        stringRoutes.add("test");
+        RouteModel testModel = new RouteModel(stringRoutes, "testRoute", false, "route_blindwalls");
+
+//        new Thread(() -> NavigationDatabase.getInstance(this).routeDAO().insertRoute(testModel)).start();
 
         createNotificationChannel();
     }

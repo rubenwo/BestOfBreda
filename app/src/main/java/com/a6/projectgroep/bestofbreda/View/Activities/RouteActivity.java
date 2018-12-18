@@ -1,6 +1,9 @@
 package com.a6.projectgroep.bestofbreda.View.Activities;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,11 +13,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.R;
+import com.a6.projectgroep.bestofbreda.Services.GoogleMapsAPIManager;
 import com.a6.projectgroep.bestofbreda.ViewModel.Adapters.RoutesRecyclerviewAdapter;
 import com.a6.projectgroep.bestofbreda.ViewModel.RouteListViewModel;
 
-public class RouteActivity extends AppCompatActivity {
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
+public class RouteActivity extends AppCompatActivity implements RoutesRecyclerviewAdapter.OnSelectRouteListener {
 
     private RecyclerView recyclerView;
     private RoutesRecyclerviewAdapter adapter;
@@ -24,6 +33,7 @@ public class RouteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route);
+        viewModel = ViewModelProviders.of(this).get(RouteListViewModel.class);
 
         Toolbar toolbar = findViewById(R.id.routeactivity_toolbar);
         setSupportActionBar(toolbar);
@@ -33,7 +43,16 @@ public class RouteActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
-        adapter = new RoutesRecyclerviewAdapter(getApplicationContext(), viewModel);
+
+        viewModel.getAllRouteModels().observe(this, routeModels -> {
+            assert routeModels != null;
+            if(!routeModels.isEmpty())
+                adapter.setRoutes(routeModels);
+            adapter.notifyDataSetChanged();
+        });
+
+        adapter = new RoutesRecyclerviewAdapter(getApplicationContext(), new ArrayList<>(), this);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -57,5 +76,11 @@ public class RouteActivity extends AppCompatActivity {
 
         return super.onCreateOptionsMenu(menu);
 
+    }
+
+    @Override
+    public void onSelectRoute(RouteModel routeModel) {
+        GoogleMapsAPIManager.getInstance(getApplication()).setCurrentRoute(routeModel);
+        super.onBackPressed();
     }
 }
