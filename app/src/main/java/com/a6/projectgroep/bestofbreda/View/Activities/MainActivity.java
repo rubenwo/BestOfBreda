@@ -34,10 +34,13 @@ import com.a6.projectgroep.bestofbreda.Services.database.NavigationDatabase;
 import com.a6.projectgroep.bestofbreda.View.Fragments.DetailedRouteFragment;
 import com.a6.projectgroep.bestofbreda.View.Fragments.TermsOfServiceFragment;
 import com.a6.projectgroep.bestofbreda.ViewModel.MainViewModel;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -51,16 +54,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private DrawerLayout drawerLayout;
     private MapView mMapView;
     private GoogleMap googleMap;
+    private CameraPosition cameraPosition;
 
     private PolylineOptions polylineOptions;
     private PolylineOptions walkedRouteOptions;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         askPermission();
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
@@ -87,6 +89,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onPause() {
         super.onPause();
         mMapView.onPause();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("CamPos", googleMap.getCameraPosition());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        cameraPosition = savedInstanceState.getParcelable("CamPos");
     }
 
     private void setupGoogleMaps(Bundle savedInstanceState) {
@@ -237,6 +251,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         else {
             //request again for permission of location....
             googleMap.setMyLocationEnabled(true);
+            if(cameraPosition != null) {
+                googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
+            else {
+                googleMap.moveCamera(CameraUpdateFactory.zoomTo(14));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLng(GeoCoderService.getInstance(getApplication()).getLocationFromName("Breda Centrum")));
+            }
         }
 
         viewModel.getCurrentLocation().observe(this, location -> {
