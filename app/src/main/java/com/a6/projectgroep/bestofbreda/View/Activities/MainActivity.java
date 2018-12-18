@@ -88,7 +88,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable("CamPos", googleMap.getCameraPosition());
+        if(googleMap != null) {
+            outState.putParcelable("CamPos", googleMap.getCameraPosition());
+        }
     }
 
     @Override
