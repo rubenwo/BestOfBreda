@@ -65,11 +65,15 @@ public class RouteActivity extends AppCompatActivity implements RoutesRecyclervi
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
+                adapter.setDataset(s);
+                adapter.notifyDataSetChanged();
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
+                adapter.setDataset(s);
+                adapter.notifyDataSetChanged();
                 return false;
             }
         });
