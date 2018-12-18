@@ -14,7 +14,6 @@ import java.util.List;
 
 public class BestOfBreda extends Application {
     private ApplicationLifecycle appLifecycle;
-    public static final String CHANNEL_SIGHT_PASSED_ID = "sightPassed";
 
     @Override
     public void onCreate() {
@@ -31,7 +30,7 @@ public class BestOfBreda extends Application {
     //   testWayPoints.add(new WaypointModel("station breda", "Centraal Station Breda", GeoCoderService.getInstance(this).getLocationFromName("station breda"), false, false, model));
 
     //        new Thread(() -> {
-//            NavigationDatabase.getInstance(this).waypointDAO().insertWaypoint(testWayPoints.get(0));
+        //           NavigationDatabase.getInstance(this).waypointDAO().insertWaypoint(testWayPoints.get(0));
 //            NavigationDatabase.getInstance(this).waypointDAO().insertWaypoint(testWayPoints.get(1));
 //            NavigationDatabase.getInstance(this).waypointDAO().insertWaypoint(testWayPoints.get(2));
 //            NavigationDatabase.getInstance(this).routeDAO().insertRoute(new RouteModel(Arrays.asList("Avans", "Casino"), "nameOfRoute", false, "resource"));

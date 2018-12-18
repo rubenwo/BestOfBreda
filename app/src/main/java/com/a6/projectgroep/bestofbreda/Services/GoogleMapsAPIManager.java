@@ -91,7 +91,7 @@ public class GoogleMapsAPIManager {
 
     public LiveData<List<WaypointModel>> getAvailableWayPoints() {
         if (availableWayPoints == null) {
-            availableWayPoints = Transformations.switchMap(userSelectedRoute, input -> {
+            availableWayPoints = Transformations.map(userSelectedRoute, input -> {
                 if (input != null) {
                     return NavigationDatabase.getInstance(application).waypointDAO().getAllWaypointModelsFromNames(input.getRoute());
                 } else {
