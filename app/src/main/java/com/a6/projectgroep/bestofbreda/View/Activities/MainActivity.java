@@ -152,6 +152,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             //TODO navigate to the activities
             switch (menuItem.getItemId()) {
                 case R.id.menu_nav_sights:
+                    Intent sightIntent = new Intent(this, SightListActivity.class);
+                    startActivity(sightIntent);
                     break;
                 case R.id.menu_nav_routes:
                     Intent intent = new Intent(this, RouteActivity.class);

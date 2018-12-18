@@ -33,8 +33,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".View.Activities.DetailedActivity" />
-        <activity android:name=".View.Activities.RouteActivity">
-
+        <activity android:name=".View.Activities.RouteActivity"/>
+        <activity android:name=".View.Activities.SightListActivity">
         </activity>
         <activity android:name=".View.Activities.HelpActivity"></activity>
 
