@@ -1,6 +1,6 @@
 {
-  "name": "Historische Route",
-  "points": [
+  "name":"Historische Route",
+  "points":[
     "VVV",
     "Nassau Baronie Monument",
     "Valkenberg",
@@ -22,6 +22,6 @@
     "Begijnenhof",
     "Einde stadswandeling"
   ],
-  "length": 20,
-  "picture": "HistorischeRouteBackground.jpg"
+  "length":20,
+  "picture":"HistorischeRouteBackground.jpg"
 }

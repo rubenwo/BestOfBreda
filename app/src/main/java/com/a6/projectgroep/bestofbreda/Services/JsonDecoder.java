@@ -34,12 +34,9 @@ public class JsonDecoder {
 
             json = new String(buffer, "UTF-8");
         } catch (IOException e) {
-            Log.e(TAG, e.getMessage());
+            Log.e(TAG, e.getMessage() + " | IO Exception");
             return false;
         }
-        Log.d(TAG, path);
-        Log.d(TAG, json);
-
         try {
             JSONArray array = new JSONArray(json);
             for (int idx = 0; idx < array.length(); idx++) {
@@ -61,11 +58,12 @@ public class JsonDecoder {
                     urls.add(images.getJSONObject(index).getString("url"));
                     files.add(images.getJSONObject(index).getString("file"));
                 }
+
                 dao.insertWaypoint(new WaypointModel(name, descNL, descEN, new LatLng(latitude, longitude), false, false, new MultimediaModel(urls, videoUrl)));
             }
             return true;
         } catch (JSONException e) {
-            Log.e(TAG, e.getMessage());
+            Log.e(TAG, e.getMessage() + " | " + path);
             return false;
         }
     }
@@ -90,14 +88,14 @@ public class JsonDecoder {
             String name = routeObject.getString("name");
             String picturePath = routeObject.getString("picture");
             List<String> points = new ArrayList<>();
-            JSONArray pointsArray = new JSONArray("points");
+            JSONArray pointsArray = routeObject.getJSONArray("points");
             for (int i = 0; i < pointsArray.length(); i++) {
                 points.add(pointsArray.getString(i));
             }
             dao.insertRoute(new RouteModel(points, name, false, picturePath));
             return true;
         } catch (JSONException e) {
-            Log.e(TAG, e.getMessage());
+            Log.e(TAG, e.getMessage() + " | " + path);
             return false;
         }
     }
