@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap googleMap;
 
     private PolylineOptions polylineOptions;
+    private PolylineOptions walkedRouteOptions;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,12 +64,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         askPermission();
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
-
-
         setupGoogleMaps(savedInstanceState);
         setupDetailedRouteFragment();
         setupToolbar();
         setupDrawerLayout();
+        setPolylineOptions();
 
         //setupViewModel();
 
@@ -240,6 +241,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         viewModel.getCurrentLocation().observe(this, location -> {
             System.out.println("De huidige locatie is..." + location.toString());
+            walkedRouteOptions.add(new LatLng(location.getLatitude(),location.getLongitude()));
+            googleMap.addPolyline(walkedRouteOptions);
         });
 
         viewModel.getWayPoints().observe(this, points -> {
@@ -271,14 +274,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    private void drawRoute() {
-        PolylineOptions walkedRouteOptions;
+    private void setPolylineOptions()
+    {
         polylineOptions = new PolylineOptions();
-//        polylineOptions.add(latLng);
-//        walkedRouteOptions.add(latLng);
         polylineOptions.width(10);
         polylineOptions.color(Color.BLUE);
         polylineOptions.add(viewModel.getCurrentPosition());
+        walkedRouteOptions = new PolylineOptions();
+        walkedRouteOptions.width(10);
+        walkedRouteOptions.color(Color.GREEN);
+    }
+
+    private void drawRoute() {
+
     }
 
     @Override
