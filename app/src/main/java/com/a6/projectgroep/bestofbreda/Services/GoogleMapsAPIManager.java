@@ -18,6 +18,7 @@ import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.Services.database.NavigationDatabase;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.PolyUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -150,8 +151,7 @@ public class GoogleMapsAPIManager {
                                 routePositions.clear();
                                 JSONArray jsonArray = response.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONArray("steps");
                                 for (int idx = 0; idx < jsonArray.length(); idx++) {
-                                    LatLng latLng = new LatLng(jsonArray.getJSONObject(idx).getJSONObject("end_location").getDouble("lat"), jsonArray.getJSONObject(idx).getJSONObject("end_location").getDouble("lng"));
-                                    routePositions.add(latLng);
+                                    routePositions.addAll(PolyUtil.decode(jsonArray.getJSONObject(idx).getJSONObject("polyline").getString("points")));
                                 }
 
                                 routePoints.postValue(routePositions);

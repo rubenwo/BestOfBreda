@@ -3,7 +3,6 @@ package com.a6.projectgroep.bestofbreda.Services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.location.Location;
-import android.util.Log;
 
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 
@@ -33,7 +32,6 @@ public class BackgroundService extends IntentService {
 
         Thread thread = new Thread(() -> {
             while (true) {
-                Log.i("BackgroundService", "Empty new check");
                 Location currentPosition = googleMapsAPIManager.getCurrentLocation().getValue();
                 if (currentPosition != null) {
                     //TODO: mogelijk null check weghalen en anders oplossen, voor nu werkt dit.
@@ -44,7 +42,6 @@ public class BackgroundService extends IntentService {
 //                        Log.i("BackgroundService", "check for every waypoint");
 
                         if (currentPosition.distanceTo(waypointLocation) < 30) {
-                            Log.i("BackgroundService", "nearby");
                             if (!waypointModel.isAlreadySeen()) {
                                 pushNotification.SendSightNotification(waypointModel.getName(), waypointModel.getDescriptionEN(), getApplicationContext());
                                 waypointModel.setAlreadySeen(true);
