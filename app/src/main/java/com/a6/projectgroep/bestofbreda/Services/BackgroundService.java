@@ -1,17 +1,13 @@
 package com.a6.projectgroep.bestofbreda.Services;
 
 import android.app.IntentService;
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleOwner;
 import android.content.Intent;
 import android.location.Location;
-import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
-import java.util.Locale;
 
 public class BackgroundService extends IntentService {
     private GoogleMapsAPIManager googleMapsAPIManager;
@@ -31,12 +27,13 @@ public class BackgroundService extends IntentService {
         googleMapsAPIManager = GoogleMapsAPIManager.getInstance(getApplication());
         pushNotification = PushNotification.getInstance(getApplicationContext());
 
-        GoogleMapsAPIManager.getInstance(getApplication()).getAvailableWayPoints().observe((LifecycleOwner) this.getApplicationContext(), waypointModels -> {
+        GoogleMapsAPIManager.getInstance(getApplication()).getAvailableWayPoints().observeForever( waypointModels -> {
             wayPoints = waypointModels;
         });
 
         Thread thread = new Thread(() -> {
             while (true) {
+                Log.i("BackgroundService", "Empty new check");
                 Location currentPosition = googleMapsAPIManager.getCurrentLocation().getValue();
                 if (currentPosition != null) {
                     //TODO: mogelijk null check weghalen en anders oplossen, voor nu werkt dit.
@@ -44,7 +41,10 @@ public class BackgroundService extends IntentService {
                         Location waypointLocation = new Location("WayPointLocation");
                         waypointLocation.setLongitude(waypointModel.getLocation().longitude);
                         waypointLocation.setLatitude(waypointModel.getLocation().latitude);
-                        if (currentPosition.distanceTo(waypointLocation) < 200) {
+//                        Log.i("BackgroundService", "check for every waypoint");
+
+                        if (currentPosition.distanceTo(waypointLocation) < 30) {
+                            Log.i("BackgroundService", "nearby");
                             if (!waypointModel.isAlreadySeen()) {
                                 pushNotification.SendSightNotification(waypointModel.getName(), waypointModel.getDescriptionEN(), getApplicationContext());
                                 waypointModel.setAlreadySeen(true);
@@ -61,4 +61,6 @@ public class BackgroundService extends IntentService {
         });
         thread.start();
     }
+
+
 }

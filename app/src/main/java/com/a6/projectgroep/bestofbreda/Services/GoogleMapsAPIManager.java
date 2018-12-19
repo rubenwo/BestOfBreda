@@ -176,10 +176,12 @@ public class GoogleMapsAPIManager {
                     modelLocation.setLatitude(model.getLocation().latitude);
                     modelLocation.setLongitude(model.getLocation().longitude);
 
-                    if (currentLocation.distanceTo(modelLocation) <= 30) {
-                        nearby = model;
-                        break;
-                    }
+                    if(!model.isAlreadySeen())
+                        if (currentLocation.distanceTo(modelLocation) <= 300000) {
+                            nearby = model;
+                            model.setAlreadySeen(true);
+                            break;
+                        }
                 }
 
                 if (nearby != null) {
@@ -187,7 +189,6 @@ public class GoogleMapsAPIManager {
                 } else {
                     System.out.println("NIET IN DE BUUUUUUUUUUUUUUUUUUUUUUUUUUURRRRRRRRRRRRTTTTTTT");
                 }
-
                 nearbyWaypoint.setValue(nearby);
             }
         }

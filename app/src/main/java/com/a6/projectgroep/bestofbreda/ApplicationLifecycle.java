@@ -19,11 +19,11 @@ public class ApplicationLifecycle implements LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     public void onEnterForeground() {
-        //application.stopService(backgroundService);
+        application.stopService(backgroundService);
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     public void onEnterBackground() {
-        //application.startService(backgroundService);
+        application.startService(backgroundService);
     }
 }

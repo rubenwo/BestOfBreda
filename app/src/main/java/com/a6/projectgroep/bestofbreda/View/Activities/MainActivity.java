@@ -19,13 +19,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
-import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.R;
 import com.a6.projectgroep.bestofbreda.Services.GeoCoderService;
@@ -90,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if(googleMap != null) {
+            outState.putParcelable("PolyLine", walkedRouteOptions);
             outState.putParcelable("CamPos", googleMap.getCameraPosition());
         }
     }
@@ -97,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        walkedRouteOptions = savedInstanceState.getParcelable("PolyLine");
         cameraPosition = savedInstanceState.getParcelable("CamPos");
     }
 
@@ -226,8 +225,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         viewModel.getCurrentLocation().observe(this, location -> {
             System.out.println("De huidige locatie is..." + location.toString());
-            walkedRouteOptions.add(new LatLng(location.getLatitude(), location.getLongitude()));
-            googleMap.addPolyline(walkedRouteOptions);
+            if(walkedRouteOptions != null) {
+                walkedRouteOptions.add(new LatLng(location.getLatitude(), location.getLongitude()));
+                googleMap.addPolyline(walkedRouteOptions);
+            }
 
 //            googleMap.addPolyline(walkedRouteOptions);
         });
