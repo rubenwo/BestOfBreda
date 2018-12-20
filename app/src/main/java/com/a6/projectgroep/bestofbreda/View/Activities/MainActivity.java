@@ -44,6 +44,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -59,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private PolylineOptions walkedRouteOptions;
     private Polyline routePolyline;
 
+    private List<Marker> mapMarkers;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         askPermission();
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mapMarkers = new ArrayList<>();
 
         setPolylineOptions();
         setupGoogleMaps(savedInstanceState);
@@ -239,7 +243,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         viewModel.getWayPoints().observe(this, points -> {
-            googleMap.clear();
+            Iterator it = mapMarkers.iterator();
+            while(it.hasNext()) {
+                Marker marker = (Marker) it.next();
+                marker.remove();
+                it.remove();
+            }
             drawMarkers(points);
         });
         
@@ -295,14 +304,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             for (int i = 0; i < tempPoints.size(); i++) {
                 WaypointModel model = tempPoints.get(i);
                 if(i == 0 && routeAvailable)
-                    GeoCoderService.getInstance(getApplication())
-                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_BLUE, model.getName(), Locale.getDefault().getLanguage().equals("nl") ? model.getDescriptionNL() : model.getDescriptionEN());
+                    mapMarkers.add(GeoCoderService.getInstance(getApplication())
+                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_BLUE, model.getName(), Locale.getDefault().getLanguage().equals("nl") ? model.getDescriptionNL() : model.getDescriptionEN()));
                 else if (!model.isAlreadySeen()) {
-                    GeoCoderService.getInstance(getApplication())
-                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_RED, model.getName(), Locale.getDefault().getLanguage().equals("nl") ? model.getDescriptionNL() : model.getDescriptionEN());
+                    mapMarkers.add(GeoCoderService.getInstance(getApplication())
+                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_RED, model.getName(), Locale.getDefault().getLanguage().equals("nl") ? model.getDescriptionNL() : model.getDescriptionEN()));
                 } else
-                    GeoCoderService.getInstance(getApplication())
-                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_GREEN, model.getName(), Locale.getDefault().getLanguage().equals("nl") ? model.getDescriptionNL() : model.getDescriptionEN());
+                    mapMarkers.add(GeoCoderService.getInstance(getApplication())
+                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_GREEN, model.getName(), Locale.getDefault().getLanguage().equals("nl") ? model.getDescriptionNL() : model.getDescriptionEN()));
 
             }
 //            for (WaypointModel model : markerPoints) {
