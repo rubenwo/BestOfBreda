@@ -25,6 +25,8 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GoogleMapsAPIManager {
     private static GoogleMapsAPIManager instance;
@@ -42,6 +44,8 @@ public class GoogleMapsAPIManager {
     private MutableLiveData<WaypointModel> nearbyWaypoint;
     private MutableLiveData<List<LatLng>> routePoints;
 
+    Timer timer;
+
     public static GoogleMapsAPIManager getInstance(Application application) {
         if (instance == null)
             instance = new GoogleMapsAPIManager(application);
@@ -51,6 +55,7 @@ public class GoogleMapsAPIManager {
     private GoogleMapsAPIManager(Application application) {
         this.application = application;
         userLocation = null;
+        timer = new Timer();
 
         userCurrentLocation = new MutableLiveData<>();
         userSelectedRoute = new MutableLiveData<>();
@@ -120,7 +125,17 @@ public class GoogleMapsAPIManager {
 
     public void setCurrentRoute(RouteModel route) {
         userSelectedRoute.setValue(route);
-        calculateRoute();
+        //calculateRoute();
+        timer.cancel();
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask()
+        {
+            @Override
+            public void run()
+            {
+                calculateRoute();
+            }
+        }, 0, 120000);
     }
 
     private void calculateRoute() {
@@ -137,11 +152,24 @@ public class GoogleMapsAPIManager {
             new Thread(() -> {
                 VolleyConnection connection = VolleyConnection.getInstance(application);
                 List<LatLng> routePositions = new ArrayList<>();
+                List<WaypointModel> tempPoints = new ArrayList<>();
                 List<WaypointModel> points = NavigationDatabase.getInstance(application).waypointDAO().getAllWaypointModelsFromNamesNotLive(userSelectedRoute.getValue().getRoute());
+                Log.i("WayPoints", points.toString());
+
+                for (String s : userSelectedRoute.getValue().getRoute()) {
+                    for (WaypointModel point : points) {
+                        if(point.getName().equals(s)){
+                            tempPoints.add(point);
+                            break;
+                        }
+                    }
+                }
+                Log.i("WayPoints", tempPoints.toString());
 
                 routePositions.add(userLocation);
-                for (WaypointModel model : points) {
-                    routePositions.add(model.getLocation());
+                for (WaypointModel model : tempPoints) {
+                    if(!model.isAlreadySeen())
+                        routePositions.add(model.getLocation());
                 }
 
                 connection.getRoute(routePositions,
@@ -177,7 +205,7 @@ public class GoogleMapsAPIManager {
                     modelLocation.setLongitude(model.getLocation().longitude);
 
                     if(!model.isAlreadySeen())
-                        if (currentLocation.distanceTo(modelLocation) <= 300000) {
+                        if (currentLocation.distanceTo(modelLocation) <= 30) {
                             nearby = model;
                             model.setAlreadySeen(true);
                             break;

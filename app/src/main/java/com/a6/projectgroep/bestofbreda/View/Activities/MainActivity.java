@@ -23,9 +23,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.R;
 import com.a6.projectgroep.bestofbreda.Services.GeoCoderService;
+import com.a6.projectgroep.bestofbreda.Services.GoogleMapsAPIManager;
 import com.a6.projectgroep.bestofbreda.View.Fragments.DetailedPreviewFragment;
 import com.a6.projectgroep.bestofbreda.View.Fragments.DetailedRouteFragment;
 import com.a6.projectgroep.bestofbreda.View.Fragments.TermsOfServiceFragment;
@@ -41,6 +43,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -265,14 +268,48 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void drawMarkers(List<WaypointModel> markerPoints) {
         if (markerPoints != null) {
-            for (WaypointModel model : markerPoints) {
-                if (!model.isAlreadySeen()) {
+
+            List<WaypointModel> tempPoints = new ArrayList<>();
+            boolean routeAvailable = true;
+            RouteModel route = GoogleMapsAPIManager.getInstance(getApplication()).getSelectedRoute().getValue();
+            if(route == null)
+                routeAvailable = false;
+
+            if(routeAvailable)
+                for (String s : route.getRoute()) {
+                    for (WaypointModel point : markerPoints) {
+                        if(point.getName().equals(s)){
+                            tempPoints.add(point);
+                            break;
+                        }
+                    }
+                }
+            else
+                tempPoints = markerPoints;
+
+
+
+            for (int i = 0; i < tempPoints.size(); i++) {
+                WaypointModel model = tempPoints.get(i);
+                if(i == 0 && routeAvailable)
+                    GeoCoderService.getInstance(getApplication())
+                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_BLUE, model.getName(), Locale.getDefault().getLanguage().equals("nl") ? model.getDescriptionNL() : model.getDescriptionEN());
+                else if (!model.isAlreadySeen()) {
                     GeoCoderService.getInstance(getApplication())
                             .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_RED, model.getName(), Locale.getDefault().getLanguage().equals("nl") ? model.getDescriptionNL() : model.getDescriptionEN());
                 } else
                     GeoCoderService.getInstance(getApplication())
                             .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_GREEN, model.getName(), Locale.getDefault().getLanguage().equals("nl") ? model.getDescriptionNL() : model.getDescriptionEN());
+
             }
+//            for (WaypointModel model : markerPoints) {
+//                if (!model.isAlreadySeen()) {
+//                    GeoCoderService.getInstance(getApplication())
+//                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_RED, model.getName(), Locale.getDefault().getLanguage().equals("nl") ? model.getDescriptionNL() : model.getDescriptionEN());
+//                } else
+//                    GeoCoderService.getInstance(getApplication())
+//                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_GREEN, model.getName(), Locale.getDefault().getLanguage().equals("nl") ? model.getDescriptionNL() : model.getDescriptionEN());
+//            }
         }
     }
 
