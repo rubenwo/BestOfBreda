@@ -219,7 +219,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             } else {
                 googleMap.moveCamera(CameraUpdateFactory.zoomTo(14));
-                googleMap.animateCamera(CameraUpdateFactory.newLatLng(GeoCoderService.getInstance(getApplication()).getLocationFromName("Breda Centrum")));
+                LatLng latLng = GeoCoderService.getInstance(getApplication()).getLocationFromName("Breda Centrum");
+                if(latLng != null)
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
             }
         }
 
