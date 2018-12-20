@@ -3,6 +3,7 @@ package com.a6.projectgroep.bestofbreda.Services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.location.Location;
+import android.util.Log;
 
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 
@@ -39,13 +40,13 @@ public class BackgroundService extends IntentService {
                         Location waypointLocation = new Location("WayPointLocation");
                         waypointLocation.setLongitude(waypointModel.getLocation().longitude);
                         waypointLocation.setLatitude(waypointModel.getLocation().latitude);
-//                        Log.i("BackgroundService", "check for every waypoint");
+                        Log.i("BackgroundService", "check for every waypoint");
 
                         if (currentPosition.distanceTo(waypointLocation) < 30) {
-                            if (!waypointModel.isAlreadySeen()) {
+                            if(!waypointModel.isAlreadySeen())
                                 pushNotification.SendSightNotification(waypointModel.getName(), waypointModel.getDescriptionEN(), getApplicationContext());
                                 waypointModel.setAlreadySeen(true);
-                            }
+
                         }
                     }
                     try {

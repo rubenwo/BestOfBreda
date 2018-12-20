@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         setPolylineOptions();
         setupGoogleMaps(savedInstanceState);
-        setupDetailedRouteFragment();
+        //setupDetailedRouteFragment();
         setupToolbar();
         setupDrawerLayout();
     }
@@ -260,8 +260,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         viewModel.getNearbyWayPoint().observe(this, waypointModel -> {
             if(waypointModel != null) {
-                DetailedPreviewFragment dFrag = DetailedPreviewFragment.newInstance(waypointModel.getName());
-                dFrag.show(getSupportFragmentManager(), "");
+                if(!waypointModel.isAlreadySeen()) {
+                    waypointModel.setAlreadySeen(true);
+                    DetailedPreviewFragment dFrag = DetailedPreviewFragment.newInstance(waypointModel.getName());
+                    dFrag.show(getSupportFragmentManager(), "");
+                }
             }
         });
     }

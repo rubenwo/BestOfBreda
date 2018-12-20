@@ -28,7 +28,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class GoogleMapsAPIManager {
+public class GoogleMapsAPIManager
+{
     private static GoogleMapsAPIManager instance;
     private Application application;
 
@@ -37,7 +38,7 @@ public class GoogleMapsAPIManager {
 
     private LatLng userLocation;
 
-    private LiveData<List<WaypointModel>> availableWayPoints;
+    private MutableLiveData<List<WaypointModel>> availableWayPoints;
 
     private MutableLiveData<Location> userCurrentLocation;
     private MutableLiveData<RouteModel> userSelectedRoute;
@@ -46,13 +47,15 @@ public class GoogleMapsAPIManager {
 
     Timer timer;
 
-    public static GoogleMapsAPIManager getInstance(Application application) {
+    public static GoogleMapsAPIManager getInstance(Application application)
+    {
         if (instance == null)
             instance = new GoogleMapsAPIManager(application);
         return instance;
     }
 
-    private GoogleMapsAPIManager(Application application) {
+    private GoogleMapsAPIManager(Application application)
+    {
         this.application = application;
         userLocation = null;
         timer = new Timer();
@@ -66,9 +69,11 @@ public class GoogleMapsAPIManager {
         nearbyWaypoint.setValue(null);
 
         locationManager = (LocationManager) application.getSystemService(Context.LOCATION_SERVICE);
-        locationListener = new LocationListener() {
+        locationListener = new LocationListener()
+        {
             @Override
-            public void onLocationChanged(Location location) {
+            public void onLocationChanged(Location location)
+            {
                 System.out.println("LOCATIE GEVONDEN!!!!!!!!!!!!!!!!!!!!!");
                 userCurrentLocation.setValue(location);
                 userLocation = new LatLng(location.getLatitude(), location.getLongitude());
@@ -76,17 +81,20 @@ public class GoogleMapsAPIManager {
             }
 
             @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
+            public void onStatusChanged(String s, int i, Bundle bundle)
+            {
 
             }
 
             @Override
-            public void onProviderEnabled(String s) {
+            public void onProviderEnabled(String s)
+            {
 
             }
 
             @Override
-            public void onProviderDisabled(String s) {
+            public void onProviderDisabled(String s)
+            {
 
             }
         };
@@ -94,17 +102,21 @@ public class GoogleMapsAPIManager {
         startLocationChanges();
     }
 
-    public LiveData<Location> getCurrentLocation() {
+    public LiveData<Location> getCurrentLocation()
+    {
         return userCurrentLocation;
     }
 
-    public LiveData<RouteModel> getSelectedRoute() {
+    public LiveData<RouteModel> getSelectedRoute()
+    {
         return userSelectedRoute;
     }
 
-    public LiveData<List<WaypointModel>> getAvailableWayPoints() {
+    public LiveData<List<WaypointModel>> getAvailableWayPoints()
+    {
         if (availableWayPoints == null) {
-            availableWayPoints = Transformations.switchMap(userSelectedRoute, input -> {
+            availableWayPoints = (MutableLiveData<List<WaypointModel>>) Transformations.switchMap(userSelectedRoute, input ->
+            {
                 if (input != null) {
                     return NavigationDatabase.getInstance(application).waypointDAO().getAllWaypointModelsFromNames(input.getRoute());
                 } else {
@@ -115,15 +127,18 @@ public class GoogleMapsAPIManager {
         return availableWayPoints;
     }
 
-    public LiveData<WaypointModel> getNearbyWayPoint() {
+    public LiveData<WaypointModel> getNearbyWayPoint()
+    {
         return nearbyWaypoint;
     }
 
-    public LiveData<List<LatLng>> routePoints() {
+    public LiveData<List<LatLng>> routePoints()
+    {
         return routePoints;
     }
 
-    public void setCurrentRoute(RouteModel route) {
+    public void setCurrentRoute(RouteModel route)
+    {
         userSelectedRoute.setValue(route);
         //calculateRoute();
         timer.cancel();
@@ -138,18 +153,20 @@ public class GoogleMapsAPIManager {
         }, 0, 120000);
     }
 
-    private void calculateRoute() {
+    private void calculateRoute()
+    {
         Location currentLoc = null;
         if (ActivityCompat.checkSelfPermission(application, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(application, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             while (currentLoc == null) {
-                currentLoc = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                currentLoc = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
             }
         }
 
         userLocation = new LatLng(currentLoc.getLatitude(), currentLoc.getLongitude());
         if (userLocation != null) {
-            new Thread(() -> {
+            new Thread(() ->
+            {
                 VolleyConnection connection = VolleyConnection.getInstance(application);
                 List<LatLng> routePositions = new ArrayList<>();
                 List<WaypointModel> tempPoints = new ArrayList<>();
@@ -158,7 +175,7 @@ public class GoogleMapsAPIManager {
 
                 for (String s : userSelectedRoute.getValue().getRoute()) {
                     for (WaypointModel point : points) {
-                        if(point.getName().equals(s)){
+                        if (point.getName().equals(s)) {
                             tempPoints.add(point);
                             break;
                         }
@@ -168,12 +185,13 @@ public class GoogleMapsAPIManager {
 
                 routePositions.add(userLocation);
                 for (WaypointModel model : tempPoints) {
-                    if(!model.isAlreadySeen())
+                    if (!model.isAlreadySeen())
                         routePositions.add(model.getLocation());
                 }
 
                 connection.getRoute(routePositions,
-                        response -> {
+                        response ->
+                        {
                             try {
                                 System.out.println(response);
                                 routePositions.clear();
@@ -186,14 +204,16 @@ public class GoogleMapsAPIManager {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                        }, error -> {
+                        }, error ->
+                        {
                             Log.i("route", "NOK");
                         });
             }).start();
         }
     }
 
-    private void calculateNearbyWaypoint() {
+    private void calculateNearbyWaypoint()
+    {
         Location currentLocation = userCurrentLocation.getValue();
         if (availableWayPoints != null) {
             List<WaypointModel> waypointOnRoute = availableWayPoints.getValue();
@@ -204,12 +224,12 @@ public class GoogleMapsAPIManager {
                     modelLocation.setLatitude(model.getLocation().latitude);
                     modelLocation.setLongitude(model.getLocation().longitude);
 
-                    if(!model.isAlreadySeen())
-                        if (currentLocation.distanceTo(modelLocation) <= 30) {
-                            nearby = model;
-                            model.setAlreadySeen(true);
-                            break;
-                        }
+                    if (currentLocation.distanceTo(modelLocation) <= 30) {
+                        nearby = model;
+                        //model.setAlreadySeen(true);
+                        availableWayPoints.setValue(waypointOnRoute);
+                        break;
+                    }
                 }
 
                 if (nearby != null) {
@@ -222,15 +242,17 @@ public class GoogleMapsAPIManager {
         }
     }
 
-    public void startLocationChanges() {
+    public void startLocationChanges()
+    {
         if (ActivityCompat.checkSelfPermission(application, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(application, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 20, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 2000, 20, locationListener);
         }
     }
 
-    public void stopLocationChanges() {
+    public void stopLocationChanges()
+    {
         locationManager.removeUpdates(locationListener);
     }
 }
