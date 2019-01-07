@@ -45,13 +45,13 @@ public class VolleyConnection {
         // Origin, destination and waypoints of route
         String str_origin = "origin=" + waypoints.get(0).latitude + "," + waypoints.get(0).longitude;
         String str_dest = "destination=" + waypoints.get(waypoints.size() - 1).latitude + "," + waypoints.get(waypoints.size() - 1).longitude;
-        String str_waypoint = "waypoints=";
+        String str_waypoint = "waypoints=optimize:true";
 
-        for (int i = 1; i < waypoints.size() - 2; i++) {
-            str_waypoint += "via:" + waypoints.get(i).latitude + "," + waypoints.get(i).longitude + "|";
+        for (int i = 1; i < waypoints.size() - 1; i++) {
+            str_waypoint += "|" + waypoints.get(i).latitude + "," + waypoints.get(i).longitude;
         }
 
-        str_waypoint += "via:" + waypoints.get(waypoints.size() - 2).latitude + "," + waypoints.get(waypoints.size() - 2).longitude;
+        str_waypoint += "|" + waypoints.get(waypoints.size() - 1).latitude + "," + waypoints.get(waypoints.size() - 2).longitude;
 
         String trafficMode = "mode=walking";
 

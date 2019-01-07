@@ -195,10 +195,14 @@ public class GoogleMapsAPIManager
                             try {
                                 System.out.println(response);
                                 routePositions.clear();
-                                JSONArray jsonArray = response.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONArray("steps");
-                                for (int idx = 0; idx < jsonArray.length(); idx++) {
-                                    routePositions.addAll(PolyUtil.decode(jsonArray.getJSONObject(idx).getJSONObject("polyline").getString("points")));
+                                JSONArray legs = response.getJSONArray("routes").getJSONObject(0).getJSONArray("legs");
+                                for (int i = 0; i < legs.length(); i++) {
+                                    JSONArray jsonArray = legs.getJSONObject(i).getJSONArray("steps");
+                                    for (int idx = 0; idx < jsonArray.length(); idx++) {
+                                        routePositions.addAll(PolyUtil.decode(jsonArray.getJSONObject(idx).getJSONObject("polyline").getString("points")));
+                                    }
                                 }
+
 
                                 routePoints.postValue(routePositions);
                             } catch (JSONException e) {
