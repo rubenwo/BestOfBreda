@@ -1,17 +1,13 @@
 package com.a6.projectgroep.bestofbreda.Services;
 
 import android.app.IntentService;
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleOwner;
 import android.content.Intent;
 import android.location.Location;
-import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
-import java.util.Locale;
 
 public class BackgroundService extends IntentService {
     private GoogleMapsAPIManager googleMapsAPIManager;
@@ -31,7 +27,7 @@ public class BackgroundService extends IntentService {
         googleMapsAPIManager = GoogleMapsAPIManager.getInstance(getApplication());
         pushNotification = PushNotification.getInstance(getApplicationContext());
 
-        GoogleMapsAPIManager.getInstance(getApplication()).getAvailableWayPoints().observe((LifecycleOwner) this.getApplicationContext(), waypointModels -> {
+        GoogleMapsAPIManager.getInstance(getApplication()).getAvailableWayPoints().observeForever( waypointModels -> {
             wayPoints = waypointModels;
         });
 
@@ -44,11 +40,13 @@ public class BackgroundService extends IntentService {
                         Location waypointLocation = new Location("WayPointLocation");
                         waypointLocation.setLongitude(waypointModel.getLocation().longitude);
                         waypointLocation.setLatitude(waypointModel.getLocation().latitude);
-                        if (currentPosition.distanceTo(waypointLocation) < 200) {
-                            if (!waypointModel.isAlreadySeen()) {
+                        Log.i("BackgroundService", "check for every waypoint");
+
+                        if (currentPosition.distanceTo(waypointLocation) < 30) {
+                            if(!waypointModel.isAlreadySeen())
                                 pushNotification.SendSightNotification(waypointModel.getName(), waypointModel.getDescriptionEN(), getApplicationContext());
                                 waypointModel.setAlreadySeen(true);
-                            }
+
                         }
                     }
                     try {
@@ -61,4 +59,6 @@ public class BackgroundService extends IntentService {
         });
         thread.start();
     }
+
+
 }

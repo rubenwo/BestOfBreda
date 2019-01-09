@@ -56,4 +56,6 @@ dependencies {
     testImplementation "org.mockito:mockito-inline:+"
 
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
+
+    implementation 'com.google.maps.android:android-maps-utils:0.4+'
 }

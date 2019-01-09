@@ -1,9 +1,12 @@
 package com.a6.projectgroep.bestofbreda.Services;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -12,15 +15,25 @@ import android.view.View;
 import com.a6.projectgroep.bestofbreda.R;
 import com.a6.projectgroep.bestofbreda.View.Activities.DetailedActivity;
 
-import static com.a6.projectgroep.bestofbreda.BestOfBreda.CHANNEL_SIGHT_PASSED_ID;
-
 public class PushNotification {
     private NotificationManagerCompat managerCompat;
     private static PushNotification instance;
+    public static final String CHANNEL_SIGHT_PASSED_ID = "sightPassed";
 
     private PushNotification(Context context)
     {
         managerCompat = NotificationManagerCompat.from(context);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel sightChannel = new NotificationChannel(
+                    CHANNEL_SIGHT_PASSED_ID,
+                    "Nearby sight",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            sightChannel.setDescription("the notification appears when a user is near a sight with the tour running");
+
+            NotificationManager manager = context.getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(sightChannel);
+        }
     }
 
     // currently used Singleton, but can be changed

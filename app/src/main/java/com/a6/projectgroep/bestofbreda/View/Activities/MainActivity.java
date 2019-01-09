@@ -19,16 +19,16 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.a6.projectgroep.bestofbreda.Model.MultimediaModel;
 import com.a6.projectgroep.bestofbreda.Model.RouteModel;
 import com.a6.projectgroep.bestofbreda.Model.WaypointModel;
 import com.a6.projectgroep.bestofbreda.R;
 import com.a6.projectgroep.bestofbreda.Services.GeoCoderService;
+import com.a6.projectgroep.bestofbreda.Services.GoogleMapsAPIManager;
+import com.a6.projectgroep.bestofbreda.View.Fragments.DetailedPreviewFragment;
 import com.a6.projectgroep.bestofbreda.View.Fragments.DetailedRouteFragment;
 import com.a6.projectgroep.bestofbreda.View.Fragments.TermsOfServiceFragment;
 import com.a6.projectgroep.bestofbreda.ViewModel.MainViewModel;
@@ -40,8 +40,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -54,8 +57,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap googleMap;
     private CameraPosition cameraPosition;
 
-    private PolylineOptions polylineOptions;
     private PolylineOptions walkedRouteOptions;
+    private Polyline routePolyline;
+
+    private List<Marker> mapMarkers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,13 +69,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         askPermission();
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mapMarkers = new ArrayList<>();
 
         setPolylineOptions();
         setupGoogleMaps(savedInstanceState);
-        setupDetailedRouteFragment();
+        //setupDetailedRouteFragment();
         setupToolbar();
         setupDrawerLayout();
-        setupViewModel();
     }
 
     @Override
@@ -89,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if(googleMap != null) {
+            outState.putParcelable("PolyLine", walkedRouteOptions);
             outState.putParcelable("CamPos", googleMap.getCameraPosition());
         }
     }
@@ -96,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        walkedRouteOptions = savedInstanceState.getParcelable("PolyLine");
         cameraPosition = savedInstanceState.getParcelable("CamPos");
     }
 
@@ -112,30 +119,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_nav);
-    }
-
-    private void setupViewModel() {
-        viewModel.getAllWaypointModels().observe(this, wayPointModels -> {
-            Toast.makeText(getApplicationContext(), "waypoints changed", Toast.LENGTH_SHORT).show();
-            for (WaypointModel m : wayPointModels) {
-                Log.i("DATABASE_MODELS", m.toString());
-            }
-        });
-
-        viewModel.getAllRouteModels().observe(this, routeModels -> {
-            Toast.makeText(getApplicationContext(), "routes changed", Toast.LENGTH_SHORT).show();
-            for (RouteModel m : routeModels) {
-                Log.i("DATABASE_MODELS", m.toString());
-                viewModel.createWaypointModelList();
-            }
-        });
-
-        viewModel.getAllMultiMediaModels().observe(this, multimediaModels -> {
-            Toast.makeText(getApplicationContext(), "multimedia changed", Toast.LENGTH_SHORT).show();
-            for (MultimediaModel m : multimediaModels) {
-                Log.i("DATABASE_MODELS", m.toString());
-            }
-        });
     }
 
     private void setupDrawerLayout() {
@@ -243,56 +226,109 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             } else {
                 googleMap.moveCamera(CameraUpdateFactory.zoomTo(14));
-                googleMap.animateCamera(CameraUpdateFactory.newLatLng(GeoCoderService.getInstance(getApplication()).getLocationFromName("Breda Centrum")));
+                LatLng latLng = GeoCoderService.getInstance(getApplication()).getLocationFromName("Breda Centrum");
+                if(latLng != null)
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
             }
         }
 
         viewModel.getCurrentLocation().observe(this, location -> {
             System.out.println("De huidige locatie is..." + location.toString());
-            walkedRouteOptions.add(new LatLng(location.getLatitude(), location.getLongitude()));
-            googleMap.addPolyline(walkedRouteOptions);
+            if(walkedRouteOptions != null) {
+                walkedRouteOptions.add(new LatLng(location.getLatitude(), location.getLongitude()));
+                googleMap.addPolyline(walkedRouteOptions);
+            }
 
 //            googleMap.addPolyline(walkedRouteOptions);
         });
 
         viewModel.getWayPoints().observe(this, points -> {
-            googleMap.clear();
+            Iterator it = mapMarkers.iterator();
+            while(it.hasNext()) {
+                Marker marker = (Marker) it.next();
+                marker.remove();
+                it.remove();
+            }
             drawMarkers(points);
         });
         
         viewModel.getRoutePoints().observe(this, latLngs -> {
-            for (LatLng l: latLngs) {
-                polylineOptions.add(l);
+            if(routePolyline != null) {
+                routePolyline.remove();
             }
-            googleMap.addPolyline(polylineOptions);
+
+            PolylineOptions polylineOptions = new PolylineOptions();
+            polylineOptions.width(10);
+            polylineOptions.color(Color.BLUE);
+
+            polylineOptions.addAll(latLngs);
+
+            routePolyline = googleMap.addPolyline(polylineOptions);
+            routePolyline.getPoints();
+        });
+
+        viewModel.getNearbyWayPoint().observe(this, waypointModel -> {
+            if(waypointModel != null) {
+                if(!waypointModel.isAlreadySeen()) {
+                    waypointModel.setAlreadySeen(true);
+                    DetailedPreviewFragment dFrag = DetailedPreviewFragment.newInstance(waypointModel.getName());
+                    dFrag.show(getSupportFragmentManager(), "");
+                }
+            }
         });
     }
 
     private void drawMarkers(List<WaypointModel> markerPoints) {
         if (markerPoints != null) {
-            for (WaypointModel model : markerPoints) {
-                if (!model.isAlreadySeen()) {
-                    GeoCoderService.getInstance(getApplication())
-                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_RED, model.getName(), Locale.getDefault().getLanguage().equals("nl") ? model.getDescriptionNL() : model.getDescriptionEN());
-                    //waypoints.add(model.getLocation());
+
+            List<WaypointModel> tempPoints = new ArrayList<>();
+            boolean routeAvailable = true;
+            RouteModel route = GoogleMapsAPIManager.getInstance(getApplication()).getSelectedRoute().getValue();
+            if(route == null)
+                routeAvailable = false;
+
+            if(routeAvailable)
+                for (String s : route.getRoute()) {
+                    for (WaypointModel point : markerPoints) {
+                        if(point.getName().equals(s)){
+                            tempPoints.add(point);
+                            break;
+                        }
+                    }
+                }
+            else
+                tempPoints = markerPoints;
+
+
+
+            for (int i = 0; i < tempPoints.size(); i++) {
+                WaypointModel model = tempPoints.get(i);
+                if(i == 0 && routeAvailable)
+                    mapMarkers.add(GeoCoderService.getInstance(getApplication())
+                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_BLUE, model.getName(), Locale.getDefault().getLanguage().equals("nl") ? model.getDescriptionNL() : model.getDescriptionEN()));
+                else if (!model.isAlreadySeen()) {
+                    mapMarkers.add(GeoCoderService.getInstance(getApplication())
+                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_RED, model.getName(), Locale.getDefault().getLanguage().equals("nl") ? model.getDescriptionNL() : model.getDescriptionEN()));
                 } else
-                    GeoCoderService.getInstance(getApplication())
-                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_GREEN, model.getName(), Locale.getDefault().getLanguage().equals("nl") ? model.getDescriptionNL() : model.getDescriptionEN());
+                    mapMarkers.add(GeoCoderService.getInstance(getApplication())
+                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_GREEN, model.getName(), Locale.getDefault().getLanguage().equals("nl") ? model.getDescriptionNL() : model.getDescriptionEN()));
+
             }
+//            for (WaypointModel model : markerPoints) {
+//                if (!model.isAlreadySeen()) {
+//                    GeoCoderService.getInstance(getApplication())
+//                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_RED, model.getName(), Locale.getDefault().getLanguage().equals("nl") ? model.getDescriptionNL() : model.getDescriptionEN());
+//                } else
+//                    GeoCoderService.getInstance(getApplication())
+//                            .placeMarker(googleMap, model.getLocation(), BitmapDescriptorFactory.HUE_GREEN, model.getName(), Locale.getDefault().getLanguage().equals("nl") ? model.getDescriptionNL() : model.getDescriptionEN());
+//            }
         }
     }
 
     private void setPolylineOptions() {
-        polylineOptions = new PolylineOptions();
-        polylineOptions.width(10);
-        polylineOptions.color(Color.BLUE);
         walkedRouteOptions = new PolylineOptions();
         walkedRouteOptions.width(10);
         walkedRouteOptions.color(Color.GREEN);
-    }
-
-    private void drawRoute() {
-
     }
 
     @Override

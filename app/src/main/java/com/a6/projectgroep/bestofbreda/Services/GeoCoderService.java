@@ -10,6 +10,7 @@ import android.util.Log;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
@@ -56,10 +57,11 @@ public class GeoCoderService {
      * @param title
      * @param description
      */
-    public void placeMarker(@NonNull GoogleMap map, @NonNull LatLng location, @NonNull float markerColor, @Nullable String title, @Nullable String description) {
+    public Marker placeMarker(@NonNull GoogleMap map, @NonNull LatLng location, @NonNull float markerColor, @Nullable String title, @Nullable String description) {
+        Marker marker;
         if (title == null && description != null) {
-            map.addMarker(new MarkerOptions().position(location))
-                    .setIcon(BitmapDescriptorFactory.defaultMarker(markerColor));
+            marker = map.addMarker(new MarkerOptions().position(location));
+            marker.setIcon(BitmapDescriptorFactory.defaultMarker(markerColor));
             try {
                 Log.e("MarkerError", "No title so this description won't be displayed!");
                 throw new Exception("No title so this description won't be displayed!");
@@ -68,15 +70,16 @@ public class GeoCoderService {
             }
         }
         if (title != null && description == null) {
-            map.addMarker(new MarkerOptions().position(location).title(title))
-                    .setIcon(BitmapDescriptorFactory.defaultMarker(markerColor));
+            marker = map.addMarker(new MarkerOptions().position(location).title(title));
+            marker.setIcon(BitmapDescriptorFactory.defaultMarker(markerColor));
         }
         if (title == null && description == null) {
-            map.addMarker(new MarkerOptions().position(location))
-                    .setIcon(BitmapDescriptorFactory.defaultMarker(markerColor));
+            marker = map.addMarker(new MarkerOptions().position(location));
+            marker.setIcon(BitmapDescriptorFactory.defaultMarker(markerColor));
         } else {
-            map.addMarker(new MarkerOptions().position(location).title(title).snippet(description))
-                    .setIcon(BitmapDescriptorFactory.defaultMarker(markerColor));
+            marker = map.addMarker(new MarkerOptions().position(location).title(title).snippet(description));
+            marker.setIcon(BitmapDescriptorFactory.defaultMarker(markerColor));
         }
+        return marker;
     }
 }

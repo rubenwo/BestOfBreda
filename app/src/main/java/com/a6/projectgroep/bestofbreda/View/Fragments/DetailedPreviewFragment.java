@@ -41,7 +41,10 @@ public class DetailedPreviewFragment extends DialogFragment {
         Button moreInfoButton = view.findViewById(R.id.detailedfragment_button);
         moreInfoButton.setOnClickListener(view1 -> {
             Intent intent = new Intent(getContext(), DetailedActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("SightName", getArguments().getString("SIGHTNAME"));
             //ToDo add waypoint id or waypoint object
+            intent.putExtras(bundle);
             startActivity(intent);
         });
     }
