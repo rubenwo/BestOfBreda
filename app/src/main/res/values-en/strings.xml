@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Best of Breda</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="menu_nav_sights">Sights</string>
+    <string name="menu_nav_routes">Routes</string>
+    <string name="menu_nav_help">Help</string>
+    <string name="menu_nav_termsofservice">Terms of Service</string>
+    <string name="menu_toolbar_search">Search</string>
+    <string name="helpactivity_header_instructions">Instructions</string>
+    <string name="termsofactivity_header">TERMS AND CONDITIONS FOR USE, REPRODUCTION AND DISTRIBUTION</string>
+    <string name="termsofactivity_text">Terms of Service example</string>
+    <string name="detailedactivity_toast_no_videos">No videos availabe for this sight</string>
+    <string name="detailedfragment_more_information">"More Info     "</string>
+
+    <string name="GPS_off">Your GPS function is off</string>
+
+    <string name="NotificationChannel_name">Nearest sight</string>
+    <string name="NotificationChannel_Description">The notification appears when a user is near a sight with the tour running</string>
+
+    <string name="HelpText">After opening the app you will see the map of Breda. When you select the
+        icon with the three horizontal stripes, you will see a menu. When you press the button Routes,
+        the app will navigate to a screen with the list of possible routes.
+    \nAfter you have chosen one of these routes, the route between the sights will appear. If you select the menu icon while walking the
+        tour, the menu will appear again. When you press the button Sights, you will find a list of the sights that are along the route. When you select on of these sights, you
+        can view the detailed information, pictures and videos. It is also possible to view this information by
+        selecting one of the markers on the map.
+    \nAs you walk, the part of the route that you have walked will have a different color. When you come within the 20
+        meter zone of a sight, you will receive a notification informing you that you are near a sight. When you tap
+        on the notification, you can view the information of this sight.
+    \nIf you deviate from the tour, the app will give the directions to return to the tour.</string>
+</resources>

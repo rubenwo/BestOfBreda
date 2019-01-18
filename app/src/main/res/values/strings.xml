@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Best of Breda</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="menu_nav_sights">Bezienswaardigheden</string>
+    <string name="menu_nav_routes">Routes</string>
+    <string name="menu_nav_help">Help</string>
+    <string name="menu_nav_termsofservice">Servicevoorwaarden</string>
+    <string name="menu_toolbar_search">Zoeken</string>
+    <string name="helpactivity_header_instructions">Instructies</string>
+    <string name="termsofactivity_header">SERVICEVOORWAARDEN VOOR GEBRUIK, REPRODUCTIE EN DISTRIBUTIE</string>
+    <string name="termsofactivity_text">Servicevoorwaarden voorbeeld</string>
+    <string name="detailedactivity_toast_no_videos">Er zijn geen videos beschikbaar voor deze bezienswaardigheid</string>
+    <string name="detailedfragment_more_information">"Meer informatie     "</string>
+
+    <string name="GPS_off">Je GPS functie staat uit</string>
+
+    <string name="NotificationChannel_name">Dichtbijzijnde bezienswaardigheid</string>
+    <string name="NotificationChannel_Description">De notificatie wordt zichtbaar wanneer de gebruiker in de buurt van een bezienswaardigheid komt waneer de tour loopt</string>
+
+    <string name="HelpText">Bij het openen van de app ziet u een kaart van Breda. Als u op het icoon met de
+        drie horizontale streepjes drukt krijgt u een menu te zien. In dit menu heeft u de keuze uit de
+         verschillende routes die gewandeld kunnen worden.\n
+        \nNadat u één van deze routes heeft gekozen, kunt u deze route bewandelen. Als u tijdens het wandelen
+        weer op het menu icoon drukt, en daarna op de knop bezienswaardigheden klikt, krijgt u een lijst met de bezienswaardigheden die op de route staan. Als
+        u een van deze bezienswaardigheden selecteert, kunt u de detailinformatie, afbeeldingen en eventueel een filmpje bekijken.
+         Het is ook mogelijk om deze informatie in te zien door op het kaart een van de markers
+        aan te tikken.\n
+        \nTijdens het wandelen is het deel van de route die u al heeft gelopen zichtbaar gemarkeerd. Als u tijdens
+        het wandelen binnen de 20 meter zone van een bezienswaardigheid komt, krijgt u een melding
+        die aangeeft dat u in de buurt van een bezienswaardigheid bent. Als u op de notificatie tikt, kunt
+        u de informatie over deze bezienswaardigheid bekijken.
+        \nWanneer u tijdens het wandelen van de route afwijkt zal de app de route herberekenen zodat u terug op de oorspronkelijke route uit komt.</string>
+</resources>

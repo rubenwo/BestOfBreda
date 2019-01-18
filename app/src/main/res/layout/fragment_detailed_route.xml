@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="8dp"
+    android:background="@drawable/detailedroutefragment_border"
+    tools:context=".View.Fragments.DetailedRouteFragment">
+
+    <TextView
+        android:id="@+id/detailedroutefragment_sight_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Sight name"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/detailedroutefragment_direction"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/detailedroutefragment_address"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Sight address"
+        app:layout_constraintEnd_toEndOf="@+id/detailedroutefragment_sight_name"
+        app:layout_constraintStart_toStartOf="@+id/detailedroutefragment_sight_name"
+        app:layout_constraintTop_toBottomOf="@+id/detailedroutefragment_sight_name" />
+
+    <TextView
+        android:id="@+id/detailedroutefragment_current_address"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Current address"
+        app:layout_constraintEnd_toEndOf="@+id/detailedroutefragment_address"
+        app:layout_constraintStart_toStartOf="@+id/detailedroutefragment_address"
+        app:layout_constraintTop_toBottomOf="@+id/detailedroutefragment_address" />
+
+    <TextView
+        android:id="@+id/detailedroutefragment_total_distance"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="16dp"
+        android:text="total distance"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/detailedroutefragment_current_address"
+        app:layout_constraintStart_toStartOf="@+id/detailedroutefragment_current_address"
+        app:layout_constraintTop_toBottomOf="@+id/detailedroutefragment_current_address" />
+
+    <ImageView
+        android:id="@+id/detailedroutefragment_direction"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_directions" />
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,27 @@
+{
+  "name": "Historische Route",
+  "points": [
+    "VVV",
+    "Nassau Baronie Monument",
+    "Valkenberg",
+    "The Light House",
+    "valkenberg II",
+    "Kasteel van Breda",
+    "Begin Vismarkt",
+    "kerkplein",
+    "Grote Kerk",
+    "Stadhuis",
+    "Bevrijdingsmonument",
+    "Zuidpunt Grote Markt",
+    "Grote Markt",
+    "Antonius van Paduakerk",
+    "Bibliotheek",
+    "Kloosterkazerne",
+    "Gasthuispoort",
+    "Veemarktstraat",
+    "Begijnenhof",
+    "Einde stadswandeling"
+  ],
+  "length": 20,
+  "picture": "route_historic_kilometer"
+}
