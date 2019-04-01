@@ -24,7 +24,7 @@
             android:name=".Services.BackgroundService"
             android:exported="false"/>
 
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCJ1TODLMDe9XX0nUGz54aOaOC_ihykK-4"/>
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value=""/>
         <activity android:name=".View.Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
